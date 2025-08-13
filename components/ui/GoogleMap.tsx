@@ -3,6 +3,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { loadGoogleMaps, getVenueInfo } from '@/lib/utils/maps';
 
+// Window インターフェースを拡張してGoogle Maps API関数を追加
+declare global {
+  interface Window {
+    gm_authFailure?: () => void;
+  }
+}
+
 interface GoogleMapProps {
   className?: string;
   height?: string;
@@ -24,6 +31,15 @@ export default function GoogleMap({
   useEffect(() => {
     let isMounted = true;
 
+    // Google Maps API エラーの全体リスナーを設定
+    const originalGoogleError = window.gm_authFailure;
+    window.gm_authFailure = () => {
+      console.error('Google Maps API authentication failed');
+      setError('Google Maps API の認証に失敗しました。API キーとドメイン設定を確認してください。');
+      setIsLoading(false);
+      if (originalGoogleError) originalGoogleError();
+    };
+
     const initializeMap = async () => {
       try {
         setIsLoading(true);
@@ -33,7 +49,7 @@ export default function GoogleMap({
         const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
         console.log('Google Maps API Key:', apiKey ? '設定済み' : '未設定');
         if (!apiKey) {
-          throw new Error('Google Maps API キーが設定されていません');
+          throw new Error('Google Maps API キーが設定されていません。.env.local ファイルに NEXT_PUBLIC_GOOGLE_MAPS_API_KEY を設定してください。');
         }
 
         // Google Maps API の読み込み
@@ -157,8 +173,64 @@ export default function GoogleMap({
         setIsLoading(false);
 
       } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'マップの読み込みに失敗しました';
+        let errorMessage = 'マップの読み込みに失敗しました';
+        let detailedSteps: string[] = [];
+        
+        // Google Maps API エラーの詳細判定
+        if (err instanceof Error) {
+          if (err.message.includes('RefererNotAllowedMapError') || 
+              window.location.href.includes('RefererNotAllowedMapError')) {
+            errorMessage = 'Google Maps API のドメイン設定が必要です';
+            detailedSteps = [
+              '1. Google Cloud Console (console.cloud.google.com) にアクセス',
+              '2. 「APIとサービス」→ 「認証情報」を選択',
+              '3. Maps JavaScript API キーを選択',
+              '4. 「HTTPリファラー（ウェブサイト）」制限を選択',
+              '5. 「項目を追加」で "http://localhost:3001/*" を追加',
+              '6. 保存後、ページを再読み込み'
+            ];
+          } else if (err.message.includes('ApiNotActivatedMapError')) {
+            errorMessage = 'Google Maps API が有効化されていません';
+            detailedSteps = [
+              '1. Google Cloud Console にアクセス',
+              '2. 「APIとサービス」→ 「ライブラリ」を選択',
+              '3. "Maps JavaScript API" を検索',
+              '4. 「有効にする」をクリック'
+            ];
+          } else if (err.message.includes('InvalidKeyMapError')) {
+            errorMessage = 'Google Maps API キーが無効です';
+            detailedSteps = [
+              '1. .env.local ファイルを確認',
+              '2. NEXT_PUBLIC_GOOGLE_MAPS_API_KEY の値を確認',
+              '3. Google Cloud Console で正しいAPIキーを取得',
+              '4. アプリケーションを再起動'
+            ];
+          } else {
+            errorMessage = err.message;
+          }
+        }
+        
         console.error('Google Map initialization error:', err);
+        console.error('Current URL:', window.location.href);
+        console.error('Error details:', {
+          message: errorMessage,
+          steps: detailedSteps,
+          timestamp: new Date().toISOString()
+        });
+        
+        // エラー情報をローカルストレージに保存（デバッグ用）
+        try {
+          localStorage.setItem('googleMapsError', JSON.stringify({
+            error: errorMessage,
+            details: err instanceof Error ? err.message : 'Unknown error',
+            steps: detailedSteps,
+            url: window.location.href,
+            timestamp: new Date().toISOString()
+          }));
+        } catch (storageError) {
+          console.warn('Could not save error to localStorage:', storageError);
+        }
+        
         setError(errorMessage);
         setIsLoading(false);
         
@@ -199,12 +271,66 @@ export default function GoogleMap({
       {/* エラー表示 */}
       {error && (
         <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg">
-          <div className="text-center text-gray-500 p-6">
+          <div className="text-center text-gray-600 p-6 max-w-md">
             <div className="text-4xl mb-4">🗺️</div>
-            <p className="text-sm font-medium mb-2">地図を表示できません</p>
-            <p className="text-xs text-gray-400 mb-4">{error}</p>
-            <div className="text-xs text-gray-400">
-              <p>住所: {getVenueInfo().address}</p>
+            <p className="text-sm font-medium mb-3 text-gray-800">地図を表示できません</p>
+            <div className="bg-white/70 rounded-lg p-4 mb-4 text-xs text-left">
+              <p className="font-medium text-gray-700 mb-2">エラー詳細:</p>
+              <p className="text-gray-600 mb-3">{error}</p>
+              
+              {error.includes('ドメイン設定') && (
+                <div className="text-gray-500 space-y-1">
+                  <p className="font-medium text-gray-700">📋 解決手順:</p>
+                  <ol className="list-decimal list-inside space-y-1 text-xs">
+                    <li>Google Cloud Console にアクセス</li>
+                    <li>「APIとサービス」→「認証情報」を選択</li>
+                    <li>Maps JavaScript API キーを選択</li>
+                    <li>「HTTPリファラー制限」を設定</li>
+                    <li>以下を追加:</li>
+                  </ol>
+                  <code className="block bg-gray-100 px-2 py-1 rounded text-xs mt-1">
+                    http://localhost:3001/*
+                  </code>
+                  <p className="text-xs text-gray-400 mt-2">💡 設定後、ページを再読み込みしてください</p>
+                </div>
+              )}
+              
+              {error.includes('API が有効化') && (
+                <div className="text-gray-500 space-y-1">
+                  <p className="font-medium text-gray-700">📋 解決手順:</p>
+                  <ol className="list-decimal list-inside space-y-1 text-xs">
+                    <li>Google Cloud Console にアクセス</li>
+                    <li>「APIとサービス」→「ライブラリ」</li>
+                    <li>"Maps JavaScript API" を検索</li>
+                    <li>「有効にする」をクリック</li>
+                  </ol>
+                </div>
+              )}
+              
+              {error.includes('キーが無効') && (
+                <div className="text-gray-500 space-y-1">
+                  <p className="font-medium text-gray-700">📋 解決手順:</p>
+                  <ol className="list-decimal list-inside space-y-1 text-xs">
+                    <li>.env.local ファイルを確認</li>
+                    <li>NEXT_PUBLIC_GOOGLE_MAPS_API_KEY を確認</li>
+                    <li>Google Cloud Console で新しいキーを生成</li>
+                    <li>アプリケーションを再起動</li>
+                  </ol>
+                </div>
+              )}
+            </div>
+            <div className="text-xs text-gray-500 space-y-1">
+              <p className="font-medium">式場情報:</p>
+              <p>{getVenueInfo().name}</p>
+              <p>{getVenueInfo().address}</p>
+              <a 
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(getVenueInfo().address)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block mt-3 bg-akane-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-akane-600 transition-colors"
+              >
+                📍 Google Maps で検索
+              </a>
             </div>
           </div>
         </div>
