@@ -3,7 +3,8 @@ import { Loader } from '@googlemaps/js-api-loader';
 // Google Maps APIの型拡張
 declare global {
   interface Window {
-    google: any; // Phase 3で詳細な型定義を実装
+    google: typeof google;
+    initGoogleMap?: () => void;
   }
 }
 
@@ -12,31 +13,83 @@ declare global {
  */
 const GOOGLE_MAPS_CONFIG = {
   apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
-  version: 'weekly',
-  libraries: ['places', 'geometry'],
-} as const;
+  version: 'weekly' as const,
+  libraries: ['places', 'geometry'] as ('places' | 'geometry')[],
+  language: 'ja',
+  region: 'JP'
+};
 
 let googleMapsLoader: Loader | null = null;
+let isLoaded = false;
+let loadPromise: Promise<typeof google> | null = null;
 
 /**
- * Google Maps APIを読み込む
+ * Google Maps APIを読み込む（改良版）
  */
-export async function loadGoogleMaps() {
-  if (!GOOGLE_MAPS_CONFIG.apiKey) {
-    throw new Error('Google Maps API キーが設定されていません');
+export async function loadGoogleMaps(): Promise<typeof google> {
+  console.log('🗺️ Google Maps API 読み込み開始...');
+  
+  const apiKey = GOOGLE_MAPS_CONFIG.apiKey;
+  console.log('API Key status:', apiKey ? '✅ 設定済み' : '❌ 未設定');
+  
+  if (!apiKey) {
+    throw new Error('Google Maps API キーが設定されていません。環境変数 NEXT_PUBLIC_GOOGLE_MAPS_API_KEY を確認してください。');
   }
 
-  if (!googleMapsLoader) {
-    googleMapsLoader = new Loader(GOOGLE_MAPS_CONFIG);
-  }
-
-  try {
-    await googleMapsLoader.load();
+  // 既に読み込み済みの場合
+  if (isLoaded && window.google?.maps) {
+    console.log('✅ Google Maps API 既に読み込み済み');
     return window.google;
-  } catch (error) {
-    console.error('Google Maps API読み込みエラー:', error);
-    throw new Error('Google Maps APIの読み込みに失敗しました');
   }
+
+  // 読み込み中の場合は同じPromiseを返す
+  if (loadPromise) {
+    console.log('⏳ Google Maps API 読み込み中...');
+    return loadPromise;
+  }
+
+  // 新規読み込み
+  loadPromise = new Promise(async (resolve, reject) => {
+    try {
+      if (!googleMapsLoader) {
+        console.log('🔄 Google Maps Loader を初期化中...');
+        googleMapsLoader = new Loader(GOOGLE_MAPS_CONFIG);
+      }
+
+      console.log('📥 Google Maps API をロード中...');
+      await googleMapsLoader.load();
+      
+      if (window.google?.maps) {
+        isLoaded = true;
+        console.log('✅ Google Maps API 読み込み成功！');
+        resolve(window.google);
+      } else {
+        throw new Error('Google Maps API の読み込みは完了しましたが、オブジェクトが見つかりません');
+      }
+    } catch (error) {
+      console.error('❌ Google Maps API読み込みエラー:', error);
+      loadPromise = null; // エラー時はPromiseをリセット
+      
+      // エラーの詳細化
+      if (error instanceof Error) {
+        if (error.message.includes('RefererNotAllowedMapError')) {
+          reject(new Error('Google Maps API: ドメインが許可されていません。Google Cloud Console でAPIキーの制限を確認してください。'));
+        } else if (error.message.includes('InvalidKeyMapError')) {
+          reject(new Error('Google Maps API: 無効なAPIキーです。APIキーを確認してください。'));
+        } else if (error.message.includes('ApiNotActivatedMapError')) {
+          reject(new Error('Google Maps API: APIが有効化されていません。Google Cloud Console で Maps JavaScript API を有効にしてください。'));
+        } else if (error.message.includes('QuotaExceededError')) {
+          reject(new Error('Google Maps API: 利用制限を超過しました。'));
+        } else {
+          reject(new Error(`Google Maps API エラー: ${error.message}`));
+        }
+      } else {
+        reject(new Error('Google Maps APIの読み込みに失敗しました'));
+      }
+    }
+  });
+
+  return loadPromise;
 }
 
 /**
