@@ -310,7 +310,7 @@ export async function GET(): Promise<NextResponse<HealthCheckResult>> {
 ### 外部監視サービス設定
 ```bash
 # UptimeRobot 監視設定例
-# URL: https://wedding-invitation-2025.com/api/health
+# URL: https://wedding-invitation-site.com/api/health
 # 監視間隔: 5分
 # アラート閾値: 2回連続失敗でアラート
 

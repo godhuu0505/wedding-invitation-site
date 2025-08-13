@@ -1,6 +1,6 @@
 ---
 mode: 'agent'
-model: GPT-4.1
+model: GPT-4o
 tools: ['githubRepo', 'codebase']
 description: 'git commit and push'
 ---

@@ -77,7 +77,7 @@ npm run dev
 
 1. [Firebase Console](https://console.firebase.google.com/) にアクセス
 2. 「プロジェクトを追加」をクリック
-3. プロジェクト名: `wedding-invitation-2025`
+3. プロジェクト名: `wedding-invitation-site`
 4. Google Analytics: 有効（推奨）
 
 ### 2. Firestore データベース設定

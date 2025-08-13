@@ -89,7 +89,7 @@ interface RSVPRequest {
 #### 例
 
 ```bash
-curl -X POST https://wedding-invitation-2025.com/api/rsvp/submit \
+curl -X POST https://wedding-invitation-site.com/api/rsvp/submit \
   -H "Content-Type: application/json" \
   -d '{
     "name": "田中太郎",
@@ -251,7 +251,7 @@ Content-Disposition: attachment; filename="rsvp-export-20250813.csv"
 ```bash
 # Authorization ヘッダーにトークンを設定
 curl -H "Authorization: Bearer <token>" \
-  https://wedding-invitation-2025.com/api/admin/rsvps
+  https://wedding-invitation-site.com/api/admin/rsvps
 ```
 
 ### レート制限
@@ -265,7 +265,7 @@ curl -H "Authorization: Bearer <token>" \
 ### CORS
 
 許可されたオリジン:
-- `https://wedding-invitation-2025.com` (本番)
+- `https://wedding-invitation-site.com` (本番)
 - `http://localhost:3000` (開発)
 
 ## エラーハンドリング

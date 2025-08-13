@@ -6,12 +6,12 @@
 - **フロントエンド**: Vercel（Next.js）
 - **バックエンドAPI**: Google Cloud Run
 - **データベース**: Firebase Firestore
-- **ドメイン**: `wedding-invitation-2025.com`
+- **ドメイン**: `wedding-invitation-site.com`
 - **SSL証明書**: 自動管理（Vercel + Let's Encrypt）
 
 ### 環境分離
 ```
-Production    : https://wedding-invitation-2025.com
+Production    : https://wedding-invitation-site.com
 Staging       : https://wedding-staging-xyz.vercel.app
 Development   : http://localhost:3000
 ```
@@ -69,9 +69,9 @@ Development   : http://localhost:3000
 ```bash
 # Vercel環境変数（本番用）
 NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=wedding-invitation-2025.firebaseapp.com
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=wedding-invitation-2025
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=wedding-invitation-2025.appspot.com
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=wedding-invitation-site.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=wedding-invitation-site
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=wedding-invitation-site.appspot.com
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=123456789
 NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 
@@ -83,7 +83,7 @@ ADMIN_EMAILS=admin1@example.com,admin2@example.com
 
 # セキュリティ
 NEXTAUTH_SECRET=your_nextauth_secret
-NEXTAUTH_URL=https://wedding-invitation-2025.com
+NEXTAUTH_URL=https://wedding-invitation-site.com
 
 # Vercel固有
 VERCEL_ENV=production
@@ -174,7 +174,7 @@ steps:
 ### Cloud Run デプロイコマンド
 ```bash
 # プロジェクト設定
-gcloud config set project wedding-invitation-2025
+gcloud config set project wedding-invitation-site
 
 # Cloud Buildを使用したデプロイ
 gcloud builds submit --config cloudbuild.yaml
@@ -205,7 +205,7 @@ firebase login
 firebase init
 
 # プロジェクト設定
-firebase use wedding-invitation-2025
+firebase use wedding-invitation-site
 ```
 
 ### Firestore セキュリティルールデプロイ
@@ -316,20 +316,20 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1
         with:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
-          project_id: wedding-invitation-2025
+          project_id: wedding-invitation-site
 
       - name: Configure Docker
         run: gcloud auth configure-docker
 
       - name: Build and Push
         run: |
-          docker build -t gcr.io/wedding-invitation-2025/app:$GITHUB_SHA .
-          docker push gcr.io/wedding-invitation-2025/app:$GITHUB_SHA
+          docker build -t gcr.io/wedding-invitation-site/app:$GITHUB_SHA .
+          docker push gcr.io/wedding-invitation-site/app:$GITHUB_SHA
 
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy wedding-invitation \
-            --image gcr.io/wedding-invitation-2025/app:$GITHUB_SHA \
+            --image gcr.io/wedding-invitation-site/app:$GITHUB_SHA \
             --region asia-northeast1 \
             --platform managed \
             --allow-unauthenticated
@@ -340,17 +340,17 @@ jobs:
 ### カスタムドメイン設定（Vercel）
 ```bash
 # Vercelでドメイン追加
-npx vercel domains add wedding-invitation-2025.com
+npx vercel domains add wedding-invitation-site.com
 
 # DNS設定確認
-npx vercel domains inspect wedding-invitation-2025.com
+npx vercel domains inspect wedding-invitation-site.com
 ```
 
 ### DNS設定例
 ```
 # DNSレコード設定
 Type: CNAME
-Name: wedding-invitation-2025.com
+Name: wedding-invitation-site.com
 Value: cname.vercel-dns.com
 
 Type: CNAME  
@@ -431,7 +431,7 @@ npx vercel env pull .env.local
 npx vercel --prod
 
 # 4. ヘルスチェック確認
-curl https://wedding-invitation-2025.com/api/health
+curl https://wedding-invitation-site.com/api/health
 ```
 
 ## パフォーマンス最適化

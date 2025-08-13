@@ -105,7 +105,7 @@ NEXT_PUBLIC_RECEPTION_TIME="15:00"
 ```
 
 ### Firebase設定詳細
-1. **プロジェクト作成**: `wedding-invitation-2025`
+1. **プロジェクト作成**: `wedding-invitation-site`
 2. **Firestore Database**: `asia-northeast1` リージョン
 3. **Authentication**: メール・パスワード認証有効化
 4. **Storage**: 画像アップロード用（将来拡張）
