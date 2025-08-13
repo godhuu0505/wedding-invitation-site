@@ -12,36 +12,86 @@ export default function FooterSection() {
   };
 
   return (
-    <footer className="bg-gradient-to-br from-gray-800 to-gray-900 text-white py-16">
+    <footer 
+      className="text-white py-20"
+      style={{
+        background: 'linear-gradient(135deg, #2D2D2D 0%, #1A1A1A 100%)',
+      }}
+    >
       <div className="max-w-6xl mx-auto px-4">
         <div className="grid md:grid-cols-3 gap-12">
-          {/* 結婚式情報 */}
+          {/* Figmaデザインの結婚式情報 */}
           <div>
-            <h3 className="text-2xl font-japanese font-bold mb-6 bg-gradient-to-r from-akane-300 to-pink-300 bg-clip-text text-transparent">
+            <h3 
+              className="mb-8"
+              style={{
+                fontFamily: 'Cinzel, serif',
+                fontWeight: '600',
+                fontSize: 'clamp(1.75rem, 3vw, 2.25rem)',
+                letterSpacing: '0.1em',
+                background: 'linear-gradient(135deg, #e65555 0%, #BDBCDA 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}
+            >
               {coupleNames.combined.shortEn}
             </h3>
-            <div className="space-y-3 text-gray-300">
-              <p className="flex items-center">
+            <div className="space-y-4">
+              <p 
+                className="flex items-center text-dusty-gray"
+                style={{
+                  fontFamily: 'Noto Serif JP, serif',
+                  fontWeight: '400',
+                  fontSize: '1rem',
+                  color: '#B8B8B8',
+                }}
+              >
                 <span className="mr-3">📅</span>
                 {weddingEnv.weddingDateJp}（{weddingEnv.weddingDayJp}）
               </p>
-              <p className="flex items-center">
+              <p 
+                className="flex items-center text-dusty-gray"
+                style={{
+                  fontFamily: 'Noto Serif JP, serif',
+                  fontWeight: '400',
+                  fontSize: '1rem',
+                  color: '#B8B8B8',
+                }}
+              >
                 <span className="mr-3">⏰</span>
                 挙式 {weddingEnv.ceremonyTimeDisplay} / 披露宴 {weddingEnv.receptionTimeDisplay}
               </p>
-              <p className="flex items-center">
+              <p 
+                className="flex items-center text-dusty-gray"
+                style={{
+                  fontFamily: 'Noto Serif JP, serif',
+                  fontWeight: '400',
+                  fontSize: '1rem',
+                  color: '#B8B8B8',
+                }}
+              >
                 <span className="mr-3">📍</span>
                 {weddingEnv.venueName}
               </p>
             </div>
           </div>
 
-          {/* サイトナビゲーション */}
+          {/* Figmaデザインのサイトナビゲーション */}
           <div>
-            <h3 className="text-xl font-japanese font-bold mb-6 text-gray-200">
+            <h3 
+              className="mb-8"
+              style={{
+                fontFamily: 'Noto Serif JP, serif',
+                fontWeight: '600',
+                fontSize: 'clamp(1.25rem, 2vw, 1.5rem)',
+                letterSpacing: '0.1em',
+                color: '#E0E0E0',
+              }}
+            >
               サイトナビゲーション
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-4">
               {[
                 { label: 'ホーム', href: '#home' },
                 { label: 'メッセージ', href: '#message' },
@@ -55,7 +105,13 @@ export default function FooterSection() {
                       const element = document.querySelector(item.href);
                       element?.scrollIntoView({ behavior: 'smooth' });
                     }}
-                    className="text-gray-400 hover:text-akane-300 transition-colors duration-300"
+                    className="text-westar hover:text-akane-300 transition-all duration-300 transform hover:translate-x-1"
+                    style={{
+                      fontFamily: 'Noto Serif JP, serif',
+                      fontWeight: '400',
+                      fontSize: '1rem',
+                      color: '#9E9E9E',
+                    }}
                   >
                     {item.label}
                   </button>
@@ -64,61 +120,176 @@ export default function FooterSection() {
             </ul>
           </div>
 
-          {/* お問い合わせ */}
+          {/* Figmaデザインのお問い合わせ */}
           <div>
-            <h3 className="text-xl font-japanese font-bold mb-6 text-gray-200">
+            <h3 
+              className="mb-8"
+              style={{
+                fontFamily: 'Noto Serif JP, serif',
+                fontWeight: '600',
+                fontSize: 'clamp(1.25rem, 2vw, 1.5rem)',
+                letterSpacing: '0.1em',
+                color: '#E0E0E0',
+              }}
+            >
               お問い合わせ
             </h3>
-            <div className="space-y-4 text-gray-300">
-              <p className="text-sm">
+            <div className="space-y-6">
+              <p 
+                className="leading-relaxed"
+                style={{
+                  fontFamily: 'Noto Serif JP, serif',
+                  fontWeight: '400',
+                  fontSize: '0.875rem',
+                  lineHeight: '1.6',
+                  color: '#B8B8B8',
+                }}
+              >
                 ご不明な点やご質問がございましたら、<br />
                 お気軽にお声かけください。
               </p>
-              <div className="flex space-x-4">
+              <div className="flex space-x-6">
                 <div className="text-center">
-                  <div className="font-medium text-akane-300">新郎</div>
-                  <div className="text-sm">{coupleNames.groom.jp}</div>
+                  <div 
+                    className="mb-2"
+                    style={{
+                      fontFamily: 'Noto Serif JP, serif',
+                      fontWeight: '500',
+                      fontSize: '1rem',
+                      color: '#e65555',
+                    }}
+                  >
+                    新郎
+                  </div>
+                  <div 
+                    style={{
+                      fontFamily: 'Noto Serif JP, serif',
+                      fontWeight: '400',
+                      fontSize: '0.875rem',
+                      color: '#B8B8B8',
+                    }}
+                  >
+                    {coupleNames.groom.jp}
+                  </div>
                 </div>
                 <div className="text-center">
-                  <div className="font-medium text-pink-300">新婦</div>
-                  <div className="text-sm">{coupleNames.bride.jp}</div>
+                  <div 
+                    className="mb-2"
+                    style={{
+                      fontFamily: 'Noto Serif JP, serif',
+                      fontWeight: '500',
+                      fontSize: '1rem',
+                      color: '#BDBCDA',
+                    }}
+                  >
+                    新婦
+                  </div>
+                  <div 
+                    style={{
+                      fontFamily: 'Noto Serif JP, serif',
+                      fontWeight: '400',
+                      fontSize: '0.875rem',
+                      color: '#B8B8B8',
+                    }}
+                  >
+                    {coupleNames.bride.jp}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* 区切り線 */}
-        <div className="border-t border-gray-700 mt-12 pt-8">
+        {/* Figmaデザインの区切り線 */}
+        <div 
+          className="mt-16 pt-10"
+          style={{
+            borderTop: '1px solid rgba(158, 158, 158, 0.3)',
+          }}
+        >
           <div className="flex flex-col md:flex-row justify-between items-center">
-            {/* トップに戻るボタン */}
+            {/* Figmaデザインのトップに戻るボタン */}
             <button
               onClick={scrollToTop}
-              className="mb-4 md:mb-0 bg-gradient-to-r from-akane-500 to-pink-500 text-white px-6 py-2 rounded-full hover:from-akane-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105"
+              className="figma-button mb-6 md:mb-0 px-8 py-3 rounded-full transform hover:scale-105 transition-all duration-300"
+              style={{
+                background: 'linear-gradient(135deg, #e65555 0%, #BDBCDA 100%)',
+                color: 'white',
+                fontFamily: 'Hiragino Kaku Gothic ProN, sans-serif',
+                fontWeight: '300',
+                fontSize: '0.875rem',
+                letterSpacing: '0.1em',
+                boxShadow: '0 6px 20px rgba(230, 85, 85, 0.3)',
+              }}
             >
               ↑ トップに戻る
             </button>
 
-            {/* コピーライト */}
-            <div className="text-center md:text-right text-gray-400 text-sm">
+            {/* Figmaデザインのコピーライト */}
+            <div 
+              className="text-center md:text-right text-westar"
+              style={{
+                fontFamily: 'Noto Serif JP, serif',
+                fontWeight: '400',
+                fontSize: '0.75rem',
+                color: '#9E9E9E',
+              }}
+            >
               <p>© 2025 {coupleNames.groom.fullJp} & {coupleNames.bride.fullJp} Wedding</p>
               <p className="mt-1">All rights reserved.</p>
             </div>
           </div>
         </div>
 
-        {/* 感謝のメッセージ */}
-        <div className="text-center mt-8 pt-8 border-t border-gray-700">
-          <p className="text-gray-300 italic">
+        {/* Figmaデザインの感謝のメッセージ */}
+        <div 
+          className="text-center mt-12 pt-10"
+          style={{
+            borderTop: '1px solid rgba(158, 158, 158, 0.2)',
+          }}
+        >
+          <p 
+            className="leading-relaxed mb-6"
+            style={{
+              fontFamily: 'Noto Serif JP, serif',
+              fontWeight: '400',
+              fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
+              lineHeight: '1.8',
+              color: '#B8B8B8',
+              fontStyle: 'italic',
+            }}
+          >
             この度は、私たちの大切な日にお忙しい中<br />
             お時間をいただき、心より感謝申し上げます。
           </p>
-          <div className="flex justify-center items-center mt-4 space-x-2">
-            <span className="text-akane-300">♡</span>
-            <span className="text-gray-400 text-sm">
+          <div className="flex justify-center items-center space-x-3">
+            <span 
+              style={{
+                color: '#e65555',
+                fontSize: '1.125rem',
+              }}
+            >
+              ♡
+            </span>
+            <span 
+              style={{
+                fontFamily: 'Cinzel, serif',
+                fontWeight: '400',
+                fontSize: '0.875rem',
+                letterSpacing: '0.1em',
+                color: '#9E9E9E',
+              }}
+            >
               {coupleNames.groom.en} & {coupleNames.bride.en}
             </span>
-            <span className="text-pink-300">♡</span>
+            <span 
+              style={{
+                color: '#BDBCDA',
+                fontSize: '1.125rem',
+              }}
+            >
+              ♡
+            </span>
           </div>
         </div>
       </div>
