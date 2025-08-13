@@ -43,6 +43,10 @@ module.exports = {
         'float': 'float 6s ease-in-out infinite',
         'loading': 'loading 2s linear infinite',
       },
+      transitionDuration: {
+        '3000': '3000ms',
+        '5000': '5000ms',
+      },
       keyframes: {
         'fade-in': {
           'from': { opacity: '0', transform: 'translateY(20px)' },
