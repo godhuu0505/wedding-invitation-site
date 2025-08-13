@@ -46,11 +46,25 @@ cd wedding-invitation-site
 npm install
 
 # 環境変数設定
-cp .env.example .env.local
-# .env.local を編集
+cp .env.local.example .env.local
+# .env.local を編集して新郎新婦情報をカスタマイズ
 
 # 開発サーバー起動
 npm run dev
+```
+
+### 🎯 カスタマイズのポイント
+
+環境変数で新郎新婦の情報を簡単にカスタマイズできます：
+
+```bash
+# 新郎新婦の基本情報
+NEXT_PUBLIC_GROOM_NAME_EN="あなたの名前"
+NEXT_PUBLIC_BRIDE_NAME_EN="パートナーの名前"
+
+# 結婚式の日程
+NEXT_PUBLIC_WEDDING_DATE="2025-12-31T10:00:00+09:00"
+NEXT_PUBLIC_VENUE_NAME="あなたの式場名"
 ```
 
 詳細は [セットアップガイド](./development/setup-guide.md) を参照してください。

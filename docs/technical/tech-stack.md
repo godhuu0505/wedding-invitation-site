@@ -1,4 +1,4 @@
-# 技術仕様
+# 技術仕様（環境変数対応版）
 
 ## 技術スタック（学習目的重視）
 
@@ -7,16 +7,22 @@
 - **言語**: TypeScript 5.1.6 - 型安全性とコード品質向上
 - **UIフレームワーク**: Tailwind CSS 3.3.2 - ユーティリティファーストCSS
 - **フォーム管理**: React Hook Form + Yup - バリデーション付きフォーム
+- **アニメーション**: Framer Motion + Vegas.js + Vivus.js + ScrollTrigger
 
 ### バックエンド
-- **サーバーレス**: GCP Cloud Functions または Firebase Functions
+- **サーバーレス**: Firebase Functions
 - **データベース**: Firebase Firestore - NoSQLデータベース
 - **認証**: Firebase Authentication（管理画面用）
 
 ### 外部サービス
 - **マップ表示**: Google Maps API - 会場アクセス情報
-- **デプロイ**: GCP Cloud Run（学習優先）または Vercel
-- **ドメイン**: Google Domains または お名前.com
+- **デプロイ**: Vercel（フロントエンド）+ Firebase（バックエンド）
+- **ドメイン**: Vercel Domains または お名前.com
+
+### 環境変数管理
+- **型安全性**: TypeScript環境変数インターフェース（`lib/env.ts`）
+- **設定管理**: `.env.local` による設定（`.env.local.example` テンプレート提供）
+- **バリデーション**: 開発時の必須環境変数チェック（`next.config.js`）
 
 ## 依存関係
 
@@ -32,7 +38,8 @@
     "yup": "^1.2.0",
     "@hookform/resolvers": "^3.1.0",
     "@googlemaps/js-api-loader": "^1.16.0",
-    "zustand": "^4.4.0"
+    "framer-motion": "^10.16.0",
+    "gsap": "^3.12.0"
   }
 }
 ```

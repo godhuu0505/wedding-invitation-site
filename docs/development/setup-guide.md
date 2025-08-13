@@ -38,7 +38,7 @@ npm install
 
 ```bash
 # 環境変数テンプレートをコピー
-cp .env.example .env.local
+cp .env.local.example .env.local
 ```
 
 `.env.local` を編集：
@@ -55,8 +55,47 @@ NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 # Google Maps API
 NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_maps_api_key
 
-# 管理者設定（開発用）
-ADMIN_EMAILS=admin@example.com
+# 新郎情報
+NEXT_PUBLIC_GROOM_NAME_EN="Naoto"
+NEXT_PUBLIC_GROOM_NAME_JP="伊藤尚人"
+NEXT_PUBLIC_GROOM_NAME_FULL_JP="伊藤 尚人"
+NEXT_PUBLIC_GROOM_BIRTH_DATE="1995年3月1日"
+NEXT_PUBLIC_GROOM_BIRTH_PLACE="東京都"
+NEXT_PUBLIC_GROOM_BLOOD_TYPE="A型"
+NEXT_PUBLIC_GROOM_OCCUPATION="会社員"
+NEXT_PUBLIC_GROOM_HOBBY="アウトドアが好きで\\n週末は少し遠くまで出かけます\\n犬が大好きです"
+NEXT_PUBLIC_GROOM_MESSAGE="美味しい料理・お酒を用意してお待ちしております\\n当日皆様にお会いできることを\\n心より楽しみにしております"
+
+# 新婦情報
+NEXT_PUBLIC_BRIDE_NAME_EN="Yui"
+NEXT_PUBLIC_BRIDE_NAME_JP="小林結衣"
+NEXT_PUBLIC_BRIDE_NAME_FULL_JP="小林 結衣"
+NEXT_PUBLIC_BRIDE_BIRTH_DATE="1995年6月5日"
+NEXT_PUBLIC_BRIDE_BIRTH_PLACE="東京都"
+NEXT_PUBLIC_BRIDE_BLOOD_TYPE="B型"
+NEXT_PUBLIC_BRIDE_OCCUPATION="保育士"
+NEXT_PUBLIC_BRIDE_HOBBY="子どもと猫が大好きです\\n週末は美味しいご飯を食べに出かけます"
+NEXT_PUBLIC_BRIDE_MESSAGE="たくさん食べてたくさん飲んで\\n楽しい時間にしたいと思っています\\n当日皆様にお会いできることを\\n心より楽しみにしております"
+
+# 結婚式情報
+NEXT_PUBLIC_WEDDING_DATE="2100-12-31T10:00:00+09:00"
+NEXT_PUBLIC_WEDDING_DATE_DISPLAY="2100.12.31"
+NEXT_PUBLIC_WEDDING_DATE_JP="2100年12月31日"
+NEXT_PUBLIC_WEDDING_DAY_JP="金曜日"
+NEXT_PUBLIC_CEREMONY_TIME="10:00"
+NEXT_PUBLIC_CEREMONY_TIME_DISPLAY="午前10時"
+NEXT_PUBLIC_RECEPTION_TIME="11:00"
+NEXT_PUBLIC_RECEPTION_TIME_DISPLAY="午前11時"
+
+# 式場情報
+NEXT_PUBLIC_VENUE_NAME="サンプルホテル"
+NEXT_PUBLIC_VENUE_ADDRESS="東京都港区北青山３丁目５－１５"
+NEXT_PUBLIC_VENUE_LAT="35.6762"
+NEXT_PUBLIC_VENUE_LNG="139.6503"
+
+# メタデータ
+NEXT_PUBLIC_SITE_TITLE="Naoto & Yui Wedding Invitation - 2100.12.31"
+NEXT_PUBLIC_SITE_DESCRIPTION="伊藤尚人・小林結衣の結婚式招待サイトです。2100年12月31日、皆様のご出席をお待ちしております。"
 
 # Next.js設定
 NEXTAUTH_SECRET=your_development_secret_minimum_32_characters
