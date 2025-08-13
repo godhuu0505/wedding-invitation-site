@@ -19,32 +19,51 @@ applyTo: "lib/firebase.{ts,js}"
 
 ## ⚙️ Firebase設定パターン
 
-### 環境変数設定
+### 環境変数設定（新郎新婦情報対応）
 ```bash
-# 必須環境変数
+# Firebase必須環境変数
 NEXT_PUBLIC_FIREBASE_API_KEY=""
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=""
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=""
 NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=""
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=""
 NEXT_PUBLIC_FIREBASE_APP_ID=""
+
+# 新郎新婦情報（カスタマイズ対応）
+NEXT_PUBLIC_GROOM_NAME_EN="Naoto"
+NEXT_PUBLIC_GROOM_NAME_JP="伊藤尚人"
+NEXT_PUBLIC_GROOM_NAME_FULL_JP="伊藤 尚人"
+NEXT_PUBLIC_BRIDE_NAME_EN="Yui"
+NEXT_PUBLIC_BRIDE_NAME_JP="小林結衣"
+NEXT_PUBLIC_BRIDE_NAME_FULL_JP="小林 結衣"
+
+# 結婚式情報（環境変数で管理）
+NEXT_PUBLIC_WEDDING_DATE="2100-12-31T10:00:00+09:00"
+NEXT_PUBLIC_VENUE_NAME="サンプルホテル"
+NEXT_PUBLIC_VENUE_ADDRESS="東京都港区北青山３丁目５－１５"
 ```
 
-### Firebase初期化パターン
+### 環境変数対応Firebase初期化パターン
 ```typescript
 // lib/firebase.ts
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
+// 環境変数の型安全な取得
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY!,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN!,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID!,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET!,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID!,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID!,
 };
+
+// 環境変数バリデーション
+if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
+  throw new Error('Firebase設定が不完全です。環境変数を確認してください。');
+}
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const db = getFirestore(app);
