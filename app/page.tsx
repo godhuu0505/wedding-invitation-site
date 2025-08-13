@@ -1,25 +1,36 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import LoadingScreen from '@/components/layout/LoadingScreen';
 import SimpleLoadingScreen from '@/components/layout/SimpleLoadingScreen';
 import HeaderSection from '@/components/sections/HeaderSection';
 import MessageSection from '@/components/sections/MessageSection';
 import CountdownSection from '@/components/sections/CountdownSection';
 import InformationSection from '@/components/sections/InformationSection';
-import SafeInformationSection from '@/components/sections/SafeInformationSection';
 import RSVPSection from '@/components/sections/RSVPSection';
 import FooterSection from '@/components/sections/FooterSection';
 import Navigation from '@/components/layout/Navigation';
 import ErrorBoundary from '@/components/layout/ErrorBoundary';
 
-export default function Home() {
+/**
+ * メインページコンポーネント - Figmaデザイン完全対応版
+ * 
+ * 6つのセクション構成（Figmaデザインベース）:
+ * 1. ローディング画面（5秒間、SVGアニメーション）
+ * 2. ヒーローセクション（背景カルーセル + カップル名）
+ * 3. メッセージセクション（挨拶文 + 新郎新婦プロフィール）
+ * 4. カウントダウンセクション（結婚式まで残り日数）
+ * 5. インフォメーションセクション（式場案内 + Google Maps）
+ * 6. RSVPセクション（出欠確認フォーム）
+ * 7. フッターセクション（ナビゲーション + クレジット）
+ */
+export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [showContent, setShowContent] = useState(false);
 
   useEffect(() => {
     let mounted = true;
     
+    // Figmaデザイン仕様：5秒間のローディング時間
     const timer = setTimeout(() => {
       if (mounted) {
         setIsLoading(false);
@@ -30,7 +41,7 @@ export default function Home() {
           }
         }, 500);
       }
-    }, 5000); // 5秒間のローディング
+    }, 5000);
 
     return () => {
       mounted = false;
@@ -40,7 +51,7 @@ export default function Home() {
 
   return (
     <ErrorBoundary>
-      {/* ローディング画面 - 安全なバージョンを使用 */}
+      {/* ローディング画面（Figma仕様: 5秒間SVGアニメーション）*/}
       {isLoading && (
         <SimpleLoadingScreen 
           isVisible={isLoading} 
@@ -53,8 +64,8 @@ export default function Home() {
       
       {/* メインコンテンツ */}
       {!isLoading && showContent && (
-        <div className="relative">
-          {/* 固定ナビゲーション */}
+        <div className="min-h-screen bg-old-lace">
+          {/* 固定ナビゲーション（スムーススクロール対応）*/}
           <Navigation items={[
             { id: 'home', label: 'Home', href: '#home' },
             { id: 'message', label: 'Message', href: '#message' },
@@ -63,16 +74,24 @@ export default function Home() {
             { id: 'rsvp', label: 'RSVP', href: '#rsvp' }
           ]} />
           
-          {/* ヘッダー（背景込み） */}
+          {/* セクション1: ヒーロー（背景カルーセル + カップル名表示）*/}
           <HeaderSection />
           
-          {/* コンテンツセクション */}
-          <div className="relative z-10 bg-white">
+          {/* セクション2-6: コンテンツセクション */}
+          <div className="relative z-10">
+            {/* セクション2: メッセージ（挨拶文 + 新郎新婦プロフィール）*/}
             <MessageSection />
+            
+            {/* セクション3: カウントダウン（結婚式まで残り日数）*/}
             <CountdownSection />
-            {/* 安全なInformationSectionを使用 */}
-            <SafeInformationSection />
+            
+            {/* セクション4: インフォメーション（式場案内 + Google Maps）*/}
+            <InformationSection />
+            
+            {/* セクション5: RSVP（出欠確認フォーム - reference-site.html準拠）*/}
             <RSVPSection />
+            
+            {/* セクション6: フッター（ナビゲーション + クレジット）*/}
             <FooterSection />
           </div>
         </div>
