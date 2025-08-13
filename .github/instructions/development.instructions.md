@@ -1,3 +1,7 @@
+---
+applyTo: "{package.json,next.config.js,tailwind.config.js,tsconfig.json,.env*}"
+---
+
 # 開発環境指示書
 
 ## 🔧 開発環境構築
@@ -34,7 +38,7 @@ npm install
 cp .env.example .env.local
 ```
 
-#### 必須環境変数（開発用）
+#### 必須環境変数（開発用 - reference-site.html完全対応）
 ```bash
 # Firebase設定
 NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
@@ -50,11 +54,50 @@ NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_maps_api_key
 # 管理者設定（開発用）
 ADMIN_EMAILS=admin@example.com
 
-# 会場情報
-NEXT_PUBLIC_VENUE_NAME="東京ベイサイドホテル"
-NEXT_PUBLIC_VENUE_ADDRESS="東京都港区台場1-1-1"
-NEXT_PUBLIC_VENUE_LAT="35.6321"
-NEXT_PUBLIC_VENUE_LNG="139.7736"
+# 新郎新婦情報（reference-site.html対応）
+NEXT_PUBLIC_GROOM_NAME="Naoto"
+NEXT_PUBLIC_GROOM_JP_NAME="伊藤 尚人"
+NEXT_PUBLIC_BRIDE_NAME="Yui"
+NEXT_PUBLIC_BRIDE_JP_NAME="小林 結衣"
+
+# 結婚式情報
+NEXT_PUBLIC_WEDDING_DATE="2025-11-03"
+NEXT_PUBLIC_RSVP_DEADLINE="2025-10-30"
+
+# 挙式会場情報
+NEXT_PUBLIC_CEREMONY_VENUE_NAME="東京ベイサイドホテル チャペル"
+NEXT_PUBLIC_CEREMONY_VENUE_ADDRESS="東京都港区台場1-1-1"
+NEXT_PUBLIC_CEREMONY_TIME="11:00"
+NEXT_PUBLIC_CEREMONY_LAT="35.6321"
+NEXT_PUBLIC_CEREMONY_LNG="139.7736"
+
+# 披露宴会場情報
+NEXT_PUBLIC_RECEPTION_VENUE_NAME="東京ベイサイドホテル バンケットホール"
+NEXT_PUBLIC_RECEPTION_VENUE_ADDRESS="東京都港区台場1-1-1"
+NEXT_PUBLIC_RECEPTION_TIME="12:30"
+NEXT_PUBLIC_RECEPTION_LAT="35.6321"
+NEXT_PUBLIC_RECEPTION_LNG="139.7736"
+
+# デザインテーマ（茜色テーマ）
+NEXT_PUBLIC_THEME_PRIMARY_COLOR="#e65555"
+NEXT_PUBLIC_THEME_SECONDARY_COLOR="#d64545"
+NEXT_PUBLIC_THEME_ACCENT_COLOR="#f66666"
+
+# アニメーション設定
+NEXT_PUBLIC_ENABLE_LOADING_ANIMATION=true
+NEXT_PUBLIC_LOADING_DURATION=5000
+NEXT_PUBLIC_ENABLE_SCROLL_ANIMATIONS=true
+NEXT_PUBLIC_ENABLE_CAROUSEL=true
+
+# 背景画像設定（カルーセル用）
+NEXT_PUBLIC_CAROUSEL_IMAGE_1="/images/bg1.jpg"
+NEXT_PUBLIC_CAROUSEL_IMAGE_2="/images/bg2.jpg"
+NEXT_PUBLIC_CAROUSEL_IMAGE_3="/images/bg3.jpg"
+
+# 開発・テスト設定
+NEXT_PUBLIC_USE_FIREBASE_EMULATOR=false
+NEXT_PUBLIC_ENABLE_DEBUG_MODE=true
+NEXT_PUBLIC_MOCK_DATA_ENABLED=false
 
 # Next.js設定
 NEXTAUTH_SECRET=your_development_secret_minimum_32_characters
@@ -70,46 +113,71 @@ npm run dev
 
 ## 🛠️ 開発コマンド
 
-### 必須コマンド
+### 必須コマンド（reference-site.html開発対応）
 ```bash
 # 開発環境起動
-npm run dev                 # ローカル開発サーバー起動
+npm run dev                 # ローカル開発サーバー起動（ホットリロード対応）
 
 # ビルド・テスト
-npm run build              # 本番ビルド
+npm run build              # 本番ビルド（アニメーション最適化込み）
 npm run start              # 本番環境でのローカル起動
-npm run lint               # ESLintチェック
+npm run lint               # ESLintチェック（TypeScript + JSX）
 npm run type-check         # TypeScript型チェック
+
+# アニメーション関連
+npm run dev:animations     # アニメーション集約確認モード
+npm run test:loading       # ローディングアニメーション確認
+npm run optimize:images    # 画像最適化（Next.js Image Optimization）
+
+# パフォーマンス
+npm run analyze            # Bundle分析（webpack-bundle-analyzer）
+npm run lighthouse         # Lighthouse パフォーマンステスト
+npm run speed-test         # ページ速度テスト
 ```
 
 ### Firebase関連コマンド
 ```bash
-# Firebase エミュレータ
+# Firebase エミュレータ（reference-site.html対応データ構造）
 firebase emulators:start --only firestore
+firebase emulators:start --only firestore,auth
 
 # Firebase設定・ルールデプロイ
 firebase deploy --only firestore:rules
 firebase deploy --only firestore:indexes
 
+# テストデータ投入（reference-site.html構造対応）
+npm run seed:dev           # 開発用テストRSVPデータ投入
+npm run seed:wedding-data  # 結婚式情報の初期データ投入
+npm run clear:dev-data     # 開発用データクリア
+
 # Firebase CLI インストール（グローバル）
 npm install -g firebase-tools
 firebase login
+firebase use wedding-invitation-2025
 ```
 
-### デバッグコマンド
+### デバッグコマンド（詳細版）
 ```bash
 # デバッグモードで起動
 NODE_OPTIONS='--inspect' npm run dev
 
-# Bundle分析
-npm run analyze
+# アニメーションデバッグ
+npm run debug:animations   # Framer Motion, Vegas.js, Vivus.js確認
+npm run debug:carousel     # 背景カルーセル確認
+npm run debug:scroll       # ScrollTrigger確認
 
-# Lighthouse パフォーマンステスト
-npx lighthouse http://localhost:3000 --output html
+# Bundle分析（詳細）
+npm run analyze:client     # クライアントサイドBundle分析
+npm run analyze:server     # サーバーサイドBundle分析
 
-# 依存関係の脆弱性チェック
-npm audit
-npm audit fix
+# パフォーマンス測定
+npx lighthouse http://localhost:3000 --output html --chrome-flags="--headless"
+npm run check:core-vitals  # Core Web Vitals チェック
+
+# 依存関係チェック（アニメーションライブラリ含む）
+npm audit                  # 脆弱性チェック
+npm run check:deps         # 依存関係の更新確認
+npm run check:licenses     # ライセンス確認
 ```
 
 ## 🏗️ VS Code 設定
@@ -288,16 +356,89 @@ npm run dev
 NEXT_PUBLIC_USE_FIREBASE_EMULATOR=true
 ```
 
-### テストデータ投入
+### テストデータ投入（reference-site.html対応）
 ```bash
 # テストデータ投入スクリプト実行
-npm run seed:dev
+npm run seed:dev                    # 基本RSVPテストデータ
+npm run seed:wedding-data           # 結婚式設定データ
+npm run seed:comprehensive          # 包括的テストデータ（全パターン）
 
 # エミュレータデータをエクスポート
 firebase emulators:export ./firebase-export
 
 # エクスポートしたデータをインポート
 firebase emulators:start --import ./firebase-export
+
+# 特定データセット投入
+npm run seed:allergy-guests         # アレルギー有りゲストデータ
+npm run seed:international-guests   # 海外ゲストデータ（ローマ字名重視）
+npm run seed:family-guests          # 家族ゲストデータ（子供・幼児含む）
+```
+
+### テストデータ作成スクリプト例
+```typescript
+// scripts/seed-comprehensive.ts
+const comprehensiveTestData = [
+  {
+    status: 1,
+    guest_side: 0,
+    jpn_family_name: "田中",
+    jpn_first_name: "太郎",
+    kana_family_name: "たなか",
+    kana_first_name: "たろう",
+    rom_family_name: "Tanaka", 
+    rom_first_name: "Taro",
+    email: "tanaka.taro@example.com",
+    age_category: 0,
+    allergy_flag: 1,
+    allergy: "エビ、カニ",
+    guest_message: "おめでとうございます！楽しみにしています。"
+  },
+  {
+    status: 1,
+    guest_side: 1,
+    jpn_family_name: "佐藤",
+    jpn_first_name: "花子",
+    kana_family_name: "さとう",
+    kana_first_name: "はなこ",
+    rom_family_name: "Sato",
+    rom_first_name: "Hanako", 
+    email: "sato.hanako@example.com",
+    phone_number: "090-1234-5678",
+    zipcode: "150-0001",
+    address: "東京都渋谷区神宮前1-1-1",
+    age_category: 0,
+    allergy_flag: 0,
+    guest_message: "結婚おめでとう！お幸せに！"
+  },
+  {
+    status: 1,
+    guest_side: 0,
+    jpn_family_name: "山田",
+    jpn_first_name: "次郎",
+    rom_family_name: "Yamada",
+    rom_first_name: "Jiro",
+    email: "yamada.jiro@example.com",
+    age_category: 1, // 子供
+    allergy_flag: 1,
+    allergy: "小麦、乳製品",
+    guest_message: ""
+  },
+  {
+    status: 2, // 欠席
+    guest_side: 1,
+    jpn_family_name: "鈴木",
+    jpn_first_name: "三郎",
+    kana_family_name: "すずき",
+    kana_first_name: "さぶろう",
+    rom_family_name: "Suzuki",
+    rom_first_name: "Saburo",
+    email: "suzuki.saburo@example.com",
+    age_category: 0,
+    allergy_flag: 0,
+    guest_message: "残念ながら参加できません。お二人の幸せをお祈りしています。"
+  }
+];
 ```
 
 ## 🔧 トラブルシューティング

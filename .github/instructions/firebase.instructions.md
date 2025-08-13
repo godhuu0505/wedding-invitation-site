@@ -1,3 +1,7 @@
+---
+applyTo: "lib/firebase.{ts,js}"
+---
+
 # Firebase統合指示書
 
 ## 🔥 Firebase プロジェクト構成
@@ -51,31 +55,99 @@ export { db, auth };
 
 ## 🗄️ Firestore操作パターン
 
-### データ追加パターン
+### データ追加パターン（reference-site.html対応）
 ```typescript
 // lib/firebase-operations.ts
 import { db } from '@/lib/firebase';
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
 
+interface RSVPData {
+  // 出欠情報
+  status: 1 | 2;                    // 1: 出席, 2: 欠席
+  guest_side: 0 | 1;                // 0: 新郎側, 1: 新婦側
+  
+  // 名前情報
+  jpn_family_name: string;          // 日本語姓
+  jpn_first_name: string;           // 日本語名
+  kana_family_name?: string;        // かな姓
+  kana_first_name?: string;         // かな名
+  rom_family_name: string;          // ローマ字姓
+  rom_first_name: string;           // ローマ字名
+  
+  // 連絡先
+  email: string;                    // メールアドレス
+  phone_number?: string;            // 電話番号
+  
+  // 住所情報
+  zipcode?: string;                 // 郵便番号
+  address?: string;                 // 住所1
+  address2?: string;                // 住所2
+  
+  // その他
+  age_category?: 0 | 1 | 2;         // 0: 大人, 1: 子供, 2: 幼児
+  allergy_flag: 0 | 1;              // 0: なし, 1: あり
+  allergy?: string;                 // アレルギー詳細
+  guest_message?: string;           // ゲストメッセージ
+}
+
 export async function submitRSVP(data: RSVPData) {
   try {
+    // 重複チェック
+    const isDuplicate = await checkDuplicateEmail(data.email);
+    if (isDuplicate) {
+      throw new AppError('既に登録済みのメールアドレスです', 'DUPLICATE_EMAIL', 409);
+    }
+    
+    // サブミッションIDの生成
+    const submissionId = generateSubmissionId();
+    
     const docRef = await addDoc(collection(db, 'rsvps'), {
       ...data,
       timestamp: Timestamp.now(),
-      ipAddress: getClientIP()
+      submissionId,
+      ipAddress: getClientIP(),
+      userAgent: getUserAgent()
     });
-    return { success: true, id: docRef.id };
+    
+    // 統計情報の更新（キャッシュ）
+    await updateStatsCache();
+    
+    return { 
+      success: true, 
+      id: docRef.id,
+      submissionId 
+    };
   } catch (error) {
     console.error('RSVP送信エラー:', error);
+    if (error instanceof AppError) {
+      throw error;
+    }
     throw new AppError('RSVP送信に失敗しました', 'RSVP_SUBMIT_ERROR', 500);
   }
 }
+
+// 重複チェック関数
+async function checkDuplicateEmail(email: string): Promise<boolean> {
+  const q = query(
+    collection(db, 'rsvps'),
+    where('email', '==', email),
+    limit(1)
+  );
+  
+  const snapshot = await getDocs(q);
+  return !snapshot.empty;
+}
+
+// サブミッションID生成
+function generateSubmissionId(): string {
+  return `rsvp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+}
 ```
 
-### データ取得パターン
+### データ取得パターン（包括的クエリ）
 ```typescript
 import { db } from '@/lib/firebase';
-import { collection, query, orderBy, limit, getDocs, where } from 'firebase/firestore';
+import { collection, query, orderBy, limit, getDocs, where, startAfter } from 'firebase/firestore';
 
 // 全RSVP取得（ページネーション）
 export async function getRSVPs(pageSize: number = 20, lastDoc?: any) {
@@ -95,10 +167,58 @@ export async function getRSVPs(pageSize: number = 20, lastDoc?: any) {
 }
 
 // 出欠状況での絞り込み
-export async function getRSVPsByAttendance(attendance: 'yes' | 'no') {
+export async function getRSVPsByStatus(status: 1 | 2) {
   const q = query(
     collection(db, 'rsvps'),
-    where('attendance', '==', attendance),
+    where('status', '==', status),
+    orderBy('timestamp', 'desc')
+  );
+  
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+}
+
+// ゲスト側別の絞り込み
+export async function getRSVPsByGuestSide(guestSide: 0 | 1) {
+  const q = query(
+    collection(db, 'rsvps'),
+    where('guest_side', '==', guestSide),
+    where('status', '==', 1), // 出席者のみ
+    orderBy('timestamp', 'desc')
+  );
+  
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+}
+
+// アレルギー情報の取得
+export async function getAllergyGuests() {
+  const q = query(
+    collection(db, 'rsvps'),
+    where('allergy_flag', '==', 1),
+    where('status', '==', 1), // 出席者のみ
+    orderBy('timestamp', 'desc')
+  );
+  
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(doc => {
+    const data = doc.data();
+    return {
+      id: doc.id,
+      name: `${data.jpn_family_name} ${data.jpn_first_name}`,
+      romanName: `${data.rom_first_name} ${data.rom_family_name}`,
+      allergy: data.allergy,
+      email: data.email
+    };
+  });
+}
+
+// 年齢区分別の取得
+export async function getRSVPsByAgeCategory(ageCategory: 0 | 1 | 2) {
+  const q = query(
+    collection(db, 'rsvps'),
+    where('age_category', '==', ageCategory),
+    where('status', '==', 1), // 出席者のみ
     orderBy('timestamp', 'desc')
   );
   
@@ -107,30 +227,75 @@ export async function getRSVPsByAttendance(attendance: 'yes' | 'no') {
 }
 ```
 
-### 統計情報取得パターン
+### 統計情報取得パターン（詳細版）
 ```typescript
 export async function getRSVPStats() {
   const snapshot = await getDocs(collection(db, 'rsvps'));
   
   const stats = {
-    total: snapshot.size,
-    attendees: 0,
-    declined: 0,
-    companions: 0,
+    totalResponses: snapshot.size,
+    totalAttendees: 0,
+    totalDeclined: 0,
+    groomSideGuests: 0,
+    brideSideGuests: 0,
+    allergyCount: 0,
+    adultsCount: 0,
+    childrenCount: 0,
+    infantsCount: 0,
     lastUpdated: new Date()
   };
   
   snapshot.docs.forEach(doc => {
     const data = doc.data();
-    if (data.attendance === 'yes') {
-      stats.attendees++;
-      stats.companions += data.companions || 0;
+    
+    if (data.status === 1) { // 出席
+      stats.totalAttendees++;
+      
+      // ゲスト側別カウント
+      if (data.guest_side === 0) {
+        stats.groomSideGuests++;
+      } else {
+        stats.brideSideGuests++;
+      }
+      
+      // アレルギー
+      if (data.allergy_flag === 1) {
+        stats.allergyCount++;
+      }
+      
+      // 年齢区分
+      switch (data.age_category) {
+        case 0:
+          stats.adultsCount++;
+          break;
+        case 1:
+          stats.childrenCount++;
+          break;
+        case 2:
+          stats.infantsCount++;
+          break;
+        default:
+          stats.adultsCount++; // デフォルトは大人
+      }
     } else {
-      stats.declined++;
+      stats.totalDeclined++;
     }
   });
   
   return stats;
+}
+
+// 統計情報キャッシュ更新
+export async function updateStatsCache() {
+  try {
+    const stats = await getRSVPStats();
+    await setDoc(doc(db, 'admin', 'stats'), {
+      ...stats,
+      lastUpdated: Timestamp.now()
+    });
+  } catch (error) {
+    console.error('統計情報キャッシュ更新エラー:', error);
+  }
 }
 ```
 
@@ -254,7 +419,7 @@ firebase functions:log
 
 ## 📊 データエクスポート・バックアップ
 
-### 手動エクスポート
+### 手動エクスポート（reference-site.html対応フォーマット）
 ```typescript
 // scripts/export-data.ts
 export async function exportRSVPsToCSV() {
@@ -263,18 +428,77 @@ export async function exportRSVPsToCSV() {
   const csvData = snapshot.docs.map(doc => {
     const data = doc.data();
     return {
-      名前: data.name,
-      ふりがな: data.furigana,
-      メール: data.email,
-      出欠: data.attendance === 'yes' ? '出席' : '欠席',
-      同伴者数: data.companions || 0,
-      アレルギー: data.allergies || '',
-      メッセージ: data.message || '',
-      送信日時: data.timestamp.toDate().toLocaleString('ja-JP')
+      ID: doc.id,
+      出欠: data.status === 1 ? '出席' : '欠席',
+      ゲスト側: data.guest_side === 0 ? '新郎側' : '新婦側',
+      日本語姓: data.jpn_family_name,
+      日本語名: data.jpn_first_name,
+      かな姓: data.kana_family_name || '',
+      かな名: data.kana_first_name || '',
+      ローマ字姓: data.rom_family_name,
+      ローマ字名: data.rom_first_name,
+      メールアドレス: data.email,
+      電話番号: data.phone_number || '',
+      郵便番号: data.zipcode || '',
+      住所1: data.address || '',
+      住所2: data.address2 || '',
+      年齢区分: getAgeCategoryText(data.age_category),
+      食事制限: data.allergy_flag === 1 ? 'あり' : 'なし',
+      アレルギー詳細: data.allergy || '',
+      メッセージ: data.guest_message || '',
+      送信日時: data.timestamp.toDate().toLocaleString('ja-JP'),
+      サブミッションID: data.submissionId || ''
     };
   });
   
   return convertToCSV(csvData);
+}
+
+function getAgeCategoryText(category?: number): string {
+  switch (category) {
+    case 0: return '大人';
+    case 1: return '子供';
+    case 2: return '幼児';
+    default: return '大人';
+  }
+}
+
+// アレルギー情報専用エクスポート
+export async function exportAllergyInfo() {
+  const allergyGuests = await getAllergyGuests();
+  
+  const csvData = allergyGuests.map(guest => ({
+    氏名: guest.name,
+    ローマ字名: guest.romanName,
+    メールアドレス: guest.email,
+    アレルギー詳細: guest.allergy
+  }));
+  
+  return convertToCSV(csvData);
+}
+
+// ゲスト側別エクスポート
+export async function exportGuestsBySide() {
+  const groomGuests = await getRSVPsByGuestSide(0);
+  const brideGuests = await getRSVPsByGuestSide(1);
+  
+  return {
+    groomSide: convertToCSV(groomGuests.map(formatGuestForExport)),
+    brideSide: convertToCSV(brideGuests.map(formatGuestForExport))
+  };
+}
+
+function formatGuestForExport(doc: any) {
+  const data = doc.data ? doc.data() : doc;
+  return {
+    氏名: `${data.jpn_family_name} ${data.jpn_first_name}`,
+    ローマ字名: `${data.rom_first_name} ${data.rom_family_name}`,
+    かな: `${data.kana_family_name || ''} ${data.kana_first_name || ''}`,
+    メールアドレス: data.email,
+    年齢区分: getAgeCategoryText(data.age_category),
+    アレルギー: data.allergy_flag === 1 ? data.allergy || 'あり（詳細なし）' : 'なし',
+    送信日時: data.timestamp.toDate().toLocaleString('ja-JP')
+  };
 }
 ```
 

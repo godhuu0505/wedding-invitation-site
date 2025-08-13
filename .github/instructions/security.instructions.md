@@ -1,3 +1,7 @@
+---
+applyTo: "{app/api/**/*.{ts,js},lib/auth/**/*.{ts,js},lib/security/**/*.{ts,js}}"
+---
+
 # セキュリティ指示書
 
 ## 🛡️ セキュリティ基本方針
@@ -47,35 +51,81 @@ const checkAdminPermissions = async (userEmail: string): Promise<UserPermissions
 import * as yup from 'yup';
 
 const rsvpSchema = yup.object({
-  name: yup.string()
-    .required('名前は必須です')
-    .min(1, '名前を入力してください')
-    .max(50, '名前は50文字以内で入力してください')
+  // 出欠情報
+  status: yup.number()
+    .required('出欠の選択は必須です')
+    .oneOf([1, 2], '有効な出欠を選択してください'),
+    
+  guest_side: yup.number()
+    .required('ゲストカテゴリーの選択は必須です')
+    .oneOf([0, 1], '有効なゲストカテゴリーを選択してください'),
+    
+  // 名前情報
+  jpn_family_name: yup.string()
+    .required('姓は必須です')
+    .min(1, '姓を入力してください')
+    .max(20, '姓は20文字以内で入力してください')
     .matches(/^[\p{L}\p{N}\s\-\.]+$/u, '有効な文字のみ使用してください'),
     
-  furigana: yup.string()
-    .required('ふりがなは必須です')
-    .matches(/^[あ-ん\s]+$/, 'ひらがなで入力してください'),
+  jpn_first_name: yup.string()
+    .required('名は必須です')
+    .min(1, '名を入力してください')
+    .max(20, '名は20文字以内で入力してください')
+    .matches(/^[\p{L}\p{N}\s\-\.]+$/u, '有効な文字のみ使用してください'),
     
+  kana_family_name: yup.string()
+    .max(20, 'かな姓は20文字以内で入力してください')
+    .matches(/^[あ-ん\s]*$/, 'ひらがなで入力してください'),
+    
+  kana_first_name: yup.string()
+    .max(20, 'かな名は20文字以内で入力してください')
+    .matches(/^[あ-ん\s]*$/, 'ひらがなで入力してください'),
+    
+  rom_family_name: yup.string()
+    .required('ローマ字姓は必須です')
+    .min(1, 'ローマ字姓を入力してください')
+    .max(30, 'ローマ字姓は30文字以内で入力してください')
+    .matches(/^[a-zA-Z\s\-\.]+$/, '英字のみ使用してください'),
+    
+  rom_first_name: yup.string()
+    .required('ローマ字名は必須です')
+    .min(1, 'ローマ字名を入力してください')
+    .max(30, 'ローマ字名は30文字以内で入力してください')
+    .matches(/^[a-zA-Z\s\-\.]+$/, '英字のみ使用してください'),
+    
+  // 連絡先
   email: yup.string()
     .required('メールアドレスは必須です')
     .email('有効なメールアドレスを入力してください')
     .max(100, 'メールアドレスは100文字以内で入力してください'),
     
-  attendance: yup.string()
-    .required('出欠確認は必須です')
-    .oneOf(['yes', 'no'], '出席または欠席を選択してください'),
+  phone_number: yup.string()
+    .max(20, '電話番号は20文字以内で入力してください')
+    .matches(/^[\d\-\(\)\+\s]*$/, '有効な電話番号を入力してください'),
     
-  companions: yup.number()
-    .integer('整数で入力してください')
-    .min(0, '0以上の数値を入力してください')
-    .max(5, '同伴者は5名までです')
-    .default(0),
+  // 住所情報
+  zipcode: yup.string()
+    .max(10, '郵便番号は10文字以内で入力してください')
+    .matches(/^[\d\-]*$/, '有効な郵便番号を入力してください'),
     
-  allergies: yup.string()
+  address: yup.string()
+    .max(100, '住所は100文字以内で入力してください'),
+    
+  address2: yup.string()
+    .max(100, '建物名等は100文字以内で入力してください'),
+    
+  // その他
+  age_category: yup.number()
+    .oneOf([0, 1, 2], '有効な年齢区分を選択してください'),
+    
+  allergy_flag: yup.number()
+    .required('食事制限の選択は必須です')
+    .oneOf([0, 1], '有効な食事制限を選択してください'),
+    
+  allergy: yup.string()
     .max(500, 'アレルギー情報は500文字以内で入力してください'),
     
-  message: yup.string()
+  guest_message: yup.string()
     .max(1000, 'メッセージは1000文字以内で入力してください')
 });
 ```
@@ -93,19 +143,35 @@ const sanitizeInput = (input: string): string => {
   });
 };
 
+// 数値検証
+const validateNumericEnum = (value: any, allowedValues: number[]): boolean => {
+  const num = parseInt(value);
+  return !isNaN(num) && allowedValues.includes(num);
+};
+
 // API Routesでの検証
 export async function POST(req: NextRequest) {
   const body = await req.json();
   
   // 入力サニタイゼーション
   const sanitizedData = {
-    name: sanitizeInput(body.name),
-    furigana: sanitizeInput(body.furigana),
+    status: parseInt(body.status),
+    guest_side: parseInt(body.guest_side),
+    jpn_family_name: sanitizeInput(body.jpn_family_name),
+    jpn_first_name: sanitizeInput(body.jpn_first_name),
+    kana_family_name: sanitizeInput(body.kana_family_name || ''),
+    kana_first_name: sanitizeInput(body.kana_first_name || ''),
+    rom_family_name: sanitizeInput(body.rom_family_name),
+    rom_first_name: sanitizeInput(body.rom_first_name),
     email: validator.normalizeEmail(body.email),
-    attendance: body.attendance,
-    companions: parseInt(body.companions) || 0,
-    allergies: sanitizeInput(body.allergies || ''),
-    message: sanitizeInput(body.message || '')
+    phone_number: sanitizeInput(body.phone_number || ''),
+    zipcode: sanitizeInput(body.zipcode || ''),
+    address: sanitizeInput(body.address || ''),
+    address2: sanitizeInput(body.address2 || ''),
+    age_category: body.age_category ? parseInt(body.age_category) : 0,
+    allergy_flag: parseInt(body.allergy_flag),
+    allergy: sanitizeInput(body.allergy || ''),
+    guest_message: sanitizeInput(body.guest_message || '')
   };
   
   // バリデーション
@@ -114,7 +180,71 @@ export async function POST(req: NextRequest) {
     return new Response(validation.error, { status: 400 });
   }
   
+  // 重複チェック
+  const isDuplicate = await checkDuplicateEmail(sanitizedData.email);
+  if (isDuplicate) {
+    return new Response('既に登録済みのメールアドレスです', { status: 409 });
+  }
+  
   // 処理続行...
+}
+
+// サーバーサイドバリデーション関数
+function validateRSVPData(data: any): { valid: boolean; error?: string } {
+  // 必須フィールドチェック
+  const requiredFields = ['status', 'guest_side', 'jpn_family_name', 'jpn_first_name', 'rom_family_name', 'rom_first_name', 'email', 'allergy_flag'];
+  for (const field of requiredFields) {
+    if (!data[field] && data[field] !== 0) {
+      return { valid: false, error: `${field}は必須項目です` };
+    }
+  }
+  
+  // 数値列挙型チェック
+  if (!validateNumericEnum(data.status, [1, 2])) {
+    return { valid: false, error: '無効な出欠情報です' };
+  }
+  
+  if (!validateNumericEnum(data.guest_side, [0, 1])) {
+    return { valid: false, error: '無効なゲストカテゴリーです' };
+  }
+  
+  if (!validateNumericEnum(data.allergy_flag, [0, 1])) {
+    return { valid: false, error: '無効な食事制限情報です' };
+  }
+  
+  if (data.age_category !== undefined && !validateNumericEnum(data.age_category, [0, 1, 2])) {
+    return { valid: false, error: '無効な年齢区分です' };
+  }
+  
+  // メールアドレス検証
+  if (!validator.isEmail(data.email)) {
+    return { valid: false, error: '無効なメールアドレスです' };
+  }
+  
+  // 文字数制限チェック
+  const textLimits = {
+    jpn_family_name: 20,
+    jpn_first_name: 20,
+    kana_family_name: 20,
+    kana_first_name: 20,
+    rom_family_name: 30,
+    rom_first_name: 30,
+    email: 100,
+    phone_number: 20,
+    zipcode: 10,
+    address: 100,
+    address2: 100,
+    allergy: 500,
+    guest_message: 1000
+  };
+  
+  for (const [field, limit] of Object.entries(textLimits)) {
+    if (data[field] && data[field].length > limit) {
+      return { valid: false, error: `${field}は${limit}文字以内で入力してください` };
+    }
+  }
+  
+  return { valid: true };
 }
 ```
 
