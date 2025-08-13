@@ -37,19 +37,24 @@ module.exports = {
         'elegant': ['Playfair Display', 'serif'],
       },
       animation: {
-        'fade-in': 'fadeIn 0.5s ease-in-out',
-        'slide-up': 'slideUp 0.8s ease-out',
+        'fade-in': 'fade-in 1s ease-out forwards',
+        'slide-up': 'slide-up 0.8s ease-out forwards',
+        'count-change': 'count-change 0.3s ease-in-out',
         'float': 'float 6s ease-in-out infinite',
         'loading': 'loading 2s linear infinite',
       },
       keyframes: {
-        fadeIn: {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
+        'fade-in': {
+          'from': { opacity: '0', transform: 'translateY(20px)' },
+          'to': { opacity: '1', transform: 'translateY(0)' },
         },
-        slideUp: {
-          '0%': { transform: 'translateY(20px)', opacity: '0' },
-          '100%': { transform: 'translateY(0)', opacity: '1' },
+        'slide-up': {
+          'from': { opacity: '0', transform: 'translateY(40px)' },
+          'to': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'count-change': {
+          '0%, 100%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.1)' },
         },
         float: {
           '0%, 100%': { transform: 'translateY(0px)' },
@@ -58,6 +63,13 @@ module.exports = {
         loading: {
           '0%': { transform: 'rotate(0deg)' },
           '100%': { transform: 'rotate(360deg)' },
+        },
+        kenburns: {
+          '0%': { transform: 'scale(1.1) translateX(-2%) translateY(-2%)' },
+          '25%': { transform: 'scale(1.15) translateX(1%) translateY(-1%)' },
+          '50%': { transform: 'scale(1.2) translateX(-1%) translateY(1%)' },
+          '75%': { transform: 'scale(1.15) translateX(1%) translateY(2%)' },
+          '100%': { transform: 'scale(1.1) translateX(-2%) translateY(-2%)' },
         }
       },
       backdropBlur: {

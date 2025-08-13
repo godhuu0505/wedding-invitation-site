@@ -24,8 +24,8 @@ export const metadata: Metadata = {
   description: '伊藤尚人・小林結衣の結婚式招待サイトです。2025年11月3日、皆様のご出席をお待ちしております。',
   keywords: ['結婚式', '招待状', 'ウェディング', '2025年11月3日', 'Naoto', 'Yui'],
   authors: [{ name: 'Naoto & Yui' }],
-  viewport: 'width=device-width, initial-scale=1',
   robots: 'index, follow',
+  metadataBase: new URL('http://localhost:3003'),
   openGraph: {
     title: 'Naoto & Yui Wedding Invitation',
     description: '2025年11月3日の結婚式にご招待いたします',
@@ -37,6 +37,11 @@ export const metadata: Metadata = {
     title: 'Naoto & Yui Wedding Invitation',
     description: '2025年11月3日の結婚式にご招待いたします',
   },
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default function RootLayout({

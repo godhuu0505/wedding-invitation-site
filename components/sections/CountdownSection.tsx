@@ -18,8 +18,8 @@ export default function CountdownSection() {
   });
   const [isClient, setIsClient] = useState(false);
 
-  // 結婚式の日時（2025年11月3日 11:00）
-  const weddingDate = new Date('2025-11-03T11:00:00+09:00');
+  // reference-site.htmlの設定に合わせた結婚式の日時（2100年12月31日）
+  const weddingDate = new Date('2100-12-31T10:00:00+09:00');
 
   useEffect(() => {
     setIsClient(true);
@@ -109,28 +109,28 @@ export default function CountdownSection() {
           <div className="space-y-4 text-gray-700 font-japanese">
             <div className="flex flex-col md:flex-row justify-center items-center gap-2 md:gap-4">
               <span className="text-3xl md:text-4xl font-bold text-akane-600">
-                2025年11月3日
+                2100年12月31日
               </span>
-              <span className="text-lg text-gray-600">（日曜日）</span>
+              <span className="text-lg text-gray-600">（金曜日）</span>
             </div>
             
             <div className="flex flex-col md:flex-row justify-center items-center gap-2 md:gap-8 mt-6">
               <div className="text-center">
-                <div className="text-lg font-semibold text-akane-600 mb-1">挙式</div>
-                <div className="text-base">午前11時より</div>
+                <div className="text-lg font-semibold text-akane-600 mb-1">結婚式</div>
+                <div className="text-base">午前10時より</div>
               </div>
               <div className="hidden md:block w-px h-8 bg-gray-300"></div>
               <div className="text-center">
                 <div className="text-lg font-semibold text-akane-600 mb-1">披露宴</div>
-                <div className="text-base">午後12時30分より</div>
+                <div className="text-base">午前11時より</div>
               </div>
             </div>
             
             <div className="mt-6 pt-6 border-t border-gray-200">
               <div className="text-lg font-semibold text-akane-600 mb-2">会場</div>
-              <div className="text-base">東京ベイサイドホテル</div>
+              <div className="text-base">サンプルホテル</div>
               <div className="text-sm text-gray-600 mt-1">
-                東京都港区台場1-1-1
+                東京都港区北青山３丁目５－１５
               </div>
             </div>
           </div>

@@ -61,16 +61,16 @@ export default function HeaderSection() {
           </p>
         </div>
 
-        {/* 結婚式日程 */}
+        {/* 結婚式日程 - reference-site.htmlに合わせて */}
         <div className="animate-fade-in" style={{ animationDelay: '0.5s' }}>
           <p className="text-lg md:text-xl mb-2 font-japanese drop-shadow-md">
             私たちの結婚式
           </p>
           <p className="text-3xl md:text-4xl font-bold mb-4 drop-shadow-lg">
-            2025.11.03
+            2100.12.31
           </p>
           <p className="text-base md:text-lg font-japanese drop-shadow-md">
-            日曜日 午前11時より
+            金曜日 午前10時より
           </p>
         </div>
 
