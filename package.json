@@ -6,18 +6,37 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "format": "prettier --write .",
+    "type-check": "tsc --noEmit",
+    "firebase:emulators": "firebase emulators:start --only firestore,auth",
+    "firebase:deploy:rules": "firebase deploy --only firestore:rules",
+    "firebase:deploy:indexes": "firebase deploy --only firestore:indexes",
+    "firebase:deploy": "firebase deploy --only firestore:rules,firestore:indexes"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.1",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "firebase": "^10.0.0",
+    "framer-motion": "^12.23.12",
+    "gsap": "^3.13.0",
     "next": "14.0.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-hook-form": "^7.62.0",
+    "tailwind-merge": "^3.3.1",
+    "vegas": "^2.6.0",
+    "vivus": "^0.4.6",
+    "yup": "^1.7.0"
   },
   "devDependencies": {
+    "@types/node": "^24.2.1",
     "@types/react": "19.1.10",
     "autoprefixer": "10.4.14",
+    "eslint-config-prettier": "^10.1.8",
     "postcss": "8.4.24",
+    "prettier": "^3.6.2",
     "tailwindcss": "3.3.2",
     "typescript": "5.1.6"
   }
