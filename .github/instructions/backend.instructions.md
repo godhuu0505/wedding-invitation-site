@@ -2,7 +2,7 @@
 applyTo: "app/api/**/*.{ts,js}"
 ---
 
-# バックエンド技術スタック指示書
+# バックエンド技術スタック指示書 - reference-site.html完全対応版
 
 ## 📋 バックエンド技術スタック概要
 
@@ -10,8 +10,9 @@ applyTo: "app/api/**/*.{ts,js}"
 - **API**: Next.js 14 API Routes (App Router) - サーバーレスAPI
 - **データベース**: Firebase Firestore - NoSQLドキュメントデータベース
 - **認証**: Firebase Authentication - 管理画面認証
-- **ファイルストレージ**: Firebase Storage（必要に応じて）
+- **ファイルストレージ**: Firebase Storage（プロフィール写真・式場画像用）
 - **サーバーレス関数**: Firebase Functions - バックエンド処理
+- **通知**: SendGrid（RSVP送信時メール通知）
 
 ### インフラストラクチャ
 - **リージョン**: asia-northeast1（東京）
@@ -31,78 +32,104 @@ applyTo: "app/api/**/*.{ts,js}"
 }
 ```
 
-### API開発用依存関係
+### API開発用依存関係（reference-site.html対応）
 ```json
 {
   "dependencies": {
     "next": "14.0.0",
     "validator": "^13.9.0",
     "isomorphic-dompurify": "^2.0.0",
-    "rate-limiter-flexible": "^3.0.0"
+    "rate-limiter-flexible": "^3.0.0",
+    "@sendgrid/mail": "^7.7.0",
+    "crypto": "^1.0.1",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "@types/validator": "^13.9.0"
+    "@types/validator": "^13.9.0",
+    "@types/uuid": "^9.0.0"
   }
 }
 ```
 
-## 🏗️ バックエンドアーキテクチャパターン
+## 🏗️ バックエンドアーキテクチャパターン（reference-site.html準拠）
 
 ### API Routes構成
 ```
 app/
 └── api/                    # Next.js API Routes
-    ├── rsvp/
+    ├── rsvp/               # RSVP関連API（reference-site.html完全対応）
     │   ├── submit/
-    │   │   └── route.ts    # RSVP送信API
+    │   │   └── route.ts    # RSVP送信API（包括的バリデーション）
+    │   ├── update/
+    │   │   └── route.ts    # RSVP更新API（編集機能）
+    │   ├── verify/
+    │   │   └── route.ts    # RSVP確認API（submission_id使用）
     │   ├── list/
     │   │   └── route.ts    # RSVP一覧取得API（管理者用）
-    │   └── stats/
-    │       └── route.ts    # RSVP統計API（管理者用）
-    ├── auth/
+    │   ├── stats/
+    │   │   └── route.ts    # RSVP統計API（ダッシュボード用）
+    │   ├── export/
+    │   │   └── route.ts    # CSVエクスポートAPI
+    │   └── duplicate-check/
+    │       └── route.ts    # 重複チェックAPI
+    ├── auth/               # 認証関連API
     │   ├── signin/
     │   │   └── route.ts    # 管理者ログインAPI
-    │   └── signout/
-    │       └── route.ts    # 管理者ログアウトAPI
-    ├── admin/
+    │   ├── signout/
+    │   │   └── route.ts    # 管理者ログアウトAPI
+    │   └── verify/
+    │       └── route.ts    # トークン検証API
+    ├── admin/              # 管理者専用API
     │   ├── settings/
     │   │   └── route.ts    # 管理者設定API
-    │   └── export/
-    │       └── route.ts    # データエクスポートAPI
+    │   ├── bulk-update/
+    │   │   └── route.ts    # 一括更新API
+    │   └── analytics/
+    │       └── route.ts    # 分析データAPI
+    ├── notification/       # 通知関連API
+    │   ├── send-confirmation/
+    │   │   └── route.ts    # 確認メール送信API
+    │   └── send-reminder/
+    │       └── route.ts    # リマインダー送信API
     └── health/
         └── route.ts        # ヘルスチェックAPI
 
 lib/                        # バックエンド用ライブラリ
 ├── firebase.ts            # Firebase設定
 ├── firebase-admin.ts      # Firebase Admin SDK設定
-├── firebase-operations.ts # Firestore操作関数
+├── firebase-operations.ts # Firestore操作関数（reference-site.html対応）
 ├── validation.ts          # サーバーサイドバリデーション
 ├── rate-limiter.ts        # レート制限
 ├── auth.ts               # 認証ヘルパー
-└── error-handler.ts      # エラーハンドリング
+├── email-service.ts      # メール送信サービス
+├── error-handler.ts      # エラーハンドリング
+├── csv-export.ts         # CSVエクスポート機能
+└── security.ts           # セキュリティ関数
 ```
 
-### Firebase Functions構成（オプション）
+### Firebase Functions構成（拡張用）
 ```
 functions/
 ├── src/
 │   ├── index.ts           # Cloud Functions エントリーポイント
 │   ├── rsvp-notification.ts  # RSVP送信時メール通知
-│   ├── stats-cache.ts     # 統計情報キャッシュ更新
+│   ├── daily-stats.ts     # 日次統計更新
+│   ├── backup-scheduler.ts   # 自動バックアップ
 │   └── data-cleanup.ts    # 定期的なデータクリーンアップ
 ├── package.json
 └── firebase.json
 ```
 
-## 🗄️ データベース操作パターン
+## 🗄️ データベース操作パターン（reference-site.html完全対応）
 
-### Firestore操作関数（reference-site.html対応）
+### Firestore操作関数
 ```typescript
 // lib/firebase-operations.ts
 import { db } from '@/lib/firebase';
-import { collection, addDoc, getDocs, query, where, orderBy, limit, Timestamp } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where, orderBy, limit, Timestamp, updateDoc, doc } from 'firebase/firestore';
 
 interface RSVPData {
+  // reference-site.html準拠の完全なインターフェース
   status: 1 | 2;                    // 1: 出席, 2: 欠席
   guest_side: 0 | 1;                // 0: 新郎側, 1: 新婦側
   jpn_family_name: string;
@@ -122,31 +149,42 @@ interface RSVPData {
   guest_message?: string;
 }
 
-// RSVP送信
+// RSVP送信（reference-site.html完全対応）
 export async function submitRSVP(data: RSVPData) {
   try {
-    // 重複チェック
+    // 1. 重複チェック（メールアドレス）
     const isDuplicate = await checkDuplicateEmail(data.email);
     if (isDuplicate) {
       throw new AppError('既に登録済みのメールアドレスです', 'DUPLICATE_EMAIL', 409);
     }
     
+    // 2. submission_id生成
     const submissionId = generateSubmissionId();
     
+    // 3. IPアドレス・User Agent取得
+    const clientInfo = getClientInfo();
+    
+    // 4. Firestoreに保存
     const docRef = await addDoc(collection(db, 'rsvps'), {
       ...data,
+      submission_id: submissionId,
       timestamp: Timestamp.now(),
-      submissionId,
-      ipAddress: getClientIP(),
-      userAgent: getUserAgent()
+      ip_address: clientInfo.ipAddress,
+      user_agent: clientInfo.userAgent,
+      is_verified: false,
+      follow_up_required: false
     });
     
+    // 5. 統計キャッシュ更新
     await updateStatsCache();
+    
+    // 6. 確認メール送信
+    await sendConfirmationEmail(data.email, submissionId, data);
     
     return { 
       success: true, 
       id: docRef.id,
-      submissionId 
+      submission_id: submissionId 
     };
   } catch (error) {
     console.error('RSVP送信エラー:', error);
@@ -157,24 +195,79 @@ export async function submitRSVP(data: RSVPData) {
   }
 }
 
-// RSVP一覧取得（管理者用・ページネーション対応）
-export async function getRSVPs(pageSize: number = 20, lastDoc?: any) {
-  const rsvpsRef = collection(db, 'rsvps');
-  let q = query(rsvpsRef, orderBy('timestamp', 'desc'), limit(pageSize));
+// RSVP一覧取得（管理者用・高度な検索対応）
+export async function getRSVPs(options: {
+  pageSize?: number;
+  lastDoc?: any;
+  status?: 1 | 2;
+  guestSide?: 0 | 1;
+  allergyFlag?: 0 | 1;
+  searchTerm?: string;
+  ageCategory?: 0 | 1 | 2;
+} = {}) {
+  const {
+    pageSize = 20,
+    lastDoc,
+    status,
+    guestSide,
+    allergyFlag,
+    searchTerm,
+    ageCategory
+  } = options;
   
-  if (lastDoc) {
-    q = query(rsvpsRef, orderBy('timestamp', 'desc'), startAfter(lastDoc), limit(pageSize));
+  let q = query(collection(db, 'rsvps'), orderBy('timestamp', 'desc'));
+  
+  // フィルタリング
+  if (status !== undefined) {
+    q = query(q, where('status', '==', status));
   }
   
+  if (guestSide !== undefined) {
+    q = query(q, where('guest_side', '==', guestSide));
+  }
+  
+  if (allergyFlag !== undefined) {
+    q = query(q, where('allergy_flag', '==', allergyFlag));
+  }
+  
+  if (ageCategory !== undefined) {
+    q = query(q, where('age_category', '==', ageCategory));
+  }
+  
+  // ページネーション
+  if (lastDoc) {
+    q = query(q, startAfter(lastDoc));
+  }
+  
+  q = query(q, limit(pageSize));
+  
   const snapshot = await getDocs(q);
+  let results = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  
+  // クライアント側での名前検索（Firestoreの制限対応）
+  if (searchTerm) {
+    results = results.filter(rsvp => {
+      const fullName = `${rsvp.jpn_family_name} ${rsvp.jpn_first_name}`;
+      const kanaName = `${rsvp.kana_family_name || ''} ${rsvp.kana_first_name || ''}`;
+      const romanName = `${rsvp.rom_first_name} ${rsvp.rom_family_name}`;
+      const email = rsvp.email;
+      
+      return fullName.includes(searchTerm) ||
+             kanaName.includes(searchTerm) ||
+             romanName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+             email.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+  }
+  
   return {
-    docs: snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })),
+    docs: results,
     lastDoc: snapshot.docs[snapshot.docs.length - 1],
-    hasMore: snapshot.docs.length === pageSize
+    hasMore: snapshot.docs.length === pageSize,
+    total: results.length
   };
 }
 
-// 統計情報取得
+// 統計情報取得（リアルタイム & キャッシュ）
 export async function getRSVPStats() {
   const snapshot = await getDocs(collection(db, 'rsvps'));
   
@@ -188,36 +281,74 @@ export async function getRSVPStats() {
     adultsCount: 0,
     childrenCount: 0,
     infantsCount: 0,
-    lastUpdated: new Date()
+    lastUpdated: new Date(),
+    
+    // 詳細統計（reference-site.html対応）
+    allergyDetails: [] as Array<{name: string, allergy: string, email: string}>,
+    guestsByDay: {},
+    responseRate: 0,
+    pendingFollowUps: 0
   };
   
   snapshot.docs.forEach(doc => {
     const data = doc.data();
-    if (data.status === 1) {
+    
+    if (data.status === 1) { // 出席
       stats.totalAttendees++;
-      if (data.guest_side === 0) stats.groomSideGuests++;
-      else stats.brideSideGuests++;
-      if (data.allergy_flag === 1) stats.allergyCount++;
       
+      // ゲスト側別カウント
+      if (data.guest_side === 0) {
+        stats.groomSideGuests++;
+      } else {
+        stats.brideSideGuests++;
+      }
+      
+      // アレルギー情報収集
+      if (data.allergy_flag === 1) {
+        stats.allergyCount++;
+        stats.allergyDetails.push({
+          name: `${data.jpn_family_name} ${data.jpn_first_name}`,
+          allergy: data.allergy || '',
+          email: data.email
+        });
+      }
+      
+      // 年齢区分別カウント
       switch (data.age_category) {
-        case 0: stats.adultsCount++; break;
-        case 1: stats.childrenCount++; break;
-        case 2: stats.infantsCount++; break;
-        default: stats.adultsCount++;
+        case 0:
+          stats.adultsCount++;
+          break;
+        case 1:
+          stats.childrenCount++;
+          break;
+        case 2:
+          stats.infantsCount++;
+          break;
+        default:
+          stats.adultsCount++; // デフォルトは大人
       }
     } else {
       stats.totalDeclined++;
     }
+    
+    // フォローアップ必要数
+    if (data.follow_up_required) {
+      stats.pendingFollowUps++;
+    }
   });
+  
+  // 回答率計算（想定ゲスト数に対する回答率）
+  const expectedGuests = parseInt(process.env.EXPECTED_GUEST_COUNT || '100');
+  stats.responseRate = Math.round((stats.totalResponses / expectedGuests) * 100);
   
   return stats;
 }
 
-// 重複チェック
+// 重複チェック関数
 async function checkDuplicateEmail(email: string): Promise<boolean> {
   const q = query(
     collection(db, 'rsvps'),
-    where('email', '==', email),
+    where('email', '==', email.toLowerCase()),
     limit(1)
   );
   
@@ -227,7 +358,53 @@ async function checkDuplicateEmail(email: string): Promise<boolean> {
 
 // サブミッションID生成
 function generateSubmissionId(): string {
-  return `rsvp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  const timestamp = new Date().toISOString().replace(/[-:T]/g, '').split('.')[0];
+  const randomString = Math.random().toString(36).substring(2, 8);
+  return `rsvp_${timestamp}_${randomString}`;
+}
+
+// クライアント情報取得
+function getClientInfo() {
+  // Next.js API Routesでのクライアント情報取得
+  return {
+    ipAddress: 'xxx.xxx.xxx.xxx', // 実際の実装では headers から取得
+    userAgent: 'User-Agent情報'    // 実際の実装では headers から取得
+  };
+}
+
+// CSVエクスポート機能
+export async function exportRSVPsToCSV() {
+  const snapshot = await getDocs(query(collection(db, 'rsvps'), orderBy('timestamp', 'desc')));
+  
+  const csvData = snapshot.docs.map(doc => {
+    const data = doc.data();
+    return {
+      ID: doc.id,
+      サブミッションID: data.submission_id,
+      出欠: data.status === 1 ? '出席' : '欠席',
+      ゲスト側: data.guest_side === 0 ? '新郎側' : '新婦側',
+      姓: data.jpn_family_name,
+      名: data.jpn_first_name,
+      姓かな: data.kana_family_name || '',
+      名かな: data.kana_first_name || '',
+      姓ローマ字: data.rom_family_name,
+      名ローマ字: data.rom_first_name,
+      メールアドレス: data.email,
+      電話番号: data.phone_number || '',
+      郵便番号: data.zipcode || '',
+      住所1: data.address || '',
+      住所2: data.address2 || '',
+      年齢区分: data.age_category === 0 ? '大人' : data.age_category === 1 ? '子供' : data.age_category === 2 ? '幼児' : '大人',
+      アレルギー有無: data.allergy_flag === 1 ? 'あり' : 'なし',
+      アレルギー詳細: data.allergy || '',
+      メッセージ: data.guest_message || '',
+      送信日時: data.timestamp.toDate().toLocaleString('ja-JP'),
+      確認済み: data.is_verified ? 'はい' : 'いいえ',
+      フォローアップ: data.follow_up_required ? '必要' : '不要'
+    };
+  });
+  
+  return convertToCSV(csvData);
 }
 ```
 

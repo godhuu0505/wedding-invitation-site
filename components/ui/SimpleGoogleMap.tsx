@@ -34,7 +34,6 @@ const loadGoogleMapsScript = (apiKey: string): Promise<void> => {
     script.defer = true;
 
     script.onload = () => {
-      console.log('✅ Google Maps script loaded successfully');
       resolve();
     };
 
@@ -66,11 +65,8 @@ export default function SimpleGoogleMap({
         setIsLoading(true);
         setError(null);
 
-        console.log('🗺️ Simple Google Map 初期化開始...');
-
         // API キーの確認
         const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-        console.log('API Key status:', apiKey ? '✅ 設定済み' : '❌ 未設定');
         
         if (!apiKey) {
           throw new Error('Google Maps API キーが設定されていません');
@@ -78,13 +74,11 @@ export default function SimpleGoogleMap({
 
         // Google Maps スクリプトの読み込み
         await loadGoogleMapsScript(apiKey);
-        console.log('📥 Google Maps API 読み込み完了');
 
         if (!isMounted || !mapRef.current) return;
 
         // 式場情報を取得
         const venueInfo = getVenueInfo();
-        console.log('📍 式場情報:', venueInfo);
 
         // 和風スタイル
         const mapStyles = [
@@ -110,7 +104,6 @@ export default function SimpleGoogleMap({
         ];
 
         // マップの初期化
-        console.log('🗺️ Google Map インスタンス作成中...');
         const map = new google.maps.Map(mapRef.current, {
           center: venueInfo.coordinates,
           zoom: 16,
@@ -165,7 +158,6 @@ export default function SimpleGoogleMap({
         });
 
         mapInstanceRef.current = map;
-        console.log('✅ Google Map 初期化完了');
 
         if (onMapLoad) {
           onMapLoad(map);

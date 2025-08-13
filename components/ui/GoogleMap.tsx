@@ -47,21 +47,17 @@ export default function GoogleMap({
 
         // Google Maps API キーの確認
         const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-        console.log('Google Maps API Key:', apiKey ? '設定済み' : '未設定');
         if (!apiKey) {
           throw new Error('Google Maps API キーが設定されていません。.env.local ファイルに NEXT_PUBLIC_GOOGLE_MAPS_API_KEY を設定してください。');
         }
 
         // Google Maps API の読み込み
-        console.log('Google Maps API を読み込み中...');
         const google = await loadGoogleMaps();
-        console.log('Google Maps API 読み込み完了:', google);
         
         if (!isMounted || !mapRef.current) return;
 
         // 式場情報を取得
         const venueInfo = getVenueInfo();
-        console.log('式場情報:', venueInfo);
 
         // 和風に合わせたマップスタイル
         const mapStyles = [
@@ -164,7 +160,6 @@ export default function GoogleMap({
         });
 
         mapInstanceRef.current = map;
-        console.log('Google Map初期化完了:', map);
 
         if (onMapLoad) {
           onMapLoad(map);

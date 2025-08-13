@@ -9,12 +9,10 @@ export default function TestPage() {
   const weddingEnv = getWeddingEnv();
   
   const handleMapLoad = (map: google.maps.Map) => {
-    console.log('✅ Google Map loaded successfully!', map);
     alert('Google Maps正常に読み込まれました！');
   };
 
   const handleMapError = (error: string) => {
-    console.error('❌ Google Map error:', error);
     alert(`Google Mapsエラー: ${error}`);
   };
 

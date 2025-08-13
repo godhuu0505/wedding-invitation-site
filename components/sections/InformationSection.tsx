@@ -14,7 +14,6 @@ export default function InformationSection() {
   }, []);
 
   const handleMapLoad = React.useCallback((map: google.maps.Map) => {
-    console.log('InformationSection - Map Loaded:', map);
     setMapError(null);
   }, []);
   

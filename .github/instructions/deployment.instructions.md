@@ -85,58 +85,108 @@ NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_maps_api_key
 ADMIN_EMAILS=admin1@example.com,admin2@example.com
 
 # セキュリティ
-NEXTAUTH_SECRET=your_nextauth_secret_minimum_32_characters
+NEXTAUTH_SECRET=your_nextauth_secret_minimum_32_characters_production
 NEXTAUTH_URL=https://wedding-invitation-site.com
 
-# 新郎新婦情報（reference-site.html対応）
+# 新郎新婦情報（本番用・Figmaデザイン対応）
 NEXT_PUBLIC_GROOM_NAME="Naoto"
 NEXT_PUBLIC_GROOM_JP_NAME="伊藤 尚人"
+NEXT_PUBLIC_GROOM_FULL_NAME_JP="伊藤 尚人"
+NEXT_PUBLIC_GROOM_PHOTO="/images/profiles/groom-photo.webp"
 NEXT_PUBLIC_BRIDE_NAME="Yui"
 NEXT_PUBLIC_BRIDE_JP_NAME="小林 結衣"
+NEXT_PUBLIC_BRIDE_FULL_NAME_JP="小林 結衣"
+NEXT_PUBLIC_BRIDE_PHOTO="/images/profiles/bride-photo.webp"
 
-# 結婚式詳細情報
+# 結婚式詳細情報（2025年11月3日）
 NEXT_PUBLIC_WEDDING_DATE="2025-11-03"
-NEXT_PUBLIC_RSVP_DEADLINE="2025-10-30"
+NEXT_PUBLIC_WEDDING_DATE_DISPLAY="2025.11.03"
+NEXT_PUBLIC_WEDDING_DATE_JP="2025年11月3日"
+NEXT_PUBLIC_WEDDING_DAY_JP="日曜日"
+NEXT_PUBLIC_RSVP_DEADLINE="2025-10-20"
+NEXT_PUBLIC_RSVP_DEADLINE_DISPLAY="2025年10月20日"
 
-# 挙式会場情報
+# 挙式会場情報（東京ベイサイドホテル）
 NEXT_PUBLIC_CEREMONY_VENUE_NAME="東京ベイサイドホテル チャペル"
 NEXT_PUBLIC_CEREMONY_VENUE_ADDRESS="東京都港区台場1-1-1"
-NEXT_PUBLIC_CEREMONY_TIME="11:00"
+NEXT_PUBLIC_CEREMONY_TIME="10:00"
+NEXT_PUBLIC_CEREMONY_TIME_DISPLAY="午前10時"
 NEXT_PUBLIC_CEREMONY_LAT="35.6321"
 NEXT_PUBLIC_CEREMONY_LNG="139.7736"
 
-# 披露宴会場情報
+# 披露宴会場情報（東京ベイサイドホテル）
 NEXT_PUBLIC_RECEPTION_VENUE_NAME="東京ベイサイドホテル バンケットホール"
 NEXT_PUBLIC_RECEPTION_VENUE_ADDRESS="東京都港区台場1-1-1"
 NEXT_PUBLIC_RECEPTION_TIME="12:30"
+NEXT_PUBLIC_RECEPTION_TIME_DISPLAY="午後12時30分"
 NEXT_PUBLIC_RECEPTION_LAT="35.6321"
 NEXT_PUBLIC_RECEPTION_LNG="139.7736"
 
-# デザインテーマ（茜色テーマ）
-NEXT_PUBLIC_THEME_PRIMARY_COLOR="#e65555"
-NEXT_PUBLIC_THEME_SECONDARY_COLOR="#d64545"
-NEXT_PUBLIC_THEME_ACCENT_COLOR="#f66666"
+# サイトメタデータ（SEO最適化）
+NEXT_PUBLIC_SITE_TITLE="Naoto & Yui Wedding - 2025.11.03 東京ベイサイドホテル"
+NEXT_PUBLIC_SITE_DESCRIPTION="伊藤尚人・小林結衣の結婚式招待サイト。2025年11月3日、東京ベイサイドホテルにて挙式・披露宴を行います。皆様のご出席を心よりお待ちしております。"
+NEXT_PUBLIC_SITE_URL="https://wedding-invitation-site.com"
+NEXT_PUBLIC_OG_IMAGE="https://wedding-invitation-site.com/images/og-image.webp"
 
-# アニメーション設定
+# デザインテーマ（Figma茜色テーマ）
+NEXT_PUBLIC_THEME_PRIMARY_COLOR="#e65555"
+NEXT_PUBLIC_THEME_SECONDARY_COLOR="#d73535"
+NEXT_PUBLIC_THEME_ACCENT_COLOR="#f58989"
+NEXT_PUBLIC_THEME_BACKGROUND_COLOR="#fef7f7"
+
+# フォント設定（和風エレガント）
+NEXT_PUBLIC_FONT_PRIMARY="Playfair Display"
+NEXT_PUBLIC_FONT_JAPANESE="Noto Serif JP"
+NEXT_PUBLIC_FONT_UI="Noto Sans JP"
+
+# アニメーション設定（本番最適化）
 NEXT_PUBLIC_ENABLE_LOADING_ANIMATION=true
 NEXT_PUBLIC_LOADING_DURATION=5000
 NEXT_PUBLIC_ENABLE_SCROLL_ANIMATIONS=true
 NEXT_PUBLIC_ENABLE_CAROUSEL=true
+NEXT_PUBLIC_CAROUSEL_TRANSITION_DURATION=2000
 
-# 背景画像設定（本番用CDN URL）
-NEXT_PUBLIC_CAROUSEL_IMAGE_1="https://wedding-invitation-site.com/images/bg1.webp"
-NEXT_PUBLIC_CAROUSEL_IMAGE_2="https://wedding-invitation-site.com/images/bg2.webp"
-NEXT_PUBLIC_CAROUSEL_IMAGE_3="https://wedding-invitation-site.com/images/bg3.webp"
+# 背景画像設定（CDN最適化・Figmaから生成）
+NEXT_PUBLIC_CAROUSEL_IMAGE_1="https://wedding-invitation-site.com/images/backgrounds/hero-bg-1.webp"
+NEXT_PUBLIC_CAROUSEL_IMAGE_2="https://wedding-invitation-site.com/images/backgrounds/hero-bg-2.webp"
+NEXT_PUBLIC_CAROUSEL_IMAGE_3="https://wedding-invitation-site.com/images/backgrounds/hero-bg-3.webp"
+NEXT_PUBLIC_LOADING_ANIMATION_SVG="https://wedding-invitation-site.com/images/animations/loading-animation.svg"
 
-# パフォーマンス設定
+# RSVP設定（reference-site.html準拠）
+NEXT_PUBLIC_RSVP_ENABLE_PHONE=true
+NEXT_PUBLIC_RSVP_ENABLE_ADDRESS=true
+NEXT_PUBLIC_RSVP_ENABLE_AGE_CATEGORY=true
+NEXT_PUBLIC_RSVP_MAX_MESSAGE_LENGTH=500
+NEXT_PUBLIC_RSVP_REQUIRE_KANA=false
+NEXT_PUBLIC_EXPECTED_GUEST_COUNT=100
+
+# 通知設定（SendGrid）
+SENDGRID_API_KEY=your_production_sendgrid_api_key
+ADMIN_NOTIFICATION_EMAIL=admin@wedding-invitation-site.com
+CONFIRMATION_EMAIL_TEMPLATE_ID=d-production-template-id
+
+# パフォーマンス設定（本番最適化）
 NEXT_PUBLIC_ENABLE_PRELOAD_IMAGES=true
 NEXT_PUBLIC_OPTIMIZE_ANIMATIONS=true
 NEXT_PUBLIC_LAZY_LOAD_THRESHOLD=0.1
+NEXT_PUBLIC_IMAGE_QUALITY=85
+
+# セキュリティ設定
+NEXT_PUBLIC_ENABLE_RATE_LIMITING=true
+NEXT_PUBLIC_MAX_RSVP_PER_EMAIL=1
+NEXT_PUBLIC_ENABLE_DUPLICATE_CHECK=true
+
+# 分析・監視設定
+NEXT_PUBLIC_ENABLE_ANALYTICS=true
+VERCEL_ANALYTICS_ID=your_vercel_analytics_id
+NEXT_PUBLIC_HOTJAR_ID=your_hotjar_id
+NEXT_PUBLIC_GTM_ID=GTM-XXXXXXX
 
 # 本番環境フラグ
 NODE_ENV=production
 NEXT_PUBLIC_USE_FIREBASE_EMULATOR=false
 NEXT_PUBLIC_ENABLE_DEBUG_MODE=false
+NEXT_PUBLIC_ENABLE_CONSOLE_LOGS=false
 ```
 
 ### デプロイコマンド

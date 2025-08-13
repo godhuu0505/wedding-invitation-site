@@ -115,7 +115,6 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
         await onSubmit(data);
       } else {
         // デフォルトの送信処理
-        console.log('RSVP Data:', data);
         
         // Firebase Firestoreへの保存を模擬
         await new Promise(resolve => setTimeout(resolve, 2000));

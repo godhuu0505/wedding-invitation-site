@@ -2,24 +2,25 @@
 applyTo: "app/**/*.{tsx,jsx,ts,js}"
 ---
 
-# フロントエンド技術スタック指示書
+# フロントエンド技術スタック指示書 - Figmaデザイン完全対応版
 
 ## 📋 フロントエンド技術スタック概要
 
-### UIフレームワーク・ライブラリ
+### UIフレームワーク・ライブラリ（和風エレガント対応）
 - **フレームワーク**: Next.js 14 (App Router) - モダンなReactフレームワーク
 - **言語**: TypeScript 5.1.6 - 型安全性とコード品質向上
-- **UIフレームワーク**: Tailwind CSS 3.3.2 - ユーティリティファーストCSS + 茜色カスタムカラー
-- **フォーム管理**: React Hook Form + Yup - 包括的RSVPフォームバリデーション
+- **UIフレームワーク**: Tailwind CSS 3.3.2 - ユーティリティファーストCSS + 茜色カスタムテーマ
+- **フォント**: Playfair Display（英語エレガント）+ Noto Serif JP（和風）
+- **フォーム管理**: React Hook Form + Yup - reference-site.html完全対応RSVPバリデーション
 - **アニメーション**: Framer Motion + Vegas.js + Vivus.js + ScrollTrigger
 
 ### 外部UIサービス
-- **マップ表示**: Google Maps Embed API - 式場アクセス情報
-- **背景スライドショー**: Vegas.js - ヘッダーカルーセル
-- **SVGアニメーション**: Vivus.js - ローディング画面
+- **マップ表示**: Google Maps Embed API - 式場アクセス情報（東京ベイサイドホテル対応）
+- **背景スライドショー**: Vegas.js - ヘッダーカルーセル（和風背景画像）
+- **SVGアニメーション**: Vivus.js - 5秒間ローディング画面
 - **スクロール連動**: ScrollTrigger - セクション切り替えアニメーション
 
-## 🔧 フロントエンド依存関係管理
+## 🔧 フロントエンド依存関係管理（Figma対応）
 
 ### 本番依存関係（UI関連）
 ```json
@@ -37,7 +38,9 @@ applyTo: "app/**/*.{tsx,jsx,ts,js}"
     "gsap": "^3.12.0",
     "tailwindcss": "3.3.2",
     "autoprefixer": "10.4.14",
-    "postcss": "8.4.24"
+    "postcss": "8.4.24",
+    "@google/maps": "^1.1.3",
+    "date-fns": "^2.30.0"
   }
 }
 ```
@@ -49,75 +52,111 @@ applyTo: "app/**/*.{tsx,jsx,ts,js}"
     "@types/react": "19.1.10",
     "@types/node": "^20.0.0",
     "@types/vegas": "^2.5.0",
+    "@types/google.maps": "^3.54.0",
     "typescript": "5.1.6",
     "eslint": "^8.50.0",
     "eslint-config-next": "14.0.0",
-    "@next/bundle-analyzer": "^14.0.0"
+    "@next/bundle-analyzer": "^14.0.0",
+    "@tailwindcss/typography": "^0.5.10",
+    "@tailwindcss/forms": "^0.5.6"
   }
 }
 ```
 
-## 📱 ブラウザサポート・レスポンシブデザイン
+## 📱 ブラウザサポート・レスポンシブデザイン（Figmaベース）
 
-### デスクトップ
-- Chrome 90+
+### デスクトップサポート
+- Chrome 90+ （最優先）
 - Firefox 88+
 - Safari 14+
 - Edge 90+
 
-### モバイル
-- iOS Safari 14+
+### モバイルサポート
+- iOS Safari 14+ （iPhone対応）
 - Android Chrome 90+
 - Samsung Internet 15+
 
-### 対応解像度
-- **モバイル**: 320px〜767px
-- **タブレット**: 768px〜1023px
-- **デスクトップ**: 1024px〜
+### 対応解像度（Figmaデザイン準拠）
+- **モバイル**: 375px〜767px (iPhone 12 Pro ベース)
+- **タブレット**: 768px〜1023px (iPad ベース)
+- **デスクトップ**: 1024px〜1920px (標準デスクトップ)
+- **大型デスクトップ**: 1920px〜 (4K対応)
 
-## 🏗️ フロントエンドアーキテクチャパターン
+## 🏗️ フロントエンドアーキテクチャパターン（Figmaデザインシステム対応）
 
 ### Next.js 14 App Router構成
 ```
 app/                    # Next.js 14 App Router
-├── page.tsx           # ホームページ（全セクション統合）
-├── layout.tsx         # 共通レイアウト
-├── loading.tsx        # ローディングUI
-├── error.tsx          # エラーUI
+├── page.tsx           # メインページ（6セクション統合）
+│                      #   1. ローディング（5秒SVG）
+│                      #   2. ヒーロー（カルーセル背景）
+│                      #   3. メッセージ（挨拶+プロフィール）
+│                      #   4. カウントダウン（結婚式まで）
+│                      #   5. インフォメーション（式場案内）
+│                      #   6. RSVP（出欠確認フォーム）
+├── layout.tsx         # 共通レイアウト + フォント読み込み
+├── loading.tsx        # SVGローディング（Vivus.js）
+├── error.tsx          # エラーUI（和風デザイン）
+├── not-found.tsx      # 404ページ
+├── globals.css        # 茜色テーマ + 和風フォント
 └── admin/             # 管理画面（認証必要）
-    ├── page.tsx
-    ├── dashboard/
-    └── rsvp-list/
+    ├── page.tsx       # 管理ダッシュボード
+    ├── layout.tsx     # 管理専用レイアウト
+    ├── dashboard/     # 統計ダッシュボード
+    ├── rsvp-list/     # RSVP一覧管理
+    └── settings/      # 管理設定
 
-components/             # 再利用可能コンポーネント
-├── ui/                # 基本UIコンポーネント
-│   ├── Button.tsx
-│   ├── Input.tsx
-│   ├── Modal.tsx
-│   └── LoadingSpinner.tsx
+components/             # 再利用可能コンポーネント（Figmaベース）
+├── ui/                # 基本UIコンポーネント（茜色テーマ）
+│   ├── Button.tsx     # プライマリ（茜色）、セカンダリ、アウトライン
+│   ├── Input.tsx      # フォーム入力（和風スタイル）
+│   ├── Select.tsx     # セレクトボックス（カスタムスタイル）
+│   ├── Modal.tsx      # モーダルダイアログ（エレガント）
+│   ├── Card.tsx       # カードコンポーネント（影付き）
+│   ├── Divider.tsx    # セクション区切り（和風装飾）
+│   └── LoadingSpinner.tsx # ローディングスピナー
 ├── layout/            # レイアウトコンポーネント
-│   ├── Header.tsx
-│   ├── Navigation.tsx
-│   ├── Footer.tsx
-│   └── LoadingScreen.tsx
-├── sections/          # セクションコンポーネント
-│   ├── MessageSection.tsx
-│   ├── CountdownSection.tsx
-│   ├── InformationSection.tsx
-│   └── RSVPSection.tsx
-└── forms/             # フォームコンポーネント
-    ├── RSVPForm.tsx
-    └── ContactForm.tsx
+│   ├── Header.tsx     # サイトヘッダー（固定ナビ）
+│   ├── Navigation.tsx # スムーススクロールナビ
+│   ├── Footer.tsx     # フッター（クレジット）
+│   ├── LoadingScreen.tsx # 5秒間ローディング画面
+│   └── ScrollProgress.tsx # スクロール進捗バー
+├── sections/          # メインセクションコンポーネント
+│   ├── HeroSection.tsx    # ヒーロー + 背景カルーセル
+│   ├── MessageSection.tsx # 挨拶文 + 新郎新婦プロフィール
+│   ├── CountdownSection.tsx # 結婚式までカウントダウン
+│   ├── InformationSection.tsx # 式場案内 + Google Maps
+│   ├── RSVPSection.tsx    # reference-site.html完全対応フォーム
+│   └── FooterSection.tsx  # フッター + ソーシャルリンク
+├── forms/             # フォームコンポーネント（reference-site.html準拠）
+│   ├── RSVPForm.tsx       # メインRSVPフォーム
+│   ├── PersonalInfoFields.tsx # 個人情報入力
+│   ├── ContactFields.tsx  # 連絡先入力
+│   ├── AllergyFields.tsx  # アレルギー情報入力
+│   ├── MessageField.tsx   # メッセージ入力
+│   └── FormValidation.tsx # バリデーション表示
+└── animations/        # アニメーション専用コンポーネント
+    ├── CarouselBackground.tsx # Vegas.js背景カルーセル
+    ├── SVGLoadingAnimation.tsx # Vivus.js 5秒ローディング
+    ├── ScrollRevealAnimation.tsx # スクロール連動表示
+    ├── CountdownAnimation.tsx # カウントダウン数字アニメ
+    └── FloatingElements.tsx # 浮遊装飾要素
 
 lib/                   # フロントエンド用ユーティリティ
-├── constants.ts       # 定数定義
+├── constants.ts       # 定数定義（カップル情報、日程等）
 ├── utils.ts          # ユーティリティ関数
-├── validation.ts     # フォームバリデーション
-└── animations.ts     # アニメーション設定
+├── validation.ts     # reference-site.html準拠バリデーション
+├── animations.ts     # アニメーション設定
+├── date-utils.ts     # 日付計算（カウントダウン用）
+├── scroll-utils.ts   # スムーススクロール
+└── design-tokens.ts  # デザイントークン（色、フォント、スペース）
 
-styles/                # スタイル定義
-├── globals.css        # グローバルスタイル
-└── components/        # コンポーネント別スタイル
+styles/                # スタイル定義（Figmaベース）
+├── globals.css        # グローバルスタイル + 茜色テーマ
+├── components.css     # コンポーネント専用CSS
+├── animations.css     # アニメーション定義
+├── fonts.css         # 和風フォント読み込み
+└── utilities.css     # カスタムユーティリティクラス
 ```
 
 ## 🎨 コンポーネント設計パターン

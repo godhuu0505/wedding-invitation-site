@@ -2,6 +2,282 @@
 applyTo: "components/**/*.{tsx,ts}"
 ---
 
+# アーキテクチャ設計指示書 - Figmaデザイン完全対応版
+
+## 🏗️ システムアーキテクチャ概要
+
+### プロジェクト概要
+**結婚式招待サイト** - 和風エレガントテーマ（Figmaデザイン & reference-site.html完全再現）
+- **新郎新婦**: Naoto（伊藤尚人）& Yui（小林結衣）
+- **結婚式日程**: 2025年11月3日（日）
+- **デザインコンセプト**: 和風モダン × エレガント × 茜色テーマ
+
+### 技術スタック
+- **フロントエンド**: Next.js 14 (App Router) + TypeScript
+- **スタイリング**: Tailwind CSS + 茜色カスタムテーマ + 和風フォント
+- **アニメーション**: Framer Motion + Vegas.js + Vivus.js + ScrollTrigger
+- **バックエンド**: Firebase Firestore + Cloud Functions
+- **認証**: Firebase Authentication（管理画面用）
+- **地図**: Google Maps Embed API
+- **デプロイ**: Vercel（フロントエンド）+ Firebase（バックエンド）
+
+### プロジェクト構造（Figmaデザイン対応）
+```
+app/                        # Next.js 14 App Router
+├── page.tsx               # メインページ（全セクション統合）
+├── layout.tsx             # 共通レイアウト + フォント読み込み
+├── loading.tsx            # SVGローディングアニメーション
+├── error.tsx              # エラーページ
+├── not-found.tsx          # 404ページ
+└── admin/                 # 管理画面
+    ├── page.tsx
+    ├── layout.tsx         # 管理画面専用レイアウト
+    ├── dashboard/
+    │   └── page.tsx       # ダッシュボード
+    ├── rsvp-list/
+    │   └── page.tsx       # RSVP一覧管理
+    └── settings/
+        └── page.tsx       # 設定画面
+
+components/                 # 再利用可能コンポーネント
+├── ui/                    # 基本UIコンポーネント
+│   ├── Button.tsx         # 茜色テーマボタン
+│   ├── Input.tsx          # フォーム入力コンポーネント
+│   ├── Select.tsx         # セレクトボックス
+│   ├── Modal.tsx          # モーダルダイアログ
+│   ├── Loading.tsx        # ローディングスピナー
+│   └── ErrorBoundary.tsx  # エラー境界
+├── layout/                # レイアウトコンポーネント
+│   ├── Header.tsx         # サイトヘッダー
+│   ├── Navigation.tsx     # ナビゲーション
+│   ├── Footer.tsx         # フッター
+│   ├── LoadingScreen.tsx  # 5秒間ローディング画面
+│   └── ScrollProgress.tsx # スクロール進捗バー
+├── sections/              # メインセクションコンポーネント
+│   ├── HeroSection.tsx    # ヘッダー + カルーセル背景
+│   ├── MessageSection.tsx # 挨拶 + プロフィール
+│   ├── CountdownSection.tsx # 結婚式までのカウントダウン
+│   ├── InformationSection.tsx # 式場案内 + Google Maps
+│   ├── RSVPSection.tsx    # 出欠確認フォーム
+│   └── FooterSection.tsx  # フッター + ナビゲーション
+├── forms/                 # フォーム関連コンポーネント
+│   ├── RSVPForm.tsx      # 包括的RSVPフォーム
+│   ├── ContactForm.tsx   # お問い合わせフォーム
+│   ├── FormField.tsx     # フォームフィールド共通
+│   └── ValidationMessage.tsx # バリデーションメッセージ
+└── animations/            # アニメーション専用コンポーネント
+    ├── CarouselBackground.tsx # Vegas.js背景カルーセル
+    ├── SVGAnimation.tsx   # Vivus.js SVGアニメーション
+    ├── ScrollReveal.tsx   # スクロール連動アニメーション
+    └── CountdownTimer.tsx # カウントダウンアニメーション
+
+lib/                       # ユーティリティ・設定
+├── firebase.ts           # Firebase設定
+├── firebase-operations.ts # Firestore操作関数
+├── validation.ts         # フォームバリデーション
+├── utils.ts             # 共通ユーティリティ
+├── constants.ts         # 定数定義
+├── animations.ts        # アニメーション設定
+├── date-utils.ts        # 日付計算ユーティリティ
+└── types/               # TypeScript型定義
+    ├── index.ts         # 基本型定義
+    ├── rsvp.ts          # RSVP関連型
+    ├── admin.ts         # 管理画面関連型
+    └── animations.ts    # アニメーション関連型
+
+styles/                   # スタイル定義
+├── globals.css          # グローバルスタイル + 茜色テーマ
+├── components.css       # コンポーネント専用CSS
+├── animations.css       # アニメーションCSS
+└── fonts.css           # 和風フォント定義
+
+public/                   # 静的アセット（Figmaから生成）
+├── images/              # 画像ファイル
+│   ├── backgrounds/     # 背景画像（カルーセル用）
+│   │   ├── hero-bg-1.webp
+│   │   ├── hero-bg-2.webp
+│   │   └── hero-bg-3.webp
+│   ├── profiles/        # プロフィール写真
+│   │   ├── groom-photo.webp
+│   │   └── bride-photo.webp
+│   ├── ceremony/        # 式場写真
+│   │   ├── venue-exterior.webp
+│   │   └── venue-interior.webp
+│   ├── decorations/     # 装飾要素
+│   │   ├── floral-accent.svg
+│   │   ├── divider-line.svg
+│   │   └── border-pattern.svg
+│   └── icons/           # アイコン
+│       ├── calendar.svg
+│       ├── location.svg
+│       └── heart.svg
+├── fonts/               # カスタムフォント
+│   ├── NotoSerifJP/     # Noto Serif JP（和風）
+│   └── PlayfairDisplay/ # Playfair Display（エレガント）
+└── animations/          # アニメーション用ファイル
+    ├── loading-animation.svg # ローディングSVG
+    └── heart-animation.json  # Lottieアニメーション
+```
+
+## 📱 レスポンシブデザイン仕様（Figmaベース）
+
+### ブレークポイント設計
+```css
+/* Tailwind CSS カスタムブレークポイント */
+sm: 640px    /* モバイル横向き */
+md: 768px    /* タブレット縦向き */
+lg: 1024px   /* タブレット横向き・小型ノートPC */
+xl: 1280px   /* デスクトップ */
+2xl: 1536px  /* 大型デスクトップ */
+```
+
+### デバイス別レイアウト調整
+```typescript
+// components/sections/HeroSection.tsx - レスポンシブ対応例
+export default function HeroSection() {
+  return (
+    <section className="relative h-screen overflow-hidden">
+      {/* 背景カルーセル */}
+      <div className="absolute inset-0">
+        <CarouselBackground />
+      </div>
+      
+      {/* コンテンツオーバーレイ */}
+      <div className="relative z-10 flex items-center justify-center h-full">
+        <div className="text-center px-4 sm:px-6 lg:px-8">
+          {/* タイトル - レスポンシブ */}
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 
+                         font-playfair font-bold text-white mb-4 sm:mb-6 lg:mb-8
+                         drop-shadow-2xl">
+            <span className="block">Naoto</span>
+            <span className="text-akane-400 block">&</span>
+            <span className="block">Yui</span>
+          </h1>
+          
+          {/* 日本語名 - レスポンシブ */}
+          <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl 
+                         text-white/90 mb-6 sm:mb-8 lg:mb-12
+                         font-noto-serif tracking-wider">
+            <p>伊藤 尚人 & 小林 結衣</p>
+          </div>
+          
+          {/* 日付 - レスポンシブ */}
+          <div className="text-base sm:text-lg md:text-xl lg:text-2xl 
+                         text-akane-200 font-playfair">
+            <time dateTime="2025-11-03">2025.11.03</time>
+          </div>
+        </div>
+      </div>
+      
+      {/* スクロールダウンインジケーター */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 
+                     animate-bounce hidden sm:block">
+        <div className="w-6 h-10 border-2 border-white/50 rounded-full p-1">
+          <div className="w-1 h-3 bg-white/70 rounded-full mx-auto animate-pulse"></div>
+        </div>
+      </div>
+    </section>
+  );
+}
+```
+
+## 🎨 デザインシステム（Figmaベース茜色テーマ）
+
+### カラーパレット
+```typescript
+// tailwind.config.js - 茜色テーマ
+const colors = {
+  akane: {
+    50: '#fef7f7',   // 最薄茜色（背景用）
+    100: '#feeaea',  // 薄茜色
+    200: '#fdd5d5',  // 
+    300: '#fab5b5',  // 
+    400: '#f58989',  // アクセント茜色
+    500: '#e65555',  // メイン茜色（Figmaプライマリ）
+    600: '#d73535',  // 濃茜色
+    700: '#b82828',  // 
+    800: '#9a2222',  // 
+    900: '#7f1d1d',  // 最濃茜色（テキスト用）
+  },
+  // 和風補色
+  traditional: {
+    gold: '#d4af37',     // 金色（アクセント）
+    cream: '#faf7f2',    // クリーム色（背景）
+    charcoal: '#2d2d2d', // 炭色（テキスト）
+    ivory: '#fffef7',    // 象牙色（カード背景）
+  }
+};
+```
+
+### フォントシステム
+```css
+/* フォント階層 - 和風エレガント */
+.font-playfair { font-family: 'Playfair Display', serif; } /* 英語タイトル用 */
+.font-noto-serif { font-family: 'Noto Serif JP', serif; } /* 日本語メイン */
+.font-noto-sans { font-family: 'Noto Sans JP', sans-serif; } /* UI要素用 */
+
+/* タイポグラフィクラス */
+.text-hero {
+  @apply text-5xl md:text-7xl lg:text-8xl font-playfair font-bold;
+  @apply text-akane-600 leading-tight tracking-wide;
+}
+
+.text-section-title {
+  @apply text-3xl md:text-4xl lg:text-5xl font-playfair font-semibold;
+  @apply text-akane-500 mb-6 md:mb-8 lg:mb-12;
+}
+
+.text-jp-title {
+  @apply text-2xl md:text-3xl lg:text-4xl font-noto-serif font-medium;
+  @apply text-traditional-charcoal tracking-wider;
+}
+
+.text-body {
+  @apply text-base md:text-lg lg:text-xl font-noto-serif;
+  @apply text-traditional-charcoal leading-relaxed;
+}
+
+.text-caption {
+  @apply text-sm md:text-base font-noto-sans;
+  @apply text-gray-600;
+}
+```
+
+### コンポーネントデザイントークン
+```typescript
+// lib/design-tokens.ts
+export const designTokens = {
+  // スペーシング（和風余白）
+  spacing: {
+    section: 'py-16 md:py-24 lg:py-32',
+    container: 'px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto',
+    content: 'space-y-8 md:space-y-12 lg:space-y-16',
+  },
+  
+  // シャドウ（エレガント）
+  shadows: {
+    card: 'shadow-lg shadow-akane-500/10',
+    modal: 'shadow-2xl shadow-black/25',
+    floating: 'shadow-xl shadow-akane-500/20',
+  },
+  
+  // ボーダー（和風）
+  borders: {
+    accent: 'border-t-4 border-akane-500',
+    decorative: 'border border-akane-200/50',
+    subtle: 'border border-gray-200',
+  },
+  
+  // アニメーション
+  animations: {
+    fadeIn: 'animate-fade-in-up',
+    slideIn: 'animate-slide-in-left',
+    zoom: 'animate-zoom-in',
+    float: 'animate-float',
+  },
+};
+```
+
 # アーキテクチャ設計指示書
 
 ## 🏗️ システムアーキテクチャ

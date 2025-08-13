@@ -2,7 +2,7 @@
 applyTo: "lib/**/*.{ts,js}"
 ---
 
-# データベース設計指示書
+# データベース設計指示書 - reference-site.html完全対応版
 
 ## 🗄️ データベース概要
 
@@ -11,57 +11,120 @@ applyTo: "lib/**/*.{ts,js}"
 - **リージョン**: asia-northeast1（東京）
 - **料金プラン**: Blaze（従量課金制）
 
-## 📊 コレクション設計
+## 📊 コレクション設計（reference-site.html準拠）
 
-### RSVPコレクション (`rsvps`)
+### RSVPコレクション (`rsvps`) - reference-site.html完全対応
 
 #### 目的
-ゲストからの出欠確認情報を保存（reference-site.html完全対応）
+ゲストからの出欠確認情報を保存（reference-site.htmlフォーム仕様に完全準拠）
 
 #### ドキュメント構造
 ```typescript
 interface RSVPData {
-  // 出欠情報
-  status: 1 | 2;                    // 1: 出席, 2: 欠席
-  guest_side: 0 | 1;                // 0: 新郎側, 1: 新婦側
+  // ========== 出欠情報 ==========
+  status: 1 | 2;                    // 1: 出席, 2: 欠席 (reference-site準拠)
+  guest_side: 0 | 1;                // 0: 新郎側, 1: 新婦側 (reference-site準拠)
   
-  // 名前情報
-  jpn_family_name: string;          // 日本語姓
-  jpn_first_name: string;           // 日本語名
-  kana_family_name?: string;        // かな姓
-  kana_first_name?: string;         // かな名
-  rom_family_name: string;          // ローマ字姓
-  rom_first_name: string;           // ローマ字名
+  // ========== 名前情報（reference-site.html完全対応） ==========
+  jpn_family_name: string;          // 日本語姓（必須）
+  jpn_first_name: string;           // 日本語名（必須）
+  kana_family_name?: string;        // かな姓（任意）
+  kana_first_name?: string;         // かな名（任意）
+  rom_family_name: string;          // ローマ字姓（必須）
+  rom_first_name: string;           // ローマ字名（必須）
   
-  // 連絡先
-  email: string;                    // メールアドレス
-  phone_number?: string;            // 電話番号
+  // ========== 連絡先情報 ==========
+  email: string;                    // メールアドレス（必須、重複チェック）
+  phone_number?: string;            // 電話番号（任意）
   
-  // 住所情報
-  zipcode?: string;                 // 郵便番号
-  address?: string;                 // 住所1
-  address2?: string;                // 住所2（建物名等）
+  // ========== 住所情報（reference-site.html準拠） ==========
+  zipcode?: string;                 // 郵便番号（7桁、ハイフンなし）
+  address?: string;                 // 住所1（都道府県・市区町村・番地）
+  address2?: string;                // 住所2（建物名・部屋番号等）
   
-  // その他の情報
-  age_category?: 0 | 1 | 2;         // 0: 大人, 1: 子供, 2: 幼児
-  allergy_flag: 0 | 1;              // 0: なし, 1: あり
-  allergy?: string;                 // アレルギー詳細
-  guest_message?: string;           // ゲストメッセージ
+  // ========== ゲスト分類（reference-site.html準拠） ==========
+  age_category?: 0 | 1 | 2;         // 0: 大人（デフォルト）, 1: 子供, 2: 幼児
   
-  // システム情報
+  // ========== 食事制限・アレルギー情報 ==========
+  allergy_flag: 0 | 1;              // 0: なし, 1: あり（必須選択）
+  allergy?: string;                 // アレルギー詳細（allergy_flag=1の場合）
+  
+  // ========== メッセージ ==========
+  guest_message?: string;           // ゲストからのメッセージ（任意、500文字以内）
+  
+  // ========== システム情報 ==========
   timestamp: Timestamp;             // 送信日時
-  ipAddress?: string;               // 送信元IP（セキュリティ用）
-  userAgent?: string;               // ブラウザ情報
-  lastModified?: Timestamp;         // 最終更新日時
-  submissionId: string;             // 一意のサブミッションID
+  submission_id: string;            // 一意のサブミッションID (rsvp_yyyymmdd_hhmmss_xxxxx)
+  ip_address?: string;              // 送信元IP（セキュリティ・重複防止用）
+  user_agent?: string;              // ブラウザ情報（分析用）
+  last_modified?: Timestamp;        // 最終更新日時（編集機能用）
+  
+  // ========== 管理者情報 ==========
+  admin_notes?: string;             // 管理者用メモ（内部用）
+  is_verified?: boolean;            // 確認済みフラグ（管理者用）
+  follow_up_required?: boolean;     // フォローアップ必要フラグ
 }
 ```
 
-#### インデックス設定
+#### reference-site.html準拠のバリデーションルール
+```typescript
+// lib/validation/rsvp-validation.ts
+export const rsvpValidationSchema = {
+  // 必須フィールド
+  required: [
+    'status',           // 出欠選択
+    'guest_side',       // ゲストカテゴリー（新郎側・新婦側）
+    'jpn_family_name',  // お名前（姓）
+    'jpn_first_name',   // お名前（名）
+    'rom_family_name',  // ローマ字姓
+    'rom_first_name',   // ローマ字名
+    'email',            // メールアドレス
+    'allergy_flag'      // 食事制限の有無
+  ],
+  
+  // フィールド長制限
+  maxLength: {
+    jpn_family_name: 50,
+    jpn_first_name: 50,
+    kana_family_name: 50,
+    kana_first_name: 50,
+    rom_family_name: 50,
+    rom_first_name: 50,
+    email: 100,
+    phone_number: 15,
+    zipcode: 7,
+    address: 200,
+    address2: 100,
+    allergy: 500,
+    guest_message: 500,
+    admin_notes: 1000
+  },
+  
+  // 形式バリデーション
+  patterns: {
+    email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+    phone_number: /^[0-9\-\+\(\)\s]+$/,
+    zipcode: /^\d{7}$/,
+    kana: /^[あ-んー\s]*$/,
+    romaji: /^[a-zA-Z\s\-\.\']+$/
+  },
+  
+  // 列挙値
+  enums: {
+    status: [1, 2],              // 1: 出席, 2: 欠席
+    guest_side: [0, 1],          // 0: 新郎側, 1: 新婦側
+    age_category: [0, 1, 2],     // 0: 大人, 1: 子供, 2: 幼児
+    allergy_flag: [0, 1]         // 0: なし, 1: あり
+  }
+};
+```
+
+#### インデックス設計（検索・パフォーマンス最適化）
 ```javascript
 // firestore.indexes.json
 {
   "indexes": [
+    // 時系列ソート（管理画面用）
     {
       "collectionGroup": "rsvps",
       "queryScope": "COLLECTION",
@@ -69,6 +132,8 @@ interface RSVPData {
         { "fieldPath": "timestamp", "order": "DESCENDING" }
       ]
     },
+    
+    // 出欠別ソート
     {
       "collectionGroup": "rsvps", 
       "queryScope": "COLLECTION",
@@ -77,14 +142,19 @@ interface RSVPData {
         { "fieldPath": "timestamp", "order": "DESCENDING" }
       ]
     },
+    
+    // ゲスト側別ソート
     {
       "collectionGroup": "rsvps",
       "queryScope": "COLLECTION", 
       "fields": [
         { "fieldPath": "guest_side", "order": "ASCENDING" },
-        { "fieldPath": "status", "order": "ASCENDING" }
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "timestamp", "order": "DESCENDING" }
       ]
     },
+    
+    // メールアドレス検索（重複チェック用）
     {
       "collectionGroup": "rsvps",
       "queryScope": "COLLECTION", 
@@ -92,12 +162,43 @@ interface RSVPData {
         { "fieldPath": "email", "order": "ASCENDING" }
       ]
     },
+    
+    // アレルギー有り検索
     {
       "collectionGroup": "rsvps",
       "queryScope": "COLLECTION", 
       "fields": [
         { "fieldPath": "allergy_flag", "order": "ASCENDING" },
         { "fieldPath": "status", "order": "ASCENDING" }
+      ]
+    },
+    
+    // 年齢区分別検索
+    {
+      "collectionGroup": "rsvps",
+      "queryScope": "COLLECTION", 
+      "fields": [
+        { "fieldPath": "age_category", "order": "ASCENDING" },
+        { "fieldPath": "status", "order": "ASCENDING" }
+      ]
+    },
+    
+    // 管理者用複合検索
+    {
+      "collectionGroup": "rsvps",
+      "queryScope": "COLLECTION", 
+      "fields": [
+        { "fieldPath": "is_verified", "order": "ASCENDING" },
+        { "fieldPath": "timestamp", "order": "DESCENDING" }
+      ]
+    },
+    
+    // 名前検索用（姓）
+    {
+      "collectionGroup": "rsvps",
+      "queryScope": "COLLECTION", 
+      "fields": [
+        { "fieldPath": "jpn_family_name", "order": "ASCENDING" }
       ]
     }
   ]

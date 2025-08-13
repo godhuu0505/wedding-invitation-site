@@ -38,7 +38,6 @@ export default function RSVPSection() {
   const handleRSVPSubmit = async (data: RSVPFormData) => {
     try {
       // TODO: Firebase Firestoreへのデータ保存を実装
-      console.log('RSVP Data submitted:', data);
       
       // 模擬的な送信処理
       await new Promise(resolve => setTimeout(resolve, 2000));

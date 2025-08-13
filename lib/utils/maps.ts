@@ -27,10 +27,7 @@ let loadPromise: Promise<typeof google> | null = null;
  * Google Maps APIを読み込む（改良版）
  */
 export async function loadGoogleMaps(): Promise<typeof google> {
-  console.log('🗺️ Google Maps API 読み込み開始...');
-  
   const apiKey = GOOGLE_MAPS_CONFIG.apiKey;
-  console.log('API Key status:', apiKey ? '✅ 設定済み' : '❌ 未設定');
   
   if (!apiKey) {
     throw new Error('Google Maps API キーが設定されていません。環境変数 NEXT_PUBLIC_GOOGLE_MAPS_API_KEY を確認してください。');
@@ -38,13 +35,11 @@ export async function loadGoogleMaps(): Promise<typeof google> {
 
   // 既に読み込み済みの場合
   if (isLoaded && window.google?.maps) {
-    console.log('✅ Google Maps API 既に読み込み済み');
     return window.google;
   }
 
   // 読み込み中の場合は同じPromiseを返す
   if (loadPromise) {
-    console.log('⏳ Google Maps API 読み込み中...');
     return loadPromise;
   }
 
@@ -52,16 +47,13 @@ export async function loadGoogleMaps(): Promise<typeof google> {
   loadPromise = new Promise(async (resolve, reject) => {
     try {
       if (!googleMapsLoader) {
-        console.log('🔄 Google Maps Loader を初期化中...');
         googleMapsLoader = new Loader(GOOGLE_MAPS_CONFIG);
       }
 
-      console.log('📥 Google Maps API をロード中...');
       await googleMapsLoader.load();
       
       if (window.google?.maps) {
         isLoaded = true;
-        console.log('✅ Google Maps API 読み込み成功！');
         resolve(window.google);
       } else {
         throw new Error('Google Maps API の読み込みは完了しましたが、オブジェクトが見つかりません');
