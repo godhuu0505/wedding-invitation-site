@@ -352,7 +352,7 @@ const nextConfig = {
           {
             key: 'Access-Control-Allow-Origin',
             value: process.env.NODE_ENV === 'production' 
-              ? 'https://wedding-invitation-2025.com'
+              ? 'https://wedding-invitation-site.com'
               : 'http://localhost:3000'
           },
           {

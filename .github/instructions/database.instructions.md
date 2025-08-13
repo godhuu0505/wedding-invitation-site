@@ -530,7 +530,7 @@ export async function seedTestData() {
 firebase firestore:schedule-backup \
   --schedule "0 2 * * *" \
   --retention "30d" \
-  --project wedding-invitation-2025
+  --project wedding-invitation-site
 ```
 
 ### 手動エクスポート

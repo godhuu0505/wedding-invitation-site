@@ -9,12 +9,12 @@ applyTo: "{vercel.json,.github/workflows/*.yml,firebase.json}"
 ### 本番環境構成
 - **フロントエンド**: Vercel（Next.js）
 - **データベース**: Firebase Firestore
-- **ドメイン**: `wedding-invitation-2025.com`
+- **ドメイン**: `wedding-invitation-site.com`
 - **SSL証明書**: 自動管理（Vercel + Let's Encrypt）
 
 ### 環境分離
 ```
-Production    : https://wedding-invitation-2025.com
+Production    : https://wedding-invitation-site.com
 Staging       : https://wedding-staging-xyz.vercel.app
 Development   : http://localhost:3000
 ```
@@ -72,9 +72,9 @@ Development   : http://localhost:3000
 ```bash
 # Firebase設定
 NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=wedding-invitation-2025.firebaseapp.com
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=wedding-invitation-2025
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=wedding-invitation-2025.appspot.com
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=wedding-invitation-site.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=wedding-invitation-site
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=wedding-invitation-site.appspot.com
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=123456789
 NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 
@@ -86,7 +86,7 @@ ADMIN_EMAILS=admin1@example.com,admin2@example.com
 
 # セキュリティ
 NEXTAUTH_SECRET=your_nextauth_secret_minimum_32_characters
-NEXTAUTH_URL=https://wedding-invitation-2025.com
+NEXTAUTH_URL=https://wedding-invitation-site.com
 
 # 新郎新婦情報（reference-site.html対応）
 NEXT_PUBLIC_GROOM_NAME="Naoto"
@@ -124,9 +124,9 @@ NEXT_PUBLIC_ENABLE_SCROLL_ANIMATIONS=true
 NEXT_PUBLIC_ENABLE_CAROUSEL=true
 
 # 背景画像設定（本番用CDN URL）
-NEXT_PUBLIC_CAROUSEL_IMAGE_1="https://wedding-invitation-2025.com/images/bg1.webp"
-NEXT_PUBLIC_CAROUSEL_IMAGE_2="https://wedding-invitation-2025.com/images/bg2.webp"
-NEXT_PUBLIC_CAROUSEL_IMAGE_3="https://wedding-invitation-2025.com/images/bg3.webp"
+NEXT_PUBLIC_CAROUSEL_IMAGE_1="https://wedding-invitation-site.com/images/bg1.webp"
+NEXT_PUBLIC_CAROUSEL_IMAGE_2="https://wedding-invitation-site.com/images/bg2.webp"
+NEXT_PUBLIC_CAROUSEL_IMAGE_3="https://wedding-invitation-site.com/images/bg3.webp"
 
 # パフォーマンス設定
 NEXT_PUBLIC_ENABLE_PRELOAD_IMAGES=true
@@ -152,7 +152,7 @@ npx vercel env add NEXT_PUBLIC_FIREBASE_API_KEY production
 npx vercel env add ADMIN_EMAILS production
 
 # ドメイン設定
-npx vercel domains add wedding-invitation-2025.com
+npx vercel domains add wedding-invitation-site.com
 ```
 
 ## 🔥 Firebase設定デプロイ
@@ -169,7 +169,7 @@ firebase login
 firebase init
 
 # プロジェクト設定
-firebase use wedding-invitation-2025
+firebase use wedding-invitation-site
 ```
 
 ### 設定ファイル
@@ -314,18 +314,18 @@ jobs:
 ### カスタムドメイン設定
 ```bash
 # Vercelでドメイン追加
-npx vercel domains add wedding-invitation-2025.com
-npx vercel domains add www.wedding-invitation-2025.com
+npx vercel domains add wedding-invitation-site.com
+npx vercel domains add www.wedding-invitation-site.com
 
 # DNS設定確認
-npx vercel domains inspect wedding-invitation-2025.com
+npx vercel domains inspect wedding-invitation-site.com
 ```
 
 ### DNS設定例
 ```
 # DNSレコード設定（お名前.com等）
 Type: CNAME
-Name: wedding-invitation-2025.com
+Name: wedding-invitation-site.com
 Value: cname.vercel-dns.com
 
 Type: CNAME  
@@ -394,7 +394,7 @@ export async function GET() {
 ### アップタイム監視設定
 ```bash
 # 外部監視サービス設定例（UptimeRobot等）
-# チェックURL: https://wedding-invitation-2025.com/api/health
+# チェックURL: https://wedding-invitation-site.com/api/health
 # 間隔: 5分
 # アラート: メール + Slack
 ```
@@ -409,7 +409,7 @@ gcloud firestore export gs://wedding-invitation-backup/$(date +%Y%m%d-%H%M%S)
 # 定期バックアップ（Cloud Scheduler）
 gcloud scheduler jobs create http backup-firestore \
   --schedule "0 2 * * *" \
-  --uri "https://firestore.googleapis.com/v1/projects/wedding-invitation-2025/databases/(default):exportDocuments" \
+  --uri "https://firestore.googleapis.com/v1/projects/wedding-invitation-site/databases/(default):exportDocuments" \
   --http-method POST
 ```
 
@@ -429,7 +429,7 @@ firebase deploy --only firestore:indexes
 npx vercel --prod
 
 # 5. ヘルスチェック確認
-curl https://wedding-invitation-2025.com/api/health
+curl https://wedding-invitation-site.com/api/health
 
 # 6. 機能テスト
 # - ホームページ表示確認
@@ -459,7 +459,7 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     domains: [
-      'wedding-invitation-2025.com',
+      'wedding-invitation-site.com',
       'firebasestorage.googleapis.com'
     ]
   },
@@ -669,7 +669,7 @@ export default function RootLayout({
 ### パフォーマンステスト
 ```bash
 # Lighthouse テスト
-npx lighthouse https://wedding-invitation-2025.com --output html
+npx lighthouse https://wedding-invitation-site.com --output html
 
 # WebPageTest
 # https://www.webpagetest.org/ でテスト実行

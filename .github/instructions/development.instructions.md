@@ -153,7 +153,7 @@ npm run clear:dev-data     # 開発用データクリア
 # Firebase CLI インストール（グローバル）
 npm install -g firebase-tools
 firebase login
-firebase use wedding-invitation-2025
+firebase use wedding-invitation-site
 ```
 
 ### デバッグコマンド（詳細版）
