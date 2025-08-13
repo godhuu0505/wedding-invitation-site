@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // React Strict Mode を一時的に無効化（Vivusエラー対策）
+  reactStrictMode: false,
+  
   // 環境変数の型安全性を確保
   env: {
     // 開発時のFirebaseエミュレータ設定
@@ -9,8 +12,8 @@ const nextConfig = {
   
   // 実験的機能
   experimental: {
-    // App Routerの最適化
-    appDir: true,
+    // 最新の最適化機能
+    optimizePackageImports: ['framer-motion'],
   },
   
   // 画像最適化設定

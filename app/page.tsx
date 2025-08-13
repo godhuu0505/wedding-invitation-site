@@ -2,29 +2,57 @@
 
 import { useState, useEffect } from 'react';
 import LoadingScreen from '@/components/layout/LoadingScreen';
+import SimpleLoadingScreen from '@/components/layout/SimpleLoadingScreen';
 import HeaderSection from '@/components/sections/HeaderSection';
 import MessageSection from '@/components/sections/MessageSection';
 import CountdownSection from '@/components/sections/CountdownSection';
+import InformationSection from '@/components/sections/InformationSection';
+import SafeInformationSection from '@/components/sections/SafeInformationSection';
+import RSVPSection from '@/components/sections/RSVPSection';
+import FooterSection from '@/components/sections/FooterSection';
 import Navigation from '@/components/layout/Navigation';
+import ErrorBoundary from '@/components/layout/ErrorBoundary';
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
+  const [showContent, setShowContent] = useState(false);
 
   useEffect(() => {
+    let mounted = true;
+    
     const timer = setTimeout(() => {
-      setIsLoading(false);
+      if (mounted) {
+        setIsLoading(false);
+        // ローディング完了後少し待ってからコンテンツを表示
+        setTimeout(() => {
+          if (mounted) {
+            setShowContent(true);
+          }
+        }, 500);
+      }
     }, 5000); // 5秒間のローディング
 
-    return () => clearTimeout(timer);
+    return () => {
+      mounted = false;
+      clearTimeout(timer);
+    };
   }, []);
 
   return (
-    <>
-      {/* ローディング画面 */}
-      {isLoading && <LoadingScreen isVisible={isLoading} />}
+    <ErrorBoundary>
+      {/* ローディング画面 - 安全なバージョンを使用 */}
+      {isLoading && (
+        <SimpleLoadingScreen 
+          isVisible={isLoading} 
+          onComplete={() => {
+            setIsLoading(false);
+            setShowContent(true);
+          }} 
+        />
+      )}
       
       {/* メインコンテンツ */}
-      {!isLoading && (
+      {!isLoading && showContent && (
         <div className="relative">
           {/* 固定ナビゲーション */}
           <Navigation items={[
@@ -42,13 +70,13 @@ export default function Home() {
           <div className="relative z-10 bg-white">
             <MessageSection />
             <CountdownSection />
-            {/* Phase 3で実装予定 */}
-            {/* <InformationSection /> */}
-            {/* <RSVPSection /> */}
-            {/* <FooterSection /> */}
+            {/* 安全なInformationSectionを使用 */}
+            <SafeInformationSection />
+            <RSVPSection />
+            <FooterSection />
           </div>
         </div>
       )}
-    </>
+    </ErrorBoundary>
   );
 }

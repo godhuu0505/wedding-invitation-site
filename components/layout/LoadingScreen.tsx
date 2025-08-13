@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { getCoupleNames, getWeddingDate } from '@/lib/env';
 
 interface LoadingScreenProps {
@@ -13,6 +13,10 @@ export default function LoadingScreen({
   onComplete 
 }: LoadingScreenProps) {
   const svgRef = useRef<HTMLDivElement>(null);
+  const vivusRef = useRef<any>(null);
+  const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const mountedRef = useRef(true);
+  
   const [animationProgress, setAnimationProgress] = useState(0);
   const [isAnimationComplete, setIsAnimationComplete] = useState(false);
 
@@ -20,88 +24,172 @@ export default function LoadingScreen({
   const coupleNames = getCoupleNames();
   const weddingDate = getWeddingDate();
 
+  // 安全なクリーンアップ関数
+  const cleanupVivus = useCallback(() => {
+    // プログレス監視の停止
+    if (progressIntervalRef.current) {
+      clearInterval(progressIntervalRef.current);
+      progressIntervalRef.current = null;
+    }
+
+    // Vivusインスタンスの安全なクリーンアップ
+    if (vivusRef.current) {
+      try {
+        if (typeof vivusRef.current.stop === 'function') {
+          vivusRef.current.stop();
+        }
+        if (typeof vivusRef.current.reset === 'function') {
+          vivusRef.current.reset();
+        }
+        if (typeof vivusRef.current.destroy === 'function') {
+          vivusRef.current.destroy();
+        }
+      } catch (error) {
+        // クリーンアップエラーは無視
+        console.warn('Vivus cleanup warning:', error);
+      }
+      vivusRef.current = null;
+    }
+
+    // SVG要素の安全なクリーンアップ
+    if (svgRef.current) {
+      try {
+        // 子要素を一つずつ安全に削除
+        while (svgRef.current.firstChild) {
+          if (svgRef.current.contains(svgRef.current.firstChild)) {
+            svgRef.current.removeChild(svgRef.current.firstChild);
+          } else {
+            // 万一firstChildが子でなければbreak
+            break;
+          }
+        }
+      } catch (error) {
+        // DOM操作エラーの場合は innerHTML で強制クリア
+        try {
+          svgRef.current.innerHTML = '';
+        } catch (e) {
+          console.warn('SVG cleanup warning:', e);
+        }
+      }
+    }
+  }, []);
+
+  // アニメーション完了ハンドラー
+  const handleAnimationComplete = useCallback(() => {
+    if (!mountedRef.current) return;
+    
+    setIsAnimationComplete(true);
+    setTimeout(() => {
+      if (mountedRef.current && onComplete) {
+        onComplete();
+      }
+    }, 1000);
+  }, [onComplete]);
+
   useEffect(() => {
     if (!isVisible) return;
 
-    let vivusInstance: any;
+    mountedRef.current = true;
 
-    const loadVivus = async () => {
+    const initializeVivus = async () => {
       try {
+        // 既存のクリーンアップ
+        cleanupVivus();
+
         // Vivus.jsを動的インポート
         const Vivus = (await import('vivus')).default;
         
-        if (svgRef.current) {
-          // SVGを動的に挿入
-          svgRef.current.innerHTML = `
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 255 150" id="loading-svg" style="width: 200px; height: 120px;">
-              <defs>
-                <style type="text/css">
-                  .st0{fill:none;stroke:#e65555;stroke-width:2;stroke-miterlimit:10;}
-                </style>
-              </defs>
-              <g transform="translate(-80, -20) scale(0.8)">
-                <path class="st0" d="M189.7,75l-62.3-36l0.1-0.1L189.8,3l0,0.1L189.7,75 M142.8,48l0-18 M174.4,11.8l15.6,9 M189.9,57.2l-15.6,9"></path>
-                <path class="st0" d="M169,39l13.1,22.7L169,39 M169,39h-26.2H169 M169,39l13.1-22.6L169,39"></path>
-                <path class="st0" d="M127.5,39l35.9,62.3l0.1,0.1l36-62.3l0-0.1L127.5,39 M175.3,39l-11.9,62.3 M127.5,39l59.9,20.9"></path>
-                <path class="st0" d="M63.6,75l35.9-62.3l-0.1,0l-71.9,0l0,0.1L63.6,75 M90.8,28.1l-9-15.6 M136.3,12.5l-9,15.6 M127,60.6l18,0"></path>
-                <path class="st0" d="M63.6,36.4l0,26.2L63.6,36.4 M63.6,36.4l-22.7-13.1L63.6,36.4 M63.6,36.4l22.7-13L63.6,36.4"></path>
-                <path class="st0" d="M127.6,39l-71.9,0l0-0.1l36-62.3l0.1,0.1L127.6,39 M163.4,-23.3l-11.9,62.3 M187.4,18.1l-59.9,20.9"></path>
-                <path class="st0" d="M63.6,75.2l36-62.3l0.1,0.1l35.9,62.3l-0.1,0L63.6,75.2 M90.5,28.9l18,0 M126.7,60.5l-9,15.6 M81.3,75.1l-9-15.6"></path>
-                <path class="st0" d="M99.5,55.2l-22.7,13.1L99.5,55.2 M99.5,55.2v-26.2V55.2 M99.5,55.2l22.6,13.1L99.5,55.2"></path>
-              </g>
-            </svg>
-          `;
+        if (!svgRef.current || !mountedRef.current) return;
 
-          // Vivusアニメーション実行
-          vivusInstance = new Vivus('loading-svg', {
-            type: 'delayed',
-            duration: 120, // 5秒のアニメーション (120フレーム = 約5秒)
-            animTimingFunction: Vivus.EASE,
-            pathTimingFunction: Vivus.EASE_OUT,
-            start: 'autostart'
-          }, () => {
-            // アニメーション完了時
-            setIsAnimationComplete(true);
-            setTimeout(() => {
-              onComplete?.();
-            }, 1000);
-          });
+        // SVGを安全に挿入
+        const svgHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 255 150" id="loading-svg-${Date.now()}" style="width: 200px; height: 120px;">
+            <defs>
+              <style type="text/css">
+                .st0{fill:none;stroke:#e65555;stroke-width:2;stroke-miterlimit:10;}
+              </style>
+            </defs>
+            <g transform="translate(-80, -20) scale(0.8)">
+              <path class="st0" d="M189.7,75l-62.3-36l0.1-0.1L189.8,3l0,0.1L189.7,75 M142.8,48l0-18 M174.4,11.8l15.6,9 M189.9,57.2l-15.6,9"></path>
+              <path class="st0" d="M169,39l13.1,22.7L169,39 M169,39h-26.2H169 M169,39l13.1-22.6L169,39"></path>
+              <path class="st0" d="M127.5,39l35.9,62.3l0.1,0.1l36-62.3l0-0.1L127.5,39 M175.3,39l-11.9,62.3 M127.5,39l59.9,20.9"></path>
+              <path class="st0" d="M63.6,75l35.9-62.3l-0.1,0l-71.9,0l0,0.1L63.6,75 M90.8,28.1l-9-15.6 M136.3,12.5l-9,15.6 M127,60.6l18,0"></path>
+              <path class="st0" d="M63.6,36.4l0,26.2L63.6,36.4 M63.6,36.4l-22.7-13.1L63.6,36.4 M63.6,36.4l22.7-13L63.6,36.4"></path>
+              <path class="st0" d="M127.6,39l-71.9,0l0-0.1l36-62.3l0.1,0.1L127.6,39 M163.4,-23.3l-11.9,62.3 M187.4,18.1l-59.9,20.9"></path>
+              <path class="st0" d="M63.6,75.2l36-62.3l0.1,0.1l35.9,62.3l-0.1,0L63.6,75.2 M90.5,28.9l18,0 M126.7,60.5l-9,15.6 M81.3,75.1l-9-15.6"></path>
+              <path class="st0" d="M99.5,55.2l-22.7,13.1L99.5,55.2 M99.5,55.2v-26.2V55.2 M99.5,55.2l22.6,13.1L99.5,55.2"></path>
+            </g>
+          </svg>
+        `;
 
-          // プログレス監視
-          const progressInterval = setInterval(() => {
-            if (vivusInstance) {
-              const progress = Math.round(vivusInstance.getStatus() * 100);
+        svgRef.current.innerHTML = svgHTML;
+        
+        // SVG要素の取得
+        const svgElement = svgRef.current.querySelector('svg');
+        if (!svgElement || !mountedRef.current) return;
+
+        const svgId = svgElement.id;
+
+        // Vivusアニメーション実行
+        vivusRef.current = new Vivus(svgId, {
+          type: 'delayed',
+          duration: 120,
+          animTimingFunction: 'EASE' as const,
+          pathTimingFunction: 'EASE_OUT' as const,
+          start: 'autostart'
+        }, handleAnimationComplete);
+
+        // プログレス監視
+        progressIntervalRef.current = setInterval(() => {
+          if (vivusRef.current && mountedRef.current) {
+            try {
+              const progress = Math.round(vivusRef.current.getStatus() * 100);
               setAnimationProgress(progress);
               
               if (progress >= 100) {
-                clearInterval(progressInterval);
+                if (progressIntervalRef.current) {
+                  clearInterval(progressIntervalRef.current);
+                  progressIntervalRef.current = null;
+                }
+              }
+            } catch (error) {
+              // プログレス取得エラーは無視
+              if (progressIntervalRef.current) {
+                clearInterval(progressIntervalRef.current);
+                progressIntervalRef.current = null;
               }
             }
-          }, 50);
+          }
+        }, 50);
 
-          return () => {
-            clearInterval(progressInterval);
-          };
-        }
       } catch (error) {
-        console.error('Vivus loading error:', error);
+        console.error('Vivus initialization error:', error);
         // フォールバック: アニメーションなしで完了
-        setTimeout(() => {
-          setIsAnimationComplete(true);
-          onComplete?.();
-        }, 3000);
+        if (mountedRef.current) {
+          setTimeout(() => {
+            if (mountedRef.current) {
+              handleAnimationComplete();
+            }
+          }, 3000);
+        }
       }
     };
 
-    loadVivus();
+    initializeVivus();
 
     return () => {
-      if (vivusInstance) {
-        vivusInstance.stop();
-        vivusInstance.reset();
-      }
+      mountedRef.current = false;
+      cleanupVivus();
     };
-  }, [isVisible, onComplete]);
+  }, [isVisible, cleanupVivus, handleAnimationComplete]);
+
+  // コンポーネントアンマウント時のクリーンアップ
+  useEffect(() => {
+    return () => {
+      mountedRef.current = false;
+      cleanupVivus();
+    };
+  }, [cleanupVivus]);
 
   if (!isVisible) return null;
 
