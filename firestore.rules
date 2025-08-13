@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // RSVPコレクション: 作成は誰でも可能、読み取り・更新・削除は管理者のみ
+    match /rsvps/{rsvpId} {
+      // 誰でもRSVPを作成可能
+      allow create: if isValidRSVP(resource.data);
+      
+      // 管理者のみ読み取り・更新・削除可能
+      allow read, update, delete: if isAdmin();
+    }
+    
+    // 管理者設定: 管理者のみアクセス可能
+    match /admin/{document} {
+      allow read, write: if isAdmin();
+    }
+    
+    // RSVPデータのバリデーション
+    function isValidRSVP(data) {
+      return data.keys().hasAll(['name', 'email', 'attendance', 'side']) &&
+             data.name is string &&
+             data.email is string &&
+             data.attendance in ['attending', 'not-attending', 'tentative'] &&
+             data.side in ['bride', 'groom'] &&
+             data.name.size() > 0 &&
+             data.email.matches('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$');
+    }
+    
+    // 管理者チェック（開発中は緩い設定）
+    function isAdmin() {
+      // 開発環境では認証なしでアクセス可能
+      // 本番環境では適切な管理者認証を実装する
+      return true;
+    }
+  }
+}
