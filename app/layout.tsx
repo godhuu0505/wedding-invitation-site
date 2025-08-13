@@ -2,6 +2,10 @@ import type { Metadata } from 'next';
 import { Noto_Serif_JP, Playfair_Display } from 'next/font/google';
 import '@/styles/globals.css';
 import ErrorBoundary from '@/components/layout/ErrorBoundary';
+import { getWeddingEnv } from '@/lib/env';
+
+// 環境変数から情報を取得
+const weddingEnv = getWeddingEnv();
 
 // 日本語フォント設定
 const notoSerifJP = Noto_Serif_JP({
@@ -20,22 +24,22 @@ const playfairDisplay = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: 'Naoto & Yui Wedding Invitation - 2025.11.03',
-  description: '伊藤尚人・小林結衣の結婚式招待サイトです。2025年11月3日、皆様のご出席をお待ちしております。',
-  keywords: ['結婚式', '招待状', 'ウェディング', '2025年11月3日', 'Naoto', 'Yui'],
-  authors: [{ name: 'Naoto & Yui' }],
+  title: weddingEnv.siteTitle,
+  description: weddingEnv.siteDescription,
+  keywords: ['結婚式', '招待状', 'ウェディング', weddingEnv.weddingDateJp, weddingEnv.groomNameEn, weddingEnv.brideNameEn],
+  authors: [{ name: `${weddingEnv.groomNameEn} & ${weddingEnv.brideNameEn}` }],
   robots: 'index, follow',
   metadataBase: new URL('http://localhost:3003'),
   openGraph: {
-    title: 'Naoto & Yui Wedding Invitation',
-    description: '2025年11月3日の結婚式にご招待いたします',
+    title: weddingEnv.siteTitle,
+    description: `${weddingEnv.weddingDateJp}の結婚式にご招待いたします`,
     type: 'website',
     locale: 'ja_JP',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Naoto & Yui Wedding Invitation',
-    description: '2025年11月3日の結婚式にご招待いたします',
+    title: weddingEnv.siteTitle,
+    description: `${weddingEnv.weddingDateJp}の結婚式にご招待いたします`,
   },
 };
 

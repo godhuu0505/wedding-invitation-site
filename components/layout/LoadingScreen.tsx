@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import { getCoupleNames, getWeddingDate } from '@/lib/env';
 
 interface LoadingScreenProps {
   isVisible: boolean;
@@ -14,6 +15,10 @@ export default function LoadingScreen({
   const svgRef = useRef<HTMLDivElement>(null);
   const [animationProgress, setAnimationProgress] = useState(0);
   const [isAnimationComplete, setIsAnimationComplete] = useState(false);
+
+  // 環境変数から情報を取得
+  const coupleNames = getCoupleNames();
+  const weddingDate = getWeddingDate();
 
   useEffect(() => {
     if (!isVisible) return;
@@ -115,13 +120,13 @@ export default function LoadingScreen({
         {/* カップル名表示 */}
         <div className="mb-6 animate-fade-in">
           <h1 className="text-3xl font-elegant text-akane-600 mb-2 tracking-wider">
-            Naoto & Yui
+            {coupleNames.combined.en}
           </h1>
           <p className="text-lg text-akane-400 font-japanese tracking-widest">
-            伊藤尚人 ♡ 小林結衣
+            {coupleNames.combined.jp}
           </p>
           <p className="text-sm text-gray-600 mt-2">
-            2025.11.03
+            {weddingDate.display}
           </p>
         </div>
 

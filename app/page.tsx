@@ -18,26 +18,37 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
-  if (isLoading) {
-    return <LoadingScreen isVisible={isLoading} />;
-  }
-
   return (
-    <main className="min-h-screen">
-      <Navigation items={[
-        { id: 'home', label: 'Home', href: '#home' },
-        { id: 'message', label: 'Message', href: '#message' },
-        { id: 'countdown', label: 'Countdown', href: '#countdown' },
-        { id: 'information', label: 'Information', href: '#information' },
-        { id: 'rsvp', label: 'RSVP', href: '#rsvp' }
-      ]} />
-      <HeaderSection />
-      <MessageSection />
-      <CountdownSection />
-      {/* Phase 3で実装予定 */}
-      {/* <InformationSection /> */}
-      {/* <RSVPSection /> */}
-      {/* <FooterSection /> */}
-    </main>
+    <>
+      {/* ローディング画面 */}
+      {isLoading && <LoadingScreen isVisible={isLoading} />}
+      
+      {/* メインコンテンツ */}
+      {!isLoading && (
+        <div className="relative">
+          {/* 固定ナビゲーション */}
+          <Navigation items={[
+            { id: 'home', label: 'Home', href: '#home' },
+            { id: 'message', label: 'Message', href: '#message' },
+            { id: 'countdown', label: 'Countdown', href: '#countdown' },
+            { id: 'information', label: 'Information', href: '#information' },
+            { id: 'rsvp', label: 'RSVP', href: '#rsvp' }
+          ]} />
+          
+          {/* ヘッダー（背景込み） */}
+          <HeaderSection />
+          
+          {/* コンテンツセクション */}
+          <div className="relative z-10 bg-white">
+            <MessageSection />
+            <CountdownSection />
+            {/* Phase 3で実装予定 */}
+            {/* <InformationSection /> */}
+            {/* <RSVPSection /> */}
+            {/* <FooterSection /> */}
+          </div>
+        </div>
+      )}
+    </>
   );
 }
