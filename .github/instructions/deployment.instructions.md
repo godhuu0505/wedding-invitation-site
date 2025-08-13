@@ -15,7 +15,7 @@ applyTo: "{vercel.json,.github/workflows/*.yml,firebase.json}"
 ### 環境分離
 ```
 Production    : https://wedding-invitation-site.com
-Staging       : https://wedding-staging-xyz.vercel.app
+Staging       : https://staging.wedding-invitation-site.vercel.app
 Development   : http://localhost:3000
 ```
 
