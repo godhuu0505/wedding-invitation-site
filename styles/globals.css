@@ -1,3 +1,88 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Ken Burns エフェクトアニメーション */
+@keyframes kenburns {
+  0% {
+    transform: scale(1.1) translateX(-2%) translateY(-2%);
+  }
+  25% {
+    transform: scale(1.15) translateX(1%) translateY(-1%);
+  }
+  50% {
+    transform: scale(1.2) translateX(-1%) translateY(1%);
+  }
+  75% {
+    transform: scale(1.15) translateX(1%) translateY(2%);
+  }
+  100% {
+    transform: scale(1.1) translateX(-2%) translateY(-2%);
+  }
+}
+
+/* フェードインアニメーション */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* スライドアップアニメーション */
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* カウントダウン数字アニメーション */
+@keyframes count-change {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* 2秒のトランジション */
+.transition-2000 {
+  transition-duration: 2000ms;
+}
+
+/* スムーズスクロール */
+html {
+  scroll-behavior: smooth;
+}
+
+/* カスタムフォント設定 */
+.font-japanese {
+  font-family: 'Noto Serif JP', serif;
+}
+
+.font-elegant {
+  font-family: 'Playfair Display', serif;
+}
+
+/* アニメーションクラス */
+.animate-fade-in {
+  animation: fade-in 1s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.8s ease-out forwards;
+}
+
+.animate-count-change {
+  animation: count-change 0.3s ease-in-out;
+}
