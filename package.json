@@ -15,6 +15,7 @@
     "firebase:deploy": "firebase deploy --only firestore:rules,firestore:indexes"
   },
   "dependencies": {
+    "@googlemaps/js-api-loader": "^1.16.10",
     "@hookform/resolvers": "^5.2.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
@@ -31,9 +32,10 @@
     "yup": "^1.7.0"
   },
   "devDependencies": {
+    "@types/google.maps": "^3.58.1",
     "@types/node": "^24.2.1",
     "@types/react": "19.1.10",
-    "autoprefixer": "10.4.14",
+    "autoprefixer": "^10.4.14",
     "eslint-config-prettier": "^10.1.8",
     "postcss": "8.4.24",
     "prettier": "^3.6.2",
