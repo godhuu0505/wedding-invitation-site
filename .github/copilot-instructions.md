@@ -49,24 +49,70 @@
 
 ## 🏗️ プロジェクト概要
 
-### 結婚式招待サイト（2025年11月3日）
-- **主要機能**: RSVP システム、会場案内、管理画面
-- **技術スタック**: Next.js 14 App Router + Firebase Firestore + Tailwind CSS
+### 結婚式招待サイト（2025年11月3日）- reference-site.html完全再現版
+- **デザインコンセプト**: reference-site.htmlの見た目を100%再現する和風エレガントサイト
+- **新郎新婦**: Naoto（伊藤 尚人）& Yui（小林 結衣）
+- **テーマカラー**: 茜色（#e65555）
+- **デザインスタイル**: モダン和風・エレガント
+
+#### 主要セクション
+1. **ローディング画面**: SVGアニメーション（5秒間）
+2. **ヘッダー**: カルーセル背景 + カップル名表示
+3. **メッセージ**: 挨拶文 + 新郎新婦紹介
+4. **カウントダウン**: 結婚式まで残り日数表示
+5. **式場案内**: 挙式・披露宴情報 + Google Maps
+6. **出欠確認**: 包括的なRSVPフォーム
+7. **フッター**: ナビゲーション + 法的情報
+
+#### 技術スタック
+- **フロントエンド**: Next.js 14 App Router + TypeScript + Tailwind CSS
+- **アニメーション**: Framer Motion + Vegas.js + Vivus.js + ScrollTrigger
+- **バックエンド**: Firebase Firestore + Cloud Functions
+- **認証**: Firebase Authentication
 - **デプロイ**: Vercel（フロントエンド）+ Firebase（バックエンド）
+- **フォーム**: React Hook Form + Yup バリデーション
 
 ##  コーディング規約
 
 ### 命名規則
-- **変数名**: キャメルケース (`userName`, `orderId`)
-- **定数**: スネークケース (`MAX_RETRIES`, `DEFAULT_TIMEOUT`)
-- **関数名**: 動詞から始める + キャメルケース (`getUserProfile`, `calculateTotalPrice`)
-- **クラス名**: パスカルケース (`UserService`, `ProductRepository`)
+- **変数名**: キャメルケース (`userName`, `orderData`, `isMenuOpen`)
+- **定数**: スネークケース (`MAX_RETRIES`, `DEFAULT_TIMEOUT`, `WEDDING_DATE`)
+- **関数名**: 動詞から始める + キャメルケース (`getUserProfile`, `calculateDaysLeft`, `handleFormSubmit`)
+- **クラス名**: パスカルケース (`UserService`, `RSVPForm`, `LoadingScreen`)
+- **コンポーネント名**: パスカルケース (`HeaderSection`, `MessageSection`, `CountdownSection`)
+
+### ファイル命名規則
+```
+components/
+├── ui/           # Button.tsx, Input.tsx, Modal.tsx
+├── layout/       # Header.tsx, Navigation.tsx, Footer.tsx
+├── sections/     # HeroSection.tsx, MessageSection.tsx
+└── forms/        # RSVPForm.tsx, ContactForm.tsx
+
+pages/sections/   # 各セクションは大文字開始
+└── MessageSection/
+    ├── index.tsx
+    ├── ProfileCard.tsx
+    └── GreetingText.tsx
+```
+
+### カラークラス命名（Tailwind CSS）
+```css
+/* 茜色系統 */
+bg-akane-50   /* 最薄い茜色 */
+bg-akane-500  /* メイン茜色 */
+bg-akane-900  /* 最も濃い茜色 */
+
+text-akane-500  /* 茜色テキスト */
+border-akane-500  /* 茜色ボーダー */
+```
 
 ### フォーマット規則
 - **インデント**: スペース2つ（タブ禁止）
 - **コメント**: 複雑なロジックにはJSDoc形式
 - **マジックナンバー**: 定数として定義
 - **エラーハンドリング**: 適切な例外処理を実装
+- **CSS**: Tailwind CSS優先、カスタムCSSは最小限
 
 ## ⚠️ 実装前の必須事項
 - **最新情報検索**: 実装・ライブラリ変更前に必ずWeb検索

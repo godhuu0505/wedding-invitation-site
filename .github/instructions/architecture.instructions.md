@@ -1,32 +1,43 @@
-# アーキテクチャ・コンポーネント設計指示書
+---
+applyTo: "components/**/*.{tsx,ts}"
+---
+
+# アーキテクチャ設計指示書
 
 ## 🏗️ システムアーキテクチャ
 
 ### アプリケーション構成
 ```
-Frontend (Next.js 14)     Backend (Firebase)     External APIs
-├── App Router            ├── Firestore         ├── Google Maps API
-├── Server Components     ├── Authentication    └── SendGrid (将来)
-├── Client Components     ├── Functions         
-└── API Routes           └── Hosting           
+Frontend (Next.js 14)          Backend (Firebase)         External APIs
+├── App Router (SSR/SSG)       ├── Firestore            ├── Google Maps Embed
+├── Server Components          ├── Authentication       └── CDN (Vegas.js等)
+├── Client Components          ├── Functions            
+├── Loading/Error UI           └── Hosting              
+└── API Routes                                          
+
+Animation Libraries
+├── Framer Motion (React用)
+├── Vegas.js (背景スライドショー)
+├── Vivus.js (SVGアニメーション)
+└── ScrollTrigger (スクロール連動)
 ```
 
-### データフロー
+### データフロー（reference-site.html完全再現版）
 ```
-User → RSVPForm → API Route → Firestore → Admin Dashboard
-                      ↓
-                Security Validation
-                      ↓  
-                Rate Limiting
-                      ↓
-                Audit Logging
+User → LoadingScreen (5s) → Header (カルーセル) → Sections → RSVPForm → API → Firestore
+                               ↓                              ↓
+                        Navigation Menu              Security Validation
+                               ↓                              ↓  
+                        Smooth Scroll               Rate Limiting + Audit Log
+                               ↓                              ↓
+                        Animation Triggers          Admin Dashboard
 ```
 
 ## 🎨 コンポーネント設計パターン
 
-### RSVPフォームパターン（最重要）
+### RSVPフォームパターン（reference-site.html完全再現版）
 ```typescript
-// components/RSVPForm.tsx
+// components/forms/RSVPForm.tsx
 'use client';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -40,15 +51,32 @@ interface RSVPFormProps {
 }
 
 interface RSVPFormData {
-  name: string;
-  furigana: string;
+  // 出欠情報
+  status: 1 | 2; // 1: 出席, 2: 欠席
+  guest_side: 0 | 1; // 0: 新郎側, 1: 新婦側
+  
+  // 名前情報
+  jpn_family_name: string;
+  jpn_first_name: string;
+  kana_family_name?: string;
+  kana_first_name?: string;
+  rom_family_name: string;
+  rom_first_name: string;
+  
+  // 連絡先
   email: string;
-  attendance: 'yes' | 'no';
-  companions: number;
-  companionNames?: string;
-  allergies?: string;
-  message?: string;
-  notes?: string;
+  phone_number?: string;
+  
+  // 住所情報
+  zipcode?: string;
+  address?: string;
+  address2?: string;
+  
+  // その他
+  age_category?: 0 | 1 | 2; // 0: 大人, 1: 子供, 2: 幼児
+  allergy_flag: 0 | 1; // 0: なし, 1: あり
+  allergy?: string;
+  guest_message?: string;
 }
 
 const RSVPForm: React.FC<RSVPFormProps> = ({ 
@@ -66,13 +94,14 @@ const RSVPForm: React.FC<RSVPFormProps> = ({
   } = useForm<RSVPFormData>({
     resolver: yupResolver(rsvpSchema),
     defaultValues: {
-      attendance: 'yes',
-      companions: 0
+      status: 1,
+      guest_side: 0,
+      allergy_flag: 0
     }
   });
 
-  const attendance = watch('attendance');
-  const companions = watch('companions');
+  const status = watch('status');
+  const allergyFlag = watch('allergy_flag');
 
   const handleFormSubmit = async (data: RSVPFormData) => {
     try {
@@ -84,173 +113,318 @@ const RSVPForm: React.FC<RSVPFormProps> = ({
   };
 
   return (
-    <form 
-      onSubmit={handleSubmit(handleFormSubmit)} 
-      className={`space-y-6 max-w-md mx-auto ${className}`}
-    >
-      {/* エラー表示 */}
-      {error && (
-        <div className="bg-red-50 border border-red-200 rounded-md p-3">
-          <p className="text-red-700 text-sm">{error}</p>
-        </div>
-      )}
-
-      {/* 基本情報 */}
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            お名前 <span className="text-red-500">*</span>
-          </label>
-          <input
-            {...register('name')}
-            type="text"
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
-            placeholder="田中太郎"
-          />
-          {errors.name && (
-            <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
-          )}
+    <section id="rsvp" className="rsvp py-24 bg-gradient-to-br from-akane-50 to-akane-100">
+      <div className="container max-w-4xl mx-auto px-8">
+        <h2 className="text-center mb-12">
+          <span className="en block font-playfair text-4xl md:text-5xl font-normal mb-2 text-akane-600">
+            ご出欠
+          </span>
+          <span className="ja text-sm md:text-base text-gray-600 tracking-widest">
+            R.S.V.P.
+          </span>
+        </h2>
+        
+        <div className="rsvp-txt text-center mb-12">
+          <p className="text-lg leading-relaxed text-gray-700 mb-4">
+            お手数ではございますが<br />
+            ご出欠情報のご登録をお願い申し上げます
+          </p>
+          <p className="limit font-semibold text-akane-600">
+            2025.10.30までにご一報をお願いいたします
+          </p>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            ふりがな <span className="text-red-500">*</span>
-          </label>
-          <input
-            {...register('furigana')}
-            type="text"
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
-            placeholder="たなかたろう"
-          />
-          {errors.furigana && (
-            <p className="text-red-500 text-xs mt-1">{errors.furigana.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            メールアドレス <span className="text-red-500">*</span>
-          </label>
-          <input
-            {...register('email')}
-            type="email"
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
-            placeholder="tanaka@example.com"
-          />
-          {errors.email && (
-            <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
-          )}
-        </div>
-      </div>
-
-      {/* 出欠確認 */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-3">
-          出欠のご連絡 <span className="text-red-500">*</span>
-        </label>
-        <div className="space-y-2">
-          <label className="flex items-center">
-            <input
-              {...register('attendance')}
-              type="radio"
-              value="yes"
-              className="text-pink-500 focus:ring-pink-500"
-            />
-            <span className="ml-2 text-sm">出席いたします</span>
-          </label>
-          <label className="flex items-center">
-            <input
-              {...register('attendance')}
-              type="radio"
-              value="no"
-              className="text-pink-500 focus:ring-pink-500"
-            />
-            <span className="ml-2 text-sm">欠席いたします</span>
-          </label>
-        </div>
-        {errors.attendance && (
-          <p className="text-red-500 text-xs mt-1">{errors.attendance.message}</p>
-        )}
-      </div>
-
-      {/* 同伴者（出席の場合のみ表示） */}
-      {attendance === 'yes' && (
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              同伴者数
-            </label>
-            <select
-              {...register('companions', { valueAsNumber: true })}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
-            >
-              {[0, 1, 2, 3, 4, 5].map(num => (
-                <key={num} value={num}>
-                  {num}名
-                </option>
-              ))}
-            </select>
-            {errors.companions && (
-              <p className="text-red-500 text-xs mt-1">{errors.companions.message}</p>
-            )}
-          </div>
-
-          {companions > 0 && (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                同伴者のお名前
-              </label>
-              <input
-                {...register('companionNames')}
-                type="text"
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
-                placeholder="田中花子"
-              />
+        <form 
+          onSubmit={handleSubmit(handleFormSubmit)} 
+          className={`form bg-white rounded-xl p-8 shadow-lg max-w-3xl mx-auto ${className}`}
+        >
+          {/* エラー表示 */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-8">
+              <p className="text-red-700">{error}</p>
             </div>
           )}
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              アレルギー・食事制限
-            </label>
-            <textarea
-              {...register('allergies')}
-              rows={3}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
-              placeholder="特にない場合は空欄で結構です"
-            />
-            {errors.allergies && (
-              <p className="text-red-500 text-xs mt-1">{errors.allergies.message}</p>
+          {/* 出欠選択 */}
+          <div className="row attendance text-center mb-8">
+            <div className="flex justify-center gap-8">
+              <label className="form-check-inline flex items-center cursor-pointer">
+                <input
+                  {...register('status', { valueAsNumber: true })}
+                  type="radio"
+                  value={1}
+                  className="w-5 h-5 mr-3 text-akane-500 focus:ring-akane-500"
+                />
+                <span className="text-xl font-semibold text-gray-800">ATTEND</span>
+              </label>
+              <label className="form-check-inline flex items-center cursor-pointer">
+                <input
+                  {...register('status', { valueAsNumber: true })}
+                  type="radio"
+                  value={2}
+                  className="w-5 h-5 mr-3 text-akane-500 focus:ring-akane-500"
+                />
+                <span className="text-xl font-semibold text-gray-800">ABSENT</span>
+              </label>
+            </div>
+            {errors.status && (
+              <p className="text-red-500 text-sm mt-2">{errors.status.message}</p>
             )}
           </div>
+
+          {/* ゲストカテゴリー */}
+          <FormField
+            title={{ ja: "ゲストカテゴリー", en: "Guest Category" }}
+            required
+            error={errors.guest_side?.message}
+          >
+            <div className="input-check flex gap-6">
+              <label className="form-check flex items-center cursor-pointer">
+                <input
+                  {...register('guest_side', { valueAsNumber: true })}
+                  type="radio"
+                  value={0}
+                  className="w-4 h-4 mr-2 text-akane-500 focus:ring-akane-500"
+                />
+                <span>新郎側ゲスト<span className="text-gray-500">（Groom）</span></span>
+              </label>
+              <label className="form-check flex items-center cursor-pointer">
+                <input
+                  {...register('guest_side', { valueAsNumber: true })}
+                  type="radio"
+                  value={1}
+                  className="w-4 h-4 mr-2 text-akane-500 focus:ring-akane-500"
+                />
+                <span>新婦側ゲスト<span className="text-gray-500">（Bride）</span></span>
+              </label>
+            </div>
+          </FormField>
+
+          {/* 名前 */}
+          <FormField
+            title={{ ja: "お名前", en: "Name" }}
+            required
+          >
+            <div className="input2 grid grid-cols-2 gap-4">
+              <div>
+                <input
+                  {...register('jpn_family_name')}
+                  type="text"
+                  placeholder="姓"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-akane-500 focus:border-transparent"
+                />
+                {errors.jpn_family_name && (
+                  <p className="text-red-500 text-xs mt-1">{errors.jpn_family_name.message}</p>
+                )}
+              </div>
+              <div>
+                <input
+                  {...register('jpn_first_name')}
+                  type="text"
+                  placeholder="名"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-akane-500 focus:border-transparent"
+                />
+                {errors.jpn_first_name && (
+                  <p className="text-red-500 text-xs mt-1">{errors.jpn_first_name.message}</p>
+                )}
+              </div>
+            </div>
+          </FormField>
+
+          {/* かな */}
+          <FormField
+            title={{ ja: "かな", en: "Kana" }}
+          >
+            <div className="input2 grid grid-cols-2 gap-4">
+              <input
+                {...register('kana_family_name')}
+                type="text"
+                placeholder="せい"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-akane-500 focus:border-transparent"
+              />
+              <input
+                {...register('kana_first_name')}
+                type="text"
+                placeholder="めい"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-akane-500 focus:border-transparent"
+              />
+            </div>
+          </FormField>
+
+          {/* ローマ字 */}
+          <FormField
+            title={{ ja: "ローマ字", en: "Latin alphabet" }}
+            required
+          >
+            <div className="input2 grid grid-cols-2 gap-4">
+              <div>
+                <input
+                  {...register('rom_family_name')}
+                  type="text"
+                  placeholder="last name"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-akane-500 focus:border-transparent"
+                />
+                {errors.rom_family_name && (
+                  <p className="text-red-500 text-xs mt-1">{errors.rom_family_name.message}</p>
+                )}
+              </div>
+              <div>
+                <input
+                  {...register('rom_first_name')}
+                  type="text"
+                  placeholder="first name"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-akane-500 focus:border-transparent"
+                />
+                {errors.rom_first_name && (
+                  <p className="text-red-500 text-xs mt-1">{errors.rom_first_name.message}</p>
+                )}
+              </div>
+            </div>
+          </FormField>
+
+          {/* メールアドレス */}
+          <FormField
+            title={{ ja: "メールアドレス", en: "Email Address" }}
+            required
+            error={errors.email?.message}
+          >
+            <input
+              {...register('email')}
+              type="email"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-akane-500 focus:border-transparent"
+            />
+          </FormField>
+
+          {/* 年齢区分 */}
+          <FormField
+            title={{ ja: "年齢区分", en: "Age Group" }}
+          >
+            <div className="input-check flex gap-6 flex-wrap">
+              <label className="form-check flex items-center cursor-pointer">
+                <input
+                  {...register('age_category', { valueAsNumber: true })}
+                  type="radio"
+                  value={0}
+                  className="w-4 h-4 mr-2"
+                />
+                <span>大人Adult</span>
+              </label>
+              <label className="form-check flex items-center cursor-pointer">
+                <input
+                  {...register('age_category', { valueAsNumber: true })}
+                  type="radio"
+                  value={1}
+                  className="w-4 h-4 mr-2"
+                />
+                <span>子供Child</span>
+              </label>
+              <label className="form-check flex items-center cursor-pointer">
+                <input
+                  {...register('age_category', { valueAsNumber: true })}
+                  type="radio"
+                  value={2}
+                  className="w-4 h-4 mr-2"
+                />
+                <span>幼児Infant</span>
+              </label>
+            </div>
+          </FormField>
+
+          {/* 食事制限 */}
+          <FormField
+            title={{ ja: "食事制限", en: "Dietary Restrictions" }}
+            required
+            error={errors.allergy_flag?.message}
+          >
+            <div className="input-check flex gap-6">
+              <label className="form-check flex items-center cursor-pointer">
+                <input
+                  {...register('allergy_flag', { valueAsNumber: true })}
+                  type="radio"
+                  value={1}
+                  className="w-4 h-4 mr-2"
+                />
+                <span>有りWith</span>
+              </label>
+              <label className="form-check flex items-center cursor-pointer">
+                <input
+                  {...register('allergy_flag', { valueAsNumber: true })}
+                  type="radio"
+                  value={0}
+                  className="w-4 h-4 mr-2"
+                />
+                <span>無しWithout</span>
+              </label>
+            </div>
+          </FormField>
+
+          {/* アレルギー詳細 */}
+          {allergyFlag === 1 && (
+            <FormField>
+              <input
+                {...register('allergy')}
+                type="text"
+                placeholder="えび かに くるみ 小麦 そば 卵 乳 落花生 etc."
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-akane-500 focus:border-transparent"
+              />
+            </FormField>
+          )}
+
+          {/* メッセージ */}
+          <FormField
+            title={{ ja: "メッセージ", en: "Message" }}
+          >
+            <textarea
+              {...register('guest_message')}
+              rows={3}
+              placeholder="MESSAGE"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-akane-500 focus:border-transparent resize-vertical min-h-[100px]"
+            />
+          </FormField>
+
+          {/* 送信ボタン */}
+          <div className="btn-wrap text-center mt-8">
+            <button
+              type="submit"
+              disabled={isLoading || isSubmitting}
+              className="bg-akane-500 text-white py-4 px-12 rounded-full text-lg font-semibold hover:bg-akane-600 focus:outline-none focus:ring-2 focus:ring-akane-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+            >
+              {isLoading || isSubmitting ? '送信中...' : (
+                <img src="/images/submit.svg" alt="送信" className="w-24 h-auto" />
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+  );
+};
+
+// フォームフィールドラッパー
+const FormField: React.FC<{
+  title?: { ja: string; en: string };
+  required?: boolean;
+  error?: string;
+  children: React.ReactNode;
+}> = ({ title, required = false, error, children }) => {
+  return (
+    <div className="row mb-8">
+      {title && (
+        <div className="tit mb-4">
+          <span className="tit-ja block text-lg font-semibold text-gray-800 mb-1">
+            {title.ja}
+            {required && <span className="text-red-500 ml-1">*</span>}
+          </span>
+          <span className="tit-en text-sm text-gray-500 font-playfair">
+            {title.en}
+          </span>
         </div>
       )}
-
-      {/* メッセージ */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          お祝いメッセージ
-        </label>
-        <textarea
-          {...register('message')}
-          rows={4}
-          className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
-          placeholder="お祝いの言葉をお聞かせください（任意）"
-        />
-        {errors.message && (
-          <p className="text-red-500 text-xs mt-1">{errors.message.message}</p>
-        )}
-      </div>
-
-      {/* 送信ボタン */}
-      <button
-        type="submit"
-        disabled={isLoading || isSubmitting}
-        className="w-full bg-pink-500 text-white py-3 px-4 rounded-md hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-      >
-        {isLoading || isSubmitting ? '送信中...' : '送信する'}
-      </button>
-    </form>
+      {children}
+      {error && (
+        <p className="text-red-500 text-sm mt-2">{error}</p>
+      )}
+    </div>
   );
 };
 
