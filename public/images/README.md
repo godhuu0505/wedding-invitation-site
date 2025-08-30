@@ -7,7 +7,11 @@ public/images/
 ├── figma-assets/          # Figmaデザインから生成したアセット
 │   ├── wedding-bg-figma.svg      # メイン背景パターン（和風結婚式テーマ）
 │   ├── wedding-pattern-1.svg     # 和風パターン1（青海波・桜）
-│   └── wedding-pattern-2.svg     # 和風パターン2（麻の葉・竹）
+│   ├── wedding-pattern-2.svg     # 和風パターン2（麻の葉・竹）
+│   ├── header-pattern.png        # Figmaヘッダーパターン背景（125x71px）
+│   ├── couple-garden.png         # 新郎新婦庭園写真（和装・日本庭園）
+│   ├── header-bg.png            # 既存ヘッダー背景
+│   └── wedding-ceremony-bg.jpg   # 式場背景画像
 ├── profiles/              # プロフィール画像
 │   ├── groom-placeholder.svg     # 新郎プロフィール画像（SVGプレースホルダー）
 │   ├── bride-placeholder.svg     # 新婦プロフィール画像（SVGプレースホルダー）
@@ -22,11 +26,13 @@ public/images/
 ## 🎯 使用箇所
 
 ### HeaderSection
-- **背景カルーセル**: 4つの背景パターンを7秒間隔で循環
-  1. `wedding-bg-figma.svg` + グラデーション
-  2. `wedding-pattern-1.svg` + グラデーション
-  3. `wedding-pattern-2.svg` + グラデーション
-  4. `wedding-bg-1.jpg` + グラデーション
+- **背景カルーセル**: 6つの背景パターンを7秒間隔で循環
+  1. `header-bg.png` + グラデーション（既存）
+  2. `couple-garden.png` + 和風グラデーション（Figmaデザイン - 新郎新婦庭園写真）
+  3. `header-pattern.png` + 和風グラデーション（Figmaデザイン - 繰り返しパターン）
+  4. `wedding-pattern-1.svg` + グラデーション（既存）
+  5. `wedding-pattern-2.svg` + グラデーション（既存）
+  6. `wedding-bg-1.jpg` + グラデーション（既存）
 
 ### MessageSection
 - **新郎プロフィール**: `groom-placeholder.svg`
@@ -47,6 +53,8 @@ public/images/
 - **竹**: 縦ストライプの竹模様
 - **神社要素**: 鳥居のシルエット
 - **和風雲**: 流れるような雲の形状
+- **障子格子**: 伝統的な格子パターン（Figmaデザイン）
+- **日本庭園**: 庭園風景と和装カップル（Figmaデザイン）
 
 ## 🔄 実装時の差し替え手順
 
@@ -101,5 +109,5 @@ public/images/backgrounds/venue-reception.jpg (1920x1080px以上)
 
 ---
 
-**更新日**: 2025年8月13日
-**Figmaデザイン**: node-id 3:2188準拠
+**更新日**: 2025年8月30日
+**Figmaデザイン**: node-id 3:1628準拠（和風ヘッダーデザイン統合完了）

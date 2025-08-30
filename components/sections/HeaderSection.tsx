@@ -12,13 +12,35 @@ export default function HeaderSection() {
   const weddingDate = getWeddingDate();
   const weddingEnv = getWeddingEnv();
 
+  // 背景スタイルの型定義
+  interface BackgroundStyle {
+    background: string;
+    backgroundSize: string;
+    backgroundPosition: string;
+    backgroundRepeat?: string;
+    overlay: string;
+  }
+
   // Figmaデザインに基づく背景画像とグラデーション
-  const backgroundStyles = React.useMemo(() => [
+  const backgroundStyles: BackgroundStyle[] = React.useMemo(() => [
     {
-      background: 'url("/images/figma-assets/wedding-bg-figma.svg"), linear-gradient(135deg, #F5F2E4 0%, #E5E3DF 20%, #D5D3CF 40%, #C5C3BF 60%, #B5B3AF 80%, #A5A39F 100%)',
+      background: 'url("/images/figma-assets/header-bg.png"), linear-gradient(135deg, #F5F2E4 0%, #E5E3DF 20%, #D5D3CF 40%, #C5C3BF 60%, #B5B3AF 80%, #A5A39F 100%)',
       backgroundSize: 'cover, cover',
       backgroundPosition: 'center, center',
       overlay: 'linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(113,18,7,0.2) 50%, rgba(0,0,0,0.3) 100%)'
+    },
+    {
+      background: 'url("/images/figma-assets/couple-garden.png"), linear-gradient(135deg, rgba(139, 69, 19, 0.3) 0%, rgba(160, 82, 45, 0.2) 30%, rgba(205, 133, 63, 0.1) 60%, rgba(222, 184, 135, 0.05) 100%)',
+      backgroundSize: 'cover, cover',
+      backgroundPosition: 'center, center',
+      overlay: 'linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(139,69,19,0.3) 50%, rgba(0,0,0,0.4) 100%)'
+    },
+    {
+      background: 'url("/images/figma-assets/header-pattern.png"), linear-gradient(45deg, #D2B48C 0%, #DEB887 30%, #F5DEB3 60%, #FDF5E6 100%)',
+      backgroundSize: '125px 71px, cover',
+      backgroundPosition: 'top left, center',
+      backgroundRepeat: 'repeat, no-repeat',
+      overlay: 'linear-gradient(to bottom, rgba(139,69,19,0.1) 0%, rgba(160,82,45,0.15) 50%, rgba(0,0,0,0.25) 100%)'
     },
     {
       background: 'url("/images/figma-assets/wedding-pattern-1.svg"), linear-gradient(45deg, #F5F5F5 0%, #BDBCDA 30%, #A5A39F 60%, #8B8985 100%)',
@@ -78,6 +100,7 @@ export default function HeaderSection() {
               background: style.background,
               backgroundSize: style.backgroundSize,
               backgroundPosition: style.backgroundPosition,
+              backgroundRepeat: style.backgroundRepeat || 'no-repeat',
               transform: 'scale(1.02)',
               transitionDuration: '3000ms',
               transitionProperty: 'opacity',
