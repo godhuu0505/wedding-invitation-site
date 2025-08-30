@@ -16,19 +16,19 @@ interface RSVPFormData {
   guest_side: 0 | 1;
   jpn_family_name: string;
   jpn_first_name: string;
-  kana_family_name?: string;
-  kana_first_name?: string;
+  kana_family_name: string;
+  kana_first_name: string;
   rom_family_name: string;
   rom_first_name: string;
   email: string;
-  phone_number?: string;
-  zipcode?: string;
-  address?: string;
-  address2?: string;
-  age_category?: 0 | 1 | 2;
+  phone_number: string;
+  zipcode: string;
+  address: string;
+  address2: string;
+  age_category: 0 | 1 | 2;
   allergy_flag: 0 | 1;
-  allergy?: string;
-  guest_message?: string;
+  allergy: string[];
+  guest_message: string;
 }
 
 export default function RSVPSection() {
@@ -38,6 +38,12 @@ export default function RSVPSection() {
   const handleRSVPSubmit = async (data: RSVPFormData) => {
     try {
       // TODO: Firebase Firestoreへのデータ保存を実装
+      
+      // アレルギー情報のログ出力（開発用）
+      console.log('RSVP送信データ:', {
+        ...data,
+        allergy_items: data.allergy_flag === 1 ? data.allergy : []
+      });
       
       // 模擬的な送信処理
       await new Promise(resolve => setTimeout(resolve, 2000));

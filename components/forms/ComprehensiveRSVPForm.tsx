@@ -21,29 +21,29 @@ const rsvpSchema = yup.object({
   // 名前情報（すべて必須）
   jpn_family_name: yup.string().required('姓（漢字）をご入力ください').max(50, '姓は50文字以内でご入力ください'),
   jpn_first_name: yup.string().required('名（漢字）をご入力ください').max(50, '名は50文字以内でご入力ください'),
-  kana_family_name: yup.string().max(50, 'せい（ひらがな）は50文字以内でご入力ください').optional(),
-  kana_first_name: yup.string().max(50, 'めい（ひらがな）は50文字以内でご入力ください').optional(),
+  kana_family_name: yup.string().max(50, 'せい（ひらがな）は50文字以内でご入力ください'),
+  kana_first_name: yup.string().max(50, 'めい（ひらがな）は50文字以内でご入力ください'),
   rom_family_name: yup.string().required('Family Name（ローマ字）をご入力ください').max(50, 'Family Nameは50文字以内でご入力ください'),
   rom_first_name: yup.string().required('First Name（ローマ字）をご入力ください').max(50, 'First Nameは50文字以内でご入力ください'),
   
   // 連絡先
   email: yup.string().email('正しいメールアドレスを入力してください').required('メールアドレスをご入力ください').max(100, 'メールアドレスは100文字以内でご入力ください'),
-  phone_number: yup.string().max(15, '電話番号は15文字以内でご入力ください').optional(),
+  phone_number: yup.string().max(15, '電話番号は15文字以内でご入力ください'),
   
   // 住所情報
-  zipcode: yup.string().matches(/^\d{7}$/, '郵便番号は7桁の数字で入力してください（例：1234567）').optional(),
-  address: yup.string().max(200, '住所は200文字以内でご入力ください').optional(),
-  address2: yup.string().max(100, '住所2は100文字以内でご入力ください').optional(),
+  zipcode: yup.string().matches(/^\d{7}$/, '郵便番号は7桁の数字で入力してください（例：1234567）'),
+  address: yup.string().max(200, '住所は200文字以内でご入力ください'),
+  address2: yup.string().max(100, '住所2は100文字以内でご入力ください'),
   
   // その他
-  age_category: yup.number().oneOf([0, 1, 2], '年齢区分をお選びください').optional(),
+  age_category: yup.number().oneOf([0, 1, 2], '年齢区分をお選びください'),
   allergy_flag: yup.number().oneOf([0, 1], 'アレルギーの有無をお選びください').required('アレルギーの有無をお選びください'),
-  allergy: yup.string().when('allergy_flag', {
+  allergy: yup.array().when('allergy_flag', {
     is: 1,
-    then: (schema) => schema.required('アレルギー内容をご入力ください').max(500, 'アレルギー内容は500文字以内でご入力ください'),
-    otherwise: (schema) => schema.max(500, 'アレルギー内容は500文字以内でご入力ください').optional(),
+    then: (schema) => schema.min(1, 'アレルギー項目を最低1つ選択してください'),
+    otherwise: (schema) => schema,
   }),
-  guest_message: yup.string().max(500, 'メッセージは500文字以内でご入力ください').optional(),
+  guest_message: yup.string().max(500, 'メッセージは500文字以内でご入力ください'),
 });
 
 // TypeScript型定義（reference-site.html準拠）
@@ -52,19 +52,19 @@ interface ComprehensiveRSVPFormData {
   guest_side: 0 | 1; // 0: 新郎側, 1: 新婦側
   jpn_family_name: string;
   jpn_first_name: string;
-  kana_family_name?: string;
-  kana_first_name?: string;
+  kana_family_name: string;
+  kana_first_name: string;
   rom_family_name: string;
   rom_first_name: string;
   email: string;
-  phone_number?: string;
-  zipcode?: string;
-  address?: string;
-  address2?: string;
-  age_category?: 0 | 1 | 2; // 0: 大人, 1: 子供, 2: 幼児
+  phone_number: string;
+  zipcode: string;
+  address: string;
+  address2: string;
+  age_category: 0 | 1 | 2; // 0: 大人, 1: 子供, 2: 幼児
   allergy_flag: 0 | 1; // 0: なし, 1: あり
-  allergy?: string;
-  guest_message?: string;
+  allergy: string[];
+  guest_message: string;
 }
 
 interface ComprehensiveRSVPFormProps {
@@ -75,17 +75,31 @@ interface ComprehensiveRSVPFormProps {
 export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: ComprehensiveRSVPFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // アレルギー項目の定数
+  const allergyOptions = [
+    'えび',
+    'かに', 
+    'くるみ',
+    '小麦',
+    'そば',
+    'たまご',
+    '乳',
+    '落花生'
+  ];
+
   const {
     register,
     handleSubmit,
     watch,
+    setValue,
+    getValues,
     formState: { errors },
     reset,
-  } = useForm<ComprehensiveRSVPFormData>({
-    resolver: yupResolver(rsvpSchema),
+  } = useForm({
+    resolver: yupResolver(rsvpSchema) as any,
     defaultValues: {
-      status: undefined,
-      guest_side: undefined,
+      status: undefined as any,
+      guest_side: undefined as any,
       jpn_family_name: '',
       jpn_first_name: '',
       kana_family_name: '',
@@ -97,15 +111,34 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
       zipcode: '',
       address: '',
       address2: '',
-      age_category: undefined,
+      age_category: undefined as any,
       allergy_flag: 0,
-      allergy: '',
+      allergy: [],
       guest_message: '',
     },
   });
 
   const status = watch('status');
   const allergyFlag = watch('allergy_flag');
+  const allergyItems = watch('allergy') || [];
+
+  // アレルギー項目のチェック状態を管理
+  const handleAllergyItemChange = (item: string, checked: boolean) => {
+    const currentAllergy = getValues('allergy') || [];
+    if (checked) {
+      setValue('allergy', [...currentAllergy, item]);
+    } else {
+      setValue('allergy', currentAllergy.filter(allergyItem => allergyItem !== item));
+    }
+  };
+
+  // アレルギー有無の変更処理
+  const handleAllergyFlagChange = (value: 0 | 1) => {
+    setValue('allergy_flag', value);
+    if (value === 0) {
+      setValue('allergy', []); // アレルギーなしの場合はチェック項目をクリア
+    }
+  };
 
   const handleFormSubmit: SubmitHandler<ComprehensiveRSVPFormData> = async (data) => {
     setIsSubmitting(true);
@@ -213,7 +246,7 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
               </label>
             </div>
             {errors.status && (
-              <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.status.message}</p>
+              <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.status.message as string}</p>
             )}
           </div>
 
@@ -268,7 +301,7 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
               </label>
             </div>
             {errors.guest_side && (
-              <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.guest_side.message}</p>
+              <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.guest_side.message as string}</p>
             )}
           </div>
         </div>
@@ -301,7 +334,7 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
                 placeholder="田中"
               />
               {errors.jpn_family_name && (
-                <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.jpn_family_name.message}</p>
+                <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.jpn_family_name.message as string}</p>
               )}
             </div>
             <div>
@@ -315,7 +348,7 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
                 placeholder="太郎"
               />
               {errors.jpn_first_name && (
-                <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.jpn_first_name.message}</p>
+                <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.jpn_first_name.message as string}</p>
               )}
             </div>
           </div>
@@ -333,7 +366,7 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
                 placeholder="たなか"
               />
               {errors.kana_family_name && (
-                <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.kana_family_name.message}</p>
+                <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.kana_family_name.message as string}</p>
               )}
             </div>
             <div>
@@ -347,7 +380,7 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
                 placeholder="たろう"
               />
               {errors.kana_first_name && (
-                <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.kana_first_name.message}</p>
+                <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.kana_first_name.message as string}</p>
               )}
             </div>
           </div>
@@ -365,7 +398,7 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
                 placeholder="Tanaka"
               />
               {errors.rom_family_name && (
-                <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.rom_family_name.message}</p>
+                <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.rom_family_name.message as string}</p>
               )}
             </div>
             <div>
@@ -379,7 +412,7 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
                 placeholder="Taro"
               />
               {errors.rom_first_name && (
-                <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.rom_first_name.message}</p>
+                <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.rom_first_name.message as string}</p>
               )}
             </div>
           </div>
@@ -412,7 +445,7 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
                 placeholder="example@email.com"
               />
               {errors.email && (
-                <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.email.message}</p>
+                <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.email.message as string}</p>
               )}
             </div>
             <div>
@@ -426,7 +459,7 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
                 placeholder="090-1234-5678"
               />
               {errors.phone_number && (
-                <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.phone_number.message}</p>
+                <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.phone_number.message as string}</p>
               )}
             </div>
           </div>
@@ -460,7 +493,7 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
             />
             <p className="text-dusty-gray text-xs mt-1 semantic-label">7桁の数字で入力してください（例：1234567）</p>
             {errors.zipcode && (
-              <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.zipcode.message}</p>
+              <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.zipcode.message as string}</p>
             )}
           </div>
 
@@ -475,7 +508,7 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
               placeholder="東京都港区青山1-2-3"
             />
             {errors.address && (
-              <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.address.message}</p>
+              <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.address.message as string}</p>
             )}
           </div>
 
@@ -490,7 +523,7 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
               placeholder="青山マンション 101号"
             />
             {errors.address2 && (
-              <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.address2.message}</p>
+              <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.address2.message as string}</p>
             )}
           </div>
         </div>
@@ -509,41 +542,6 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
           >
             その他情報
           </h3>
-          
-          {/* 年齢区分 */}
-          <div className="mb-8">
-            <label className="semantic-label block mb-4">
-              年齢区分
-            </label>
-            <div className="grid grid-cols-3 gap-4">
-              {[
-                { value: 0, label: '大人' },
-                { value: 1, label: '子供' },
-                { value: 2, label: '幼児' }
-              ].map((option) => (
-                <label key={option.value} className="relative">
-                  <input
-                    type="radio"
-                    value={option.value}
-                    {...register('age_category', { valueAsNumber: true })}
-                    className="sr-only"
-                  />
-                  <div className={`
-                    p-3 border-2 rounded-lg text-center cursor-pointer transition-all duration-300
-                    ${watch('age_category') === option.value 
-                      ? 'border-akane-500 bg-akane-50 text-akane-500' 
-                      : 'border-mercury hover:border-akane-300'
-                    }
-                  `}>
-                    <div className="semantic-button">{option.label}</div>
-                  </div>
-                </label>
-              ))}
-            </div>
-            {errors.age_category && (
-              <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.age_category.message}</p>
-            )}
-          </div>
 
           {/* アレルギー */}
           <div className="mb-8">
@@ -555,7 +553,8 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
                 <input
                   type="radio"
                   value={0}
-                  {...register('allergy_flag', { valueAsNumber: true })}
+                  checked={allergyFlag === 0}
+                  onChange={() => handleAllergyFlagChange(0)}
                   className="sr-only"
                 />
                 <div className={`
@@ -572,7 +571,8 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
                 <input
                   type="radio"
                   value={1}
-                  {...register('allergy_flag', { valueAsNumber: true })}
+                  checked={allergyFlag === 1}
+                  onChange={() => handleAllergyFlagChange(1)}
                   className="sr-only"
                 />
                 <div className={`
@@ -587,25 +587,45 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
               </label>
             </div>
             {errors.allergy_flag && (
-              <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.allergy_flag.message}</p>
+              <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.allergy_flag.message as string}</p>
             )}
 
-            {allergyFlag === 1 && (
-              <div className="mt-4">
-                <label className="semantic-label block mb-3">
-                  アレルギー内容をお聞かせください <span className="text-akane-500">*</span>
-                </label>
-                <textarea
-                  {...register('allergy')}
-                  className="figma-textarea w-full"
-                  rows={3}
-                  placeholder="例：エビ、カニ、小麦、そば、乳製品など"
-                />
-                {errors.allergy && (
-                  <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.allergy.message}</p>
-                )}
+            {/* アレルギー項目チェックボックス（条件付き表示・非活性化） */}
+            <div className={`mt-4 p-6 rounded-lg transition-all duration-300 ${
+              allergyFlag === 1 ? 'bg-gray-50' : 'bg-gray-100'
+            }`}>
+              <label className={`semantic-label block mb-4 transition-opacity duration-300 ${
+                allergyFlag === 1 ? 'opacity-100' : 'opacity-60'
+              }`}>
+                該当するアレルギー項目をチェックしてください {allergyFlag === 1 && <span className="text-akane-500">*</span>}
+              </label>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {allergyOptions.map((item) => (
+                  <label key={item} className={`flex items-center transition-all duration-300 ${
+                    allergyFlag === 1 ? 'cursor-pointer' : 'cursor-not-allowed opacity-60'
+                  }`}>
+                    <input
+                      type="checkbox"
+                      checked={allergyItems.includes(item)}
+                      disabled={allergyFlag !== 1}
+                      onChange={(e) => handleAllergyItemChange(item, e.target.checked)}
+                      className={`mr-2 rounded border-mercury transition-all duration-300 ${
+                        allergyFlag === 1 
+                          ? 'text-akane-500 focus:ring-akane-500' 
+                          : 'text-gray-300 cursor-not-allowed'
+                      }`}
+                    />
+                    <span className="semantic-label">{item}</span>
+                  </label>
+                ))}
               </div>
-            )}
+              {allergyFlag === 1 && errors.allergy && (
+                <p className="text-cinnabar text-sm mt-3 semantic-label">{errors.allergy.message as string}</p>
+              )}
+              {allergyFlag === 1 && allergyItems.length === 0 && (
+                <p className="text-selective-yellow text-xs mt-3 semantic-label">※ 最低1つの項目を選択してください</p>
+              )}
+            </div>
           </div>
 
           {/* メッセージ */}
@@ -620,7 +640,7 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
               placeholder="お二人へのメッセージをお聞かせください"
             />
             {errors.guest_message && (
-              <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.guest_message.message}</p>
+              <p className="text-cinnabar text-sm mt-2 semantic-label">{errors.guest_message.message as string}</p>
             )}
           </div>
         </div>
