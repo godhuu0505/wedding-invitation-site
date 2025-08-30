@@ -32,131 +32,121 @@ export default function InformationSection() {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12 items-start">
-          {/* 式場情報 */}
-          <div className="space-y-8">
-            {/* 挙式 */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 border border-akane-100/50">
-              <h3 className="text-2xl font-japanese font-bold text-akane-700 mb-6 flex items-center">
-                <span className="w-3 h-3 bg-gradient-to-r from-akane-400 to-pink-400 rounded-full mr-3"></span>
-                挙式
-              </h3>
-              <div className="space-y-4 text-gray-700">
-                <div className="flex items-start">
-                  <span className="font-medium text-gray-500 w-16 flex-shrink-0">日時</span>
-                  <span>{weddingEnv.weddingDateJp}（{weddingEnv.weddingDayJp}）</span>
-                </div>
-                <div className="flex items-start">
-                  <span className="font-medium text-gray-500 w-16 flex-shrink-0">時間</span>
-                  <span>{weddingEnv.ceremonyTimeDisplay}より</span>
-                </div>
-                <div className="flex items-start">
-                  <span className="font-medium text-gray-500 w-16 flex-shrink-0">会場</span>
-                  <div>
-                    <div className="font-medium text-akane-700">{weddingEnv.venueName}</div>
-                    <div className="text-sm text-gray-600 mt-1">{weddingEnv.venueAddress}</div>
+          {/* 会場情報・地図エリア */}
+          <div className="space-y-6">
+            {/* 会場情報と地図統合カード */}
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-akane-100/50">
+              {/* 会場基本情報 */}
+              <div className="p-8 pb-0 bg-gray-50">
+                <h3 className="text-2xl font-japanese font-bold text-gray-600 mb-6 flex items-center">
+                  <img 
+                    src="/images/crane_icon.png" 
+                    alt="鶴アイコン" 
+                    className="h-6"
+                  />
+                  会場情報
+                </h3>
+                <div className="space-y-4 text-gray-700">
+                  <div className="flex items-start">
+                    <span className="font-medium text-gray-500 w-16 flex-shrink-0">会場名</span>
+                    <span className="text-lg font-semibold text-akane-700">{weddingEnv.venueName}</span>
+                  </div>
+                  <div className="flex items-start">
+                    <span className="font-medium text-gray-500 w-16 flex-shrink-0">住所</span>
+                    <span>{weddingEnv.venueAddress}</span>
+                  </div>
+                  <div className="flex items-start">
+                    <span className="font-medium text-gray-500 w-16 flex-shrink-0">URL</span>
+                    <a 
+                      href={weddingEnv.venueWebSite} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 underline transition-colors duration-200"
+                    >
+                      会場の公式サイトはこちら
+                    </a>
                   </div>
                 </div>
               </div>
-            </div>
-
-            {/* 披露宴 */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 border border-akane-100/50">
-              <h3 className="text-2xl font-japanese font-bold text-akane-700 mb-6 flex items-center">
-                <span className="w-3 h-3 bg-gradient-to-r from-pink-400 to-rose-400 rounded-full mr-3"></span>
-                披露宴
-              </h3>
-              <div className="space-y-4 text-gray-700">
-                <div className="flex items-start">
-                  <span className="font-medium text-gray-500 w-16 flex-shrink-0">時間</span>
-                  <span>{weddingEnv.receptionTimeDisplay}より</span>
+              
+              {/* 地図セクション */}
+              <div>
+                <div className="p-6 pb-0">
+                  <h4 className="text-xl font-japanese font-bold text-akane-700 mb-4">会場までの地図</h4>
                 </div>
-                <div className="flex items-start">
-                  <span className="font-medium text-gray-500 w-16 flex-shrink-0">会場</span>
-                  <div>
-                    <div className="font-medium text-akane-700">{weddingEnv.venueName}</div>
-                    <div className="text-sm text-gray-600 mt-1">同会場内</div>
-                  </div>
+                
+                {/* Google Maps */}
+                <div className="relative">
+                  <SimpleGoogleMap
+                    className="w-full"
+                    height="384px"
+                    onMapLoad={handleMapLoad}
+                    onError={handleMapError}
+                  />
                 </div>
-              </div>
-            </div>
-
-            {/* アクセス情報 */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 border border-akane-100/50">
-              <h3 className="text-2xl font-japanese font-bold text-akane-700 mb-6 flex items-center">
-                <span className="w-3 h-3 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-full mr-3"></span>
-                アクセス
-              </h3>
-              <div className="space-y-4 text-gray-700">
-                <div className="flex items-start">
-                  <span className="font-medium text-gray-500 w-16 flex-shrink-0">住所</span>
-                  <span>{weddingEnv.venueAddress}</span>
-                </div>
-                <div className="flex items-start">
-                  <span className="font-medium text-gray-500 w-16 flex-shrink-0">最寄駅</span>
-                  <div>
-                    <div>JR線・地下鉄各線「表参道駅」徒歩5分</div>
-                    <div className="text-sm text-gray-600 mt-1">※詳細なアクセス方法は地図をご確認ください</div>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <span className="font-medium text-gray-500 w-16 flex-shrink-0">駐車場</span>
-                  <span>あり（台数限定）</span>
+                
+                <div className="p-6 bg-gray-50">
+                  <p className="text-sm text-gray-600">
+                    地図上のマーカーをクリックすると詳細情報を確認できます
+                  </p>
                 </div>
               </div>
             </div>
           </div>
-
-          {/* 地図エリア */}
-          <div className="space-y-6">
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-akane-100/50">
-              <div className="p-6 border-b border-gray-100">
-                <h3 className="text-xl font-japanese font-bold text-akane-700">会場までの地図</h3>
-              </div>
-              
-              {/* Google Maps */}
-              <div className="relative">
-                <SimpleGoogleMap
-                  className="w-full"
-                  height="384px"
-                  onMapLoad={handleMapLoad}
-                  onError={handleMapError}
+          {/* 式場情報 */}
+          <div className="space-y-8">
+            {/* アクセス情報 */}
+            <div className="bg-white rounded-2xl shadow-lg p-8 border border-akane-100/50">
+              <h3 className="text-2xl font-japanese font-bold text-gray-600 mb-6 flex items-center">
+                <img 
+                  src="/images/crane_icon.png" 
+                  alt="鶴アイコン" 
+                  className="h-6"
                 />
-              </div>
-              
-              <div className="p-6 bg-gray-50">
-                <div className="flex items-start space-x-3 text-sm text-gray-600">
-                  <span className="w-5 h-5 bg-akane-400 rounded-full flex-shrink-0 mt-0.5"></span>
-                  <div>
-                    <div className="font-medium text-gray-800">{weddingEnv.venueName}</div>
-                    <div>{weddingEnv.venueAddress}</div>
+                アクセス
+              </h3>
+              <div className="space-y-6 text-gray-700">
+                {/* 電車の場合 */}
+                <div>
+                  <h4 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                    電車の場合
+                  </h4>
+                  <p className="mb-3 text-sm">最寄り駅は下記3駅になります。</p>
+                  <ul className="space-y-2 text-sm leading-relaxed">
+                    <li>・JR中央・総武線　【信濃町駅】下車、徒歩3分</li>
+                    <li>・地下鉄 銀座線・半蔵門線・大江戸線<br />
+                        　【青山一丁目駅】下車（2番出口）、徒歩6分</li>
+                    <li>・地下鉄 大江戸線<br />
+                        　【国立競技場駅】下車（A1出口）、徒歩6分</li>
+                  </ul>
+                </div>
+
+                {/* お車の場合 */}
+                <div>
+                  <h4 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                    <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                    お車の場合
+                  </h4>
+                  <div className="space-y-3 text-sm leading-relaxed">
+                    <p>首都高速4号線　外苑出口をご利用ください。<br />
+                       上り線、下り線で出口が異なりますのでご注意ください。</p>
+                    <p>館内施設ご利用者用無料駐車場（97台）がございます。その他、一部エリアは事前予約制有料駐車場としております。</p>
+                    <p className="text-akane-600 font-medium">※土日祝日は大変混雑いたしますので、できるだけ公共交通機関をご利用くださいませ。</p>
                   </div>
                 </div>
-              </div>
-            </div>
 
-            {/* お車でお越しの方 */}
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-100">
-              <h4 className="font-japanese font-bold text-blue-800 mb-3 flex items-center">
-                <span className="mr-2">🚗</span>
-                お車でお越しの方へ
-              </h4>
-              <div className="text-sm text-blue-700 space-y-2">
-                <p>• 駐車場の台数に限りがございます</p>
-                <p>• 公共交通機関のご利用をお勧めいたします</p>
-                <p>• 周辺にコインパーキングもございます</p>
-              </div>
-            </div>
-
-            {/* 公共交通機関 */}
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-100">
-              <h4 className="font-japanese font-bold text-green-800 mb-3 flex items-center">
-                <span className="mr-2">🚇</span>
-                公共交通機関でお越しの方へ
-              </h4>
-              <div className="text-sm text-green-700 space-y-2">
-                <p>• 表参道駅A4出口より徒歩5分</p>
-                <p>• 青山一丁目駅より徒歩8分</p>
-                <p>• 当日は案内スタッフが駅にてご案内いたします</p>
+                {/* バスの場合 */}
+                <div>
+                  <h4 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                    <span className="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
+                    バスの場合
+                  </h4>
+                  <p className="text-sm leading-relaxed">
+                    都バス　品川車庫前〜新宿駅西口（品97）<br />
+                    【権田原】下車徒歩1分
+                  </p>
+                </div>
               </div>
             </div>
           </div>

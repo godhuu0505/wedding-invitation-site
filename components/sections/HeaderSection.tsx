@@ -24,13 +24,13 @@ export default function HeaderSection() {
   // Figmaデザインに基づく背景画像とグラデーション
   const backgroundStyles: BackgroundStyle[] = React.useMemo(() => [
     {
-      background: 'url("/images/figma-assets/couple-garden.png"), linear-gradient(135deg, rgba(139, 69, 19, 0.3) 0%, rgba(160, 82, 45, 0.2) 30%, rgba(205, 133, 63, 0.1) 60%, rgba(222, 184, 135, 0.05) 100%)',
+      background: 'url("/images/header-pattern1.png"), linear-gradient(135deg, rgba(139, 69, 19, 0.3) 0%, rgba(160, 82, 45, 0.2) 30%, rgba(205, 133, 63, 0.1) 60%, rgba(222, 184, 135, 0.05) 100%)',
       backgroundSize: 'cover, cover',
       backgroundPosition: 'center, center',
       overlay: 'linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(139,69,19,0.3) 50%, rgba(0,0,0,0.4) 100%)'
     },
     {
-      background: 'url("/images/figma-assets/header-pattern.png"), linear-gradient(45deg, #D2B48C 0%, #DEB887 30%, #F5DEB3 60%, #FDF5E6 100%)',
+      background: 'url("/images/header-pattern2.png"), linear-gradient(45deg, #D2B48C 0%, #DEB887 30%, #F5DEB3 60%, #FDF5E6 100%)',
       backgroundSize: '125px 71px, cover',
       backgroundPosition: 'top left, center',
       backgroundRepeat: 'repeat, no-repeat',

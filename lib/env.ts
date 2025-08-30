@@ -35,6 +35,7 @@ export interface WeddingEnvironment {
   // 会場情報
   venueName: string;
   venueAddress: string;
+  venueWebSite: string;
   venueLat: string;
   venueLng: string;
 
@@ -81,6 +82,7 @@ export const getWeddingEnv = (): WeddingEnvironment => {
     // 会場情報
     venueName: process.env.NEXT_PUBLIC_VENUE_NAME || 'サンプルホテル',
     venueAddress: process.env.NEXT_PUBLIC_VENUE_ADDRESS || '東京都港区北青山３丁目５－１５',
+    venueWebSite: process.env.NEXT_PUBLIC_WEB_SITE || 'https://example-venue.com',
     venueLat: process.env.NEXT_PUBLIC_VENUE_LAT || '35.6762',
     venueLng: process.env.NEXT_PUBLIC_VENUE_LNG || '139.6503',
 

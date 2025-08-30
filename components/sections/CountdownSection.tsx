@@ -237,82 +237,17 @@ export default function CountdownSection() {
                 >
                   {weddingDate.jp}
                 </span>
-                <span 
-                  className="text-dusty-gray"
-                  style={{
-                    fontFamily: 'Noto Serif JP, serif',
-                    fontWeight: '400',
-                    fontSize: 'clamp(1.25rem, 2.5vw, 1.75rem)',
-                    color: '#999999',
-                  }}
-                >
-                  （{weddingDate.dayJp}）
-                </span>
               </div>
-            </div>
-            
-            {/* Figmaデザインのスケジュール */}
-            <div className="grid md:grid-cols-2 gap-8 mb-12">
               <div 
-                className="p-8 rounded-xl"
+                className="text-mine-shaft mb-3"
                 style={{
-                  background: 'linear-gradient(135deg, rgba(230, 85, 85, 0.1) 0%, rgba(230, 85, 85, 0.05) 100%)',
-                  border: '1px solid rgba(230, 85, 85, 0.2)',
+                  fontFamily: 'Noto Serif JP, serif',
+                  fontWeight: '600',
+                  fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
+                  color: '#333333',
                 }}
               >
-                <div 
-                  className="mb-3"
-                  style={{
-                    fontFamily: 'Noto Serif JP, serif',
-                    fontWeight: '500',
-                    fontSize: 'clamp(1.25rem, 2.5vw, 1.75rem)',
-                    color: '#e65555',
-                  }}
-                >
-                  結婚式
-                </div>
-                <div 
-                  className="text-mine-shaft"
-                  style={{
-                    fontFamily: 'Cinzel, serif',
-                    fontWeight: '400',
-                    fontSize: 'clamp(1rem, 2vw, 1.25rem)',
-                    color: '#333333',
-                  }}
-                >
-                  {weddingEnv.ceremonyTimeDisplay}より
-                </div>
-              </div>
-              
-              <div 
-                className="p-8 rounded-xl"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(189, 188, 218, 0.2) 0%, rgba(189, 188, 218, 0.1) 100%)',
-                  border: '1px solid rgba(189, 188, 218, 0.3)',
-                }}
-              >
-                <div 
-                  className="mb-3"
-                  style={{
-                    fontFamily: 'Noto Serif JP, serif',
-                    fontWeight: '500',
-                    fontSize: 'clamp(1.25rem, 2.5vw, 1.75rem)',
-                    color: '#BDBCDA',
-                  }}
-                >
-                  披露宴
-                </div>
-                <div 
-                  className="text-mine-shaft"
-                  style={{
-                    fontFamily: 'Cinzel, serif',
-                    fontWeight: '400',
-                    fontSize: 'clamp(1rem, 2vw, 1.25rem)',
-                    color: '#333333',
-                  }}
-                >
-                  {weddingEnv.receptionTimeDisplay}より
-                </div>
+                {weddingEnv.receptionTimeDisplay}より
               </div>
             </div>
             
