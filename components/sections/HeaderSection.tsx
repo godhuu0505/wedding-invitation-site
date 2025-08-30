@@ -24,12 +24,6 @@ export default function HeaderSection() {
   // Figmaデザインに基づく背景画像とグラデーション
   const backgroundStyles: BackgroundStyle[] = React.useMemo(() => [
     {
-      background: 'url("/images/figma-assets/header-bg.png"), linear-gradient(135deg, #F5F2E4 0%, #E5E3DF 20%, #D5D3CF 40%, #C5C3BF 60%, #B5B3AF 80%, #A5A39F 100%)',
-      backgroundSize: 'cover, cover',
-      backgroundPosition: 'center, center',
-      overlay: 'linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(113,18,7,0.2) 50%, rgba(0,0,0,0.3) 100%)'
-    },
-    {
       background: 'url("/images/figma-assets/couple-garden.png"), linear-gradient(135deg, rgba(139, 69, 19, 0.3) 0%, rgba(160, 82, 45, 0.2) 30%, rgba(205, 133, 63, 0.1) 60%, rgba(222, 184, 135, 0.05) 100%)',
       backgroundSize: 'cover, cover',
       backgroundPosition: 'center, center',
@@ -41,24 +35,6 @@ export default function HeaderSection() {
       backgroundPosition: 'top left, center',
       backgroundRepeat: 'repeat, no-repeat',
       overlay: 'linear-gradient(to bottom, rgba(139,69,19,0.1) 0%, rgba(160,82,45,0.15) 50%, rgba(0,0,0,0.25) 100%)'
-    },
-    {
-      background: 'url("/images/figma-assets/wedding-pattern-1.svg"), linear-gradient(45deg, #F5F5F5 0%, #BDBCDA 30%, #A5A39F 60%, #8B8985 100%)',
-      backgroundSize: 'cover, cover',
-      backgroundPosition: 'center, center',
-      overlay: 'linear-gradient(to bottom, rgba(113,18,7,0.1) 0%, rgba(230,85,85,0.2) 50%, rgba(0,0,0,0.3) 100%)'
-    },
-    {
-      background: 'url("/images/figma-assets/wedding-pattern-2.svg"), linear-gradient(225deg, #E5E3DF 0%, #BDBCDA 30%, #F5F2E4 60%, #F5F5F5 100%)',
-      backgroundSize: 'cover, cover',
-      backgroundPosition: 'center, center',
-      overlay: 'linear-gradient(to bottom, rgba(77,77,77,0.1) 0%, rgba(230,85,85,0.15) 50%, rgba(0,0,0,0.25) 100%)'
-    },
-    {
-      background: 'url("/images/backgrounds/wedding-bg-1.jpg"), linear-gradient(135deg, #F5F2E4 0%, #e65555 20%, #BDBCDA 80%, #333333 100%)',
-      backgroundSize: 'cover, cover',
-      backgroundPosition: 'center, center',
-      overlay: 'linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(230,85,85,0.1) 50%, rgba(0,0,0,0.4) 100%)'
     },
   ], []);
 
@@ -127,162 +103,6 @@ export default function HeaderSection() {
         <div className="flex-1 flex items-center justify-center px-4 py-20">
           <div className="text-center max-w-6xl mx-auto">
             
-            {/* Figmaデザインのカップル名セクション */}
-            <div className="mb-16 animate-figma-fade-in">
-              {/* 英語名 - Figmaデザインのタイポグラフィ */}
-              <h1 
-                className="figma-heading-large text-mine-shaft mb-8 drop-shadow-lg"
-                style={{
-                  fontFamily: 'Cinzel, serif',
-                  fontWeight: '700',
-                  fontSize: 'clamp(3rem, 8vw, 7rem)',
-                  lineHeight: '0.85',
-                  letterSpacing: '0.15em',
-                  textShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
-                  color: '#333333',
-                  marginBottom: '2rem',
-                }}
-              >
-                {coupleNames.groom.en}
-                <span 
-                  className="mx-6"
-                  style={{
-                    fontSize: 'clamp(2rem, 6vw, 5rem)',
-                    fontWeight: '300',
-                    color: '#711207',
-                    margin: '0 1.5rem',
-                  }}
-                >
-                  &
-                </span>
-                {coupleNames.bride.en}
-              </h1>
-              
-              {/* Figmaデザインの装飾線 */}
-              <div className="flex items-center justify-center mb-8">
-                <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-mine-shaft to-transparent opacity-60"></div>
-                <div className="w-2 h-2 bg-akane-500 rounded-full mx-6 opacity-80 shadow-sm"></div>
-                <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-mine-shaft to-transparent opacity-60"></div>
-              </div>
-              
-              {/* 日本語名 - Figmaデザインのタイポグラフィ */}
-              <p 
-                className="figma-body-japanese text-mine-shaft mb-4"
-                style={{
-                  fontFamily: 'Noto Serif JP, serif',
-                  fontWeight: '400',
-                  fontSize: 'clamp(1.25rem, 3vw, 2rem)',
-                  letterSpacing: '0.25em',
-                  textShadow: '0 2px 10px rgba(0, 0, 0, 0.2)',
-                  color: '#333333',
-                  marginBottom: '1rem',
-                }}
-              >
-                {coupleNames.combined.jp}
-              </p>
-            </div>
-
-            {/* Figmaデザインの結婚式情報セクション */}
-            <div className="animate-figma-slide-up mb-16" style={{ animationDelay: '0.6s' }}>
-              {/* 日付 - Figmaデザインスタイル */}
-              <div className="mb-10">
-                <p 
-                  className="text-mine-shaft mb-3"
-                  style={{
-                    fontFamily: 'Cinzel, serif',
-                    fontWeight: '600',
-                    fontSize: 'clamp(3rem, 6vw, 5rem)',
-                    lineHeight: '1',
-                    letterSpacing: '0.1em',
-                    textShadow: '0 3px 15px rgba(0, 0, 0, 0.2)',
-                    color: '#333333',
-                  }}
-                >
-                  {weddingDate.display}
-                </p>
-                <p 
-                  className="text-dark-burgundy opacity-90"
-                  style={{
-                    fontFamily: 'Noto Serif JP, serif',
-                    fontWeight: '400',
-                    fontSize: 'clamp(1rem, 2.5vw, 1.5rem)',
-                    letterSpacing: '0.1em',
-                    color: '#711207',
-                  }}
-                >
-                  {weddingDate.dayJp}
-                </p>
-              </div>
-              
-              {/* Figmaデザインの式場情報カード */}
-              <div className="figma-card p-8 md:p-10 max-w-2xl mx-auto">
-                <p 
-                  className="text-tundora mb-3 opacity-80"
-                  style={{
-                    fontFamily: 'Cinzel, serif',
-                    fontWeight: '300',
-                    fontSize: 'clamp(0.9rem, 1.5vw, 1.1rem)',
-                    letterSpacing: '0.2em',
-                    color: '#4D4D4D',
-                  }}
-                >
-                  at
-                </p>
-                <h2 
-                  className="text-mine-shaft mb-6"
-                  style={{
-                    fontFamily: 'Noto Serif JP, serif',
-                    fontWeight: '500',
-                    fontSize: 'clamp(1.5rem, 3vw, 2.5rem)',
-                    letterSpacing: '0.1em',
-                    color: '#333333',
-                    textShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-                  }}
-                >
-                  {weddingEnv.venueName}
-                </h2>
-                
-                {/* Figmaデザインのタイムライン */}
-                <div className="grid md:grid-cols-2 gap-6 md:gap-8">
-                  <div className="text-center md:text-right">
-                    <div className="figma-small-text text-dusty-gray mb-2">
-                      結婚式
-                    </div>
-                    <div 
-                      className="text-mine-shaft font-medium"
-                      style={{
-                        fontFamily: 'Cinzel, serif',
-                        fontWeight: '500',
-                        fontSize: 'clamp(1rem, 2vw, 1.25rem)',
-                        color: '#333333',
-                      }}
-                    >
-                      {weddingEnv.ceremonyTime}
-                    </div>
-                  </div>
-                  
-                  <div className="hidden md:block w-px bg-gradient-to-b from-transparent via-dusty-gray to-transparent opacity-30 mx-auto"></div>
-                  <div className="block md:hidden h-px bg-gradient-to-r from-transparent via-dusty-gray to-transparent opacity-30 my-2"></div>
-                  
-                  <div className="text-center md:text-left">
-                    <div className="figma-small-text text-dusty-gray mb-2">
-                      披露宴
-                    </div>
-                    <div 
-                      className="text-mine-shaft font-medium"
-                      style={{
-                        fontFamily: 'Cinzel, serif',
-                        fontWeight: '500',
-                        fontSize: 'clamp(1rem, 2vw, 1.25rem)',
-                        color: '#333333',
-                      }}
-                    >
-                      {weddingEnv.receptionTime}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
 
             {/* Figmaデザインのスクロールインジケーター */}
             <div className="animate-figma-fade-in" style={{ animationDelay: '1.2s' }}>
