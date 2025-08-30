@@ -119,8 +119,14 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
   });
 
   const status = watch('status');
+  const guestSide = watch('guest_side');
   const allergyFlag = watch('allergy_flag');
   const allergyItems = watch('allergy') || [];
+
+  // 選択肢の変更処理
+  const handleRadioChange = (value: number, field: string) => {
+    setValue(field, value);
+  };
 
   // アレルギー項目のチェック状態を管理
   const handleAllergyItemChange = (item: string, checked: boolean) => {
@@ -212,13 +218,14 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
                 <input
                   type="radio"
                   value={1}
-                  {...register('status', { valueAsNumber: true })}
+                  checked={status === 1}
+                  onChange={() => handleRadioChange(1, 'status')}
                   className="sr-only"
                 />
                 <div className={`
                   p-6 border-2 rounded-xl text-center cursor-pointer transition-all duration-300 transform hover:scale-102
                   ${status === 1 
-                    ? 'border-chateau-green bg-chateau-green/10 text-chateau-green shadow-lg' 
+                    ? 'border-chateau-green bg-chateau-green/10 text-chateau-green' 
                     : 'border-mercury hover:border-chateau-green hover:bg-chateau-green/5'
                   }
                 `}>
@@ -230,13 +237,14 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
                 <input
                   type="radio"
                   value={2}
-                  {...register('status', { valueAsNumber: true })}
+                  checked={status === 2}
+                  onChange={() => handleRadioChange(2, 'status')}
                   className="sr-only"
                 />
                 <div className={`
                   p-6 border-2 rounded-xl text-center cursor-pointer transition-all duration-300 transform hover:scale-102
                   ${status === 2 
-                    ? 'border-cinnabar bg-cinnabar/10 text-cinnabar shadow-lg' 
+                    ? 'border-cinnabar bg-cinnabar/10 text-cinnabar' 
                     : 'border-mercury hover:border-cinnabar hover:bg-cinnabar/5'
                   }
                 `}>
@@ -269,12 +277,13 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
                 <input
                   type="radio"
                   value={0}
-                  {...register('guest_side', { valueAsNumber: true })}
+                  checked={guestSide === 0}
+                  onChange={() => handleRadioChange(0, 'guest_side')}
                   className="sr-only"
                 />
                 <div className={`
                   p-4 border-2 rounded-lg text-center cursor-pointer transition-all duration-300
-                  ${watch('guest_side') === 0 
+                  ${guestSide === 0 
                     ? 'border-akane-500 bg-akane-50 text-akane-500' 
                     : 'border-mercury hover:border-akane-300'
                   }
@@ -286,12 +295,13 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
                 <input
                   type="radio"
                   value={1}
-                  {...register('guest_side', { valueAsNumber: true })}
+                  checked={guestSide === 1}
+                  onChange={() => handleRadioChange(1, 'guest_side')}
                   className="sr-only"
                 />
                 <div className={`
                   p-4 border-2 rounded-lg text-center cursor-pointer transition-all duration-300
-                  ${watch('guest_side') === 1 
+                  ${guestSide === 1 
                     ? 'border-akane-500 bg-akane-50 text-akane-500' 
                     : 'border-mercury hover:border-akane-300'
                   }
