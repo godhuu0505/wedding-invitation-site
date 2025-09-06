@@ -39,7 +39,7 @@ export default function DiagnosticPage() {
       tests: {
         apiKeyExists: !!apiKey,
         scriptsLoaded: !!document.querySelector('script[src*="maps.googleapis.com"]'),
-        googleMapsAvailable: !!(window as any).google?.maps,
+        googleMapsAvailable: !!(window as any).google?.maps, // Google Maps APIの型定義がglobalに存在しない場合のワークアラウンド
         venueDataComplete: !!(venueName && venueAddress && venueLat && venueLng)
       }
     });

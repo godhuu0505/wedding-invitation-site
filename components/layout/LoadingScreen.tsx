@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { getCoupleNames, getWeddingDate } from '@/lib/env';
+import type Vivus from 'vivus';
 
 interface LoadingScreenProps {
   isVisible: boolean;
@@ -13,7 +14,7 @@ export default function LoadingScreen({
   onComplete 
 }: LoadingScreenProps) {
   const svgRef = useRef<HTMLDivElement>(null);
-  const vivusRef = useRef<any>(null);
+  const vivusRef = useRef<Vivus | null>(null);
   const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const mountedRef = useRef(true);
   

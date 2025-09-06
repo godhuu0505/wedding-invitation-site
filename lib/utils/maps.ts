@@ -139,13 +139,13 @@ export async function initializeMap(mapElement: HTMLElement) {
 /**
  * 住所から座標を取得する
  */
-export async function geocodeAddress(address: string) {
+export async function geocodeAddress(address: string): Promise<google.maps.LatLng> {
   try {
     const google = await loadGoogleMaps();
     const geocoder = new google.maps.Geocoder();
 
-    return new Promise<any>((resolve, reject) => {
-      geocoder.geocode({ address }, (results: any, status: string) => {
+    return new Promise<google.maps.LatLng>((resolve, reject) => {
+      geocoder.geocode({ address }, (results: google.maps.GeocoderResult[] | null, status: google.maps.GeocoderStatus) => {
         if (status === 'OK' && results && results[0]) {
           resolve(results[0].geometry.location);
         } else {

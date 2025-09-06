@@ -13,38 +13,38 @@ import * as yup from 'yup';
  */
 
 // reference-site.html準拠のフォームスキーマ
-const rsvpSchema = yup.object({
+const rsvpSchema = yup.object().shape({
   // 出欠情報
-  status: yup.number().oneOf([1, 2], '出欠をお選びください').required('出欠をお選びください'),
-  guest_side: yup.number().oneOf([0, 1], 'どちら側のゲストかお選びください').required('どちら側のゲストかお選びください'),
+  status: yup.number().oneOf([1, 2] as const, '出欠をお選びください').required('出欠をお選びください'),
+  guest_side: yup.number().oneOf([0, 1] as const, 'どちら側のゲストかお選びください').required('どちら側のゲストかお選びください'),
   
   // 名前情報（すべて必須）
   jpn_family_name: yup.string().required('姓（漢字）をご入力ください').max(50, '姓は50文字以内でご入力ください'),
   jpn_first_name: yup.string().required('名（漢字）をご入力ください').max(50, '名は50文字以内でご入力ください'),
-  kana_family_name: yup.string().max(50, 'せい（ひらがな）は50文字以内でご入力ください'),
-  kana_first_name: yup.string().max(50, 'めい（ひらがな）は50文字以内でご入力ください'),
+  kana_family_name: yup.string().default('').max(50, 'せい（ひらがな）は50文字以内でご入力ください'),
+  kana_first_name: yup.string().default('').max(50, 'めい（ひらがな）は50文字以内でご入力ください'),
   rom_family_name: yup.string().required('Family Name（ローマ字）をご入力ください').max(50, 'Family Nameは50文字以内でご入力ください'),
   rom_first_name: yup.string().required('First Name（ローマ字）をご入力ください').max(50, 'First Nameは50文字以内でご入力ください'),
   
   // 連絡先
   email: yup.string().email('正しいメールアドレスを入力してください').required('メールアドレスをご入力ください').max(100, 'メールアドレスは100文字以内でご入力ください'),
-  phone_number: yup.string().max(15, '電話番号は15文字以内でご入力ください'),
+  phone_number: yup.string().default('').max(15, '電話番号は15文字以内でご入力ください'),
   
   // 住所情報
-  zipcode: yup.string().matches(/^\d{7}$/, '郵便番号は7桁の数字で入力してください（例：1234567）'),
-  address: yup.string().max(200, '住所は200文字以内でご入力ください'),
-  address2: yup.string().max(100, '住所2は100文字以内でご入力ください'),
+  zipcode: yup.string().default('').matches(/^(\d{7})?$/, '郵便番号は7桁の数字で入力してください（例：1234567）'),
+  address: yup.string().default('').max(200, '住所は200文字以内でご入力ください'),
+  address2: yup.string().default('').max(100, '住所2は100文字以内でご入力ください'),
   
   // その他
-  age_category: yup.number().oneOf([0, 1, 2], '年齢区分をお選びください'),
-  allergy_flag: yup.number().oneOf([0, 1], 'アレルギーの有無をお選びください').required('アレルギーの有無をお選びください'),
-  allergy: yup.array().when('allergy_flag', {
+  age_category: yup.number().oneOf([0, 1, 2] as const, '年齢区分をお選びください').nullable().transform((value) => value === null ? undefined : value),
+  allergy_flag: yup.number().oneOf([0, 1] as const, 'アレルギーの有無をお選びください').required('アレルギーの有無をお選びください'),
+  allergy: yup.array().of(yup.string()).default([]).when('allergy_flag', {
     is: 1,
     then: (schema) => schema.min(1, 'アレルギー項目を最低1つ選択してください'),
     otherwise: (schema) => schema,
   }),
-  guest_message: yup.string().max(500, 'メッセージは500文字以内でご入力ください'),
-});
+  guest_message: yup.string().default('').max(500, 'メッセージは500文字以内でご入力ください'),
+}).strict();
 
 // TypeScript型定義（reference-site.html準拠）
 interface ComprehensiveRSVPFormData {
@@ -61,7 +61,7 @@ interface ComprehensiveRSVPFormData {
   zipcode: string;
   address: string;
   address2: string;
-  age_category: 0 | 1 | 2; // 0: 大人, 1: 子供, 2: 幼児
+  age_category?: 0 | 1 | 2; // 0: 大人, 1: 子供, 2: 幼児
   allergy_flag: 0 | 1; // 0: なし, 1: あり
   allergy: string[];
   guest_message: string;
@@ -95,11 +95,11 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
     getValues,
     formState: { errors },
     reset,
-  } = useForm({
-    resolver: yupResolver(rsvpSchema) as any,
+  } = useForm<ComprehensiveRSVPFormData>({
+    resolver: yupResolver(rsvpSchema) as any, // 型互換性の問題を回避
     defaultValues: {
-      status: undefined as any,
-      guest_side: undefined as any,
+      status: undefined,
+      guest_side: undefined,
       jpn_family_name: '',
       jpn_first_name: '',
       kana_family_name: '',
@@ -111,7 +111,7 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
       zipcode: '',
       address: '',
       address2: '',
-      age_category: undefined as any,
+      age_category: undefined,
       allergy_flag: 0,
       allergy: [],
       guest_message: '',
@@ -124,8 +124,14 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
   const allergyItems = watch('allergy') || [];
 
   // 選択肢の変更処理
-  const handleRadioChange = (value: number, field: string) => {
-    setValue(field, value);
+  const handleRadioChange = (value: number, field: keyof ComprehensiveRSVPFormData) => {
+    if (field === 'status' && (value === 1 || value === 2)) {
+      setValue(field, value);
+    } else if (field === 'guest_side' && (value === 0 || value === 1)) {
+      setValue(field, value);
+    } else if (field === 'age_category' && (value === 0 || value === 1 || value === 2)) {
+      setValue(field, value);
+    }
   };
 
   // アレルギー項目のチェック状態を管理

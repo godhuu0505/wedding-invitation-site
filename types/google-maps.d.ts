@@ -101,7 +101,9 @@ declare global {
       interface MapTypeStyle {
         featureType?: string;
         elementType?: string;
-        stylers?: any[];
+        stylers?: Array<{
+          [key: string]: string | number | boolean;
+        }>;
       }
 
       interface GeocoderRequest {
