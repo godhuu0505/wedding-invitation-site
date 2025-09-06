@@ -7,6 +7,9 @@ out/
 # Environment variables
 .env.local
 .env*.local
+.env.development
+.env.test.local
+.env.production
 
 # IDE
 .vscode/
@@ -30,3 +33,6 @@ pids
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Firebase
+.firebase/hosting.b3V0.cache

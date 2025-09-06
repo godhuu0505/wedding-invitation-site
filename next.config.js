@@ -3,6 +3,11 @@ const nextConfig = {
   // React Strict Mode を一時的に無効化（Vivusエラー対策）
   reactStrictMode: false,
   
+  // 静的サイト生成用の設定
+  output: 'export',
+  distDir: 'out',
+  trailingSlash: true,
+  
   // 環境変数の型安全性を確保
   env: {
     // 開発時のFirebaseエミュレータ設定

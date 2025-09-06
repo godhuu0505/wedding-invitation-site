@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p $PORT",
+    "export": "next build && next export",
+    "deploy": "npm run export && firebase deploy --only hosting",
     "lint": "next lint",
     "format": "prettier --write .",
     "type-check": "tsc --noEmit",
