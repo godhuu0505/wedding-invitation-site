@@ -39,11 +39,6 @@ export default function InformationSection() {
               {/* 会場基本情報 */}
               <div className="p-8 pb-0 bg-gray-50">
                 <h3 className="text-2xl font-japanese font-bold text-gray-600 mb-6 flex items-center">
-                  <img 
-                    src="/images/crane_icon.png" 
-                    alt="鶴アイコン" 
-                    className="h-6"
-                  />
                   会場情報
                 </h3>
                 <div className="space-y-4 text-gray-700">
@@ -98,11 +93,6 @@ export default function InformationSection() {
             {/* アクセス情報 */}
             <div className="bg-white rounded-2xl shadow-lg p-8 border border-akane-100/50">
               <h3 className="text-2xl font-japanese font-bold text-gray-600 mb-6 flex items-center">
-                <img 
-                  src="/images/crane_icon.png" 
-                  alt="鶴アイコン" 
-                  className="h-6"
-                />
                 アクセス
               </h3>
               <div className="space-y-6 text-gray-700">

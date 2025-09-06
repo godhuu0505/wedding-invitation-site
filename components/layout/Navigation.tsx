@@ -105,11 +105,11 @@ export default function Navigation({
   };
 
   const navClasses = `
-    fixed top-0 left-0 right-0 z-50 backdrop-blur-lg shadow-lg
+    fixed top-0 left-0 right-0 z-50 backdrop-blur-lg shadow-lg nav-flower-pattern
     transition-all duration-500 border-b border-akane-100/50
     ${isScrolled 
-      ? 'bg-gradient-to-r from-white/95 to-akane-50/95 py-2' 
-      : 'bg-gradient-to-r from-white/90 to-akane-50/90 py-4'
+      ? 'py-2' 
+      : 'py-4'
     }
     ${className}
   `;
@@ -121,10 +121,10 @@ export default function Navigation({
           isScrolled ? 'h-14' : 'h-16'
         }`}>
           {/* ロゴ */}
-          <div className={`font-japanese font-bold text-akane-700 tracking-wider transition-all duration-500 ${
+          <div className={`font-japanese font-bold nav-logo-white tracking-wider transition-all duration-500 ${
             isScrolled ? 'text-xl' : 'text-2xl'
           }`}>
-            <span className="bg-gradient-to-r from-akane-600 to-pink-600 bg-clip-text text-transparent">
+            <span className="nav-text-white">
               {coupleNames.combined.shortEn}
             </span>
           </div>
@@ -143,8 +143,8 @@ export default function Navigation({
                     text-sm font-medium transition-all duration-300 px-4 py-2 rounded-full
                     transform hover:scale-105
                     ${isActive
-                      ? 'text-white bg-gradient-to-r from-akane-500 to-pink-500 shadow-lg scale-105' 
-                      : 'text-gray-700 hover:text-akane-500 hover:bg-akane-50/50'
+                      ? 'nav-button-active-white shadow-lg scale-105' 
+                      : 'nav-button-white hover:nav-button-white'
                     }
                   `}
                 >
@@ -157,7 +157,7 @@ export default function Navigation({
           {/* モバイルハンバーガーメニュー */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 text-gray-700 hover:text-akane-500 transition-colors duration-300"
+            className="md:hidden p-2 nav-text-white hover:nav-button-white transition-colors duration-300"
           >
             <div className="w-6 h-6 flex flex-col justify-center items-center">
               <span className={`block w-5 h-0.5 bg-current transition-all duration-300 ${
@@ -178,7 +178,7 @@ export default function Navigation({
           md:hidden overflow-hidden transition-all duration-300
           ${isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}
         `}>
-          <div className="py-4 space-y-2 bg-gradient-to-r from-white/95 to-akane-50/95 backdrop-blur-lg border-t border-akane-100/50 rounded-b-lg">
+          <div className="py-4 space-y-2 nav-flower-pattern-mobile backdrop-blur-lg border-t border-akane-100/50 rounded-b-lg">
             {items.map((item) => {
               const sectionId = item.href.replace('#', '');
               const isActive = activeSection === sectionId;
@@ -191,8 +191,8 @@ export default function Navigation({
                     block w-full text-left px-4 py-3 mx-2 rounded-lg
                     transition-all duration-300 transform hover:scale-[1.02]
                     ${isActive
-                      ? 'text-white bg-gradient-to-r from-akane-500 to-pink-500 shadow-lg'
-                      : 'text-gray-700 hover:text-akane-500 hover:bg-gradient-to-r hover:from-akane-50/50 hover:to-pink-50/50'
+                      ? 'nav-button-active-white shadow-lg'
+                      : 'nav-button-white hover:nav-button-white'
                     }
                   `}
                 >

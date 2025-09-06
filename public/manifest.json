@@ -1,0 +1,26 @@
+{
+  "name": "結婚式招待サイト - Godai & Kana",
+  "short_name": "Wedding",
+  "description": "2025年11月3日の結婚式招待サイト",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F5F5F5",
+  "theme_color": "#e65555",
+  "icons": [
+    {
+      "src": "/favicon.jpg",
+      "sizes": "32x32",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/icon-192.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/icon-512.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}

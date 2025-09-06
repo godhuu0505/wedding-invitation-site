@@ -30,6 +30,18 @@ export const metadata: Metadata = {
   authors: [{ name: `${weddingEnv.groomNameEn} & ${weddingEnv.brideNameEn}` }],
   robots: 'index, follow',
   metadataBase: new URL('http://localhost:3003'),
+  icons: {
+    icon: [
+      { url: '/favicon.jpg', sizes: '32x32', type: 'image/jpeg' },
+      { url: '/icon-192.jpg', sizes: '192x192', type: 'image/jpeg' },
+      { url: '/icon-512.jpg', sizes: '512x512', type: 'image/jpeg' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.jpg', sizes: '180x180', type: 'image/jpeg' },
+    ],
+    shortcut: '/favicon.jpg',
+  },
+  manifest: '/manifest.json',
   openGraph: {
     title: weddingEnv.siteTitle,
     description: `${weddingEnv.weddingDateJp}の結婚式にご招待いたします`,

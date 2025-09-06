@@ -345,7 +345,7 @@ body {
   }
 }
 
-/* Figmaデザインのレスポンシブブレークポイント */
+  /* Figmaデザインのレスポンシブブレークポイント */
 @media (max-width: 640px) {
   .figma-mobile-padding {
     padding-left: 1rem;
@@ -370,4 +370,44 @@ body {
     padding-left: 4rem;
     padding-right: 4rem;
   }
+}
+
+/* ナビゲーション背景スタイル */
+.nav-flower-pattern {
+  background-image: url('/images/flower-pattern.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-blend-mode: overlay;
+}
+
+.nav-flower-pattern-mobile {
+  background-image: url('/images/flower-pattern.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-blend-mode: overlay;
+}
+
+/* ナビゲーションテキストスタイル */
+.nav-text-white {
+  color: white !important;
+}
+
+.nav-logo-white {
+  color: white !important;
+}
+
+.nav-button-white {
+  color: white !important;
+}
+
+.nav-button-white:hover {
+  color: rgba(255, 255, 255, 0.8) !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.nav-button-active-white {
+  color: white !important;
+  background-color: rgba(255, 255, 255, 0.2) !important;
 }
