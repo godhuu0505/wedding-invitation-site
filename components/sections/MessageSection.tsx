@@ -93,7 +93,7 @@ export default function MessageSection() {
                   }}
                 >
                   <img 
-                    src="/images/profiles/groom-placeholder.svg"
+                    src="/images/profiles/groom-placeholder.jpg"
                     alt={`${weddingEnv.groomNameFullJp}のプロフィール写真`}
                     className="w-full h-full object-cover"
                     style={{
@@ -202,7 +202,7 @@ export default function MessageSection() {
                   }}
                 >
                   <img 
-                    src="/images/profiles/bride-placeholder.svg"
+                    src="/images/profiles/bride-placeholder.jpg"
                     alt={`${weddingEnv.brideNameFullJp}のプロフィール写真`}
                     className="w-full h-full object-cover"
                     style={{
