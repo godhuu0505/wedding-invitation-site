@@ -16,11 +16,9 @@
    # NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_actual_maps_api_key
    ```
 
-2. **ビルド & 静的エクスポート**
+2. **ビルド（静的エクスポート）**
    ```bash
-   npm run export
-   # または
-   npm run build && next export
+   npm run build
    ```
    - `out/` ディレクトリが生成されます（静的ファイル）
 
@@ -30,7 +28,7 @@
    # または
    firebase deploy --only hosting
    ```
-   - `npm run deploy` は `npm run export` と `firebase deploy --only hosting` をまとめて実行します
+   - `npm run deploy` は `npm run build` と `firebase deploy --only hosting` をまとめて実行します
 
 4. **デプロイ完了後の確認**
    - デプロイが完了すると、公開URLが表示されます。

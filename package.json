@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build_backup": "if [ -d out ]; then mv out out_backup_$(date +%Y%m%d_%H%M%S); fi",
+    "build": "npm run build_backup && next build",
     "start": "next start -p $PORT",
-    "export": "next build && next export",
-    "deploy": "npm run export && firebase deploy --only hosting",
+    "deploy": "npm run build && firebase deploy --only hosting",
     "lint": "next lint",
     "format": "prettier --write .",
     "type-check": "tsc --noEmit",
