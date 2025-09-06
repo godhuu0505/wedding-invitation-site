@@ -115,48 +115,6 @@ export default function SimpleGoogleMap({
           gestureHandling: 'cooperative'
         });
 
-        // カスタムマーカー
-        const marker = new google.maps.Marker({
-          position: venueInfo.coordinates,
-          map: map,
-          title: venueInfo.name,
-          icon: {
-            path: google.maps.SymbolPath.CIRCLE,
-            fillColor: '#e65555',
-            fillOpacity: 1,
-            strokeColor: '#ffffff',
-            strokeWeight: 3,
-            scale: 12
-          },
-          animation: google.maps.Animation.DROP
-        });
-
-        // 情報ウィンドウ
-        const infoWindow = new google.maps.InfoWindow({
-          content: `
-            <div style="padding: 12px; font-family: 'Noto Sans JP', sans-serif; max-width: 280px;">
-              <h3 style="margin: 0 0 8px 0; color: #e65555; font-size: 16px; font-weight: bold;">
-                ${venueInfo.name}
-              </h3>
-              <p style="margin: 0 0 8px 0; color: #666; font-size: 14px; line-height: 1.4;">
-                ${venueInfo.address}
-              </p>
-              <a 
-                href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(venueInfo.address)}" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                style="color: #e65555; text-decoration: none; font-size: 13px; display: inline-block; margin-top: 4px;"
-              >
-                📍 ルートを検索 →
-              </a>
-            </div>
-          `
-        });
-
-        marker.addListener('click', () => {
-          infoWindow.open(map, marker);
-        });
-
         mapInstanceRef.current = map;
 
         if (onMapLoad) {
