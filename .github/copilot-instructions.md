@@ -33,13 +33,6 @@
 ### 技術分野別の詳細指示
 実装時は、以下の専門指示書を必ず参照してください：
 
-- **技術スタック**: `.github/instructions/tech-stack.instructions.md`
-- **Firebase統合**: `.github/instructions/firebase.instructions.md`
-- **セキュリティ**: `.github/instructions/security.instructions.md`
-- **データベース**: `.github/instructions/database.instructions.md`
-- **デプロイメント**: `.github/instructions/deployment.instructions.md`
-- **開発環境**: `.github/instructions/development.instructions.md`
-- **アーキテクチャ**: `.github/instructions/architecture.instructions.md`
 - **コミット規約**: `.github/instructions/commit-message.instructions.md`
 
 ### 指示書の使い方
@@ -51,7 +44,6 @@
 
 ### 結婚式招待サイト（2025年11月3日）- reference-site.html完全再現版
 - **デザインコンセプト**: reference-site.htmlの見た目を100%再現する和風エレガントサイト
-- **新郎新婦**: Naoto（伊藤 尚人）& Yui（小林 結衣）
 - **テーマカラー**: 茜色（#e65555）
 - **デザインスタイル**: モダン和風・エレガント
 
@@ -67,9 +59,8 @@
 #### 技術スタック
 - **フロントエンド**: Next.js 14 App Router + TypeScript + Tailwind CSS
 - **アニメーション**: Framer Motion + Vegas.js + Vivus.js + ScrollTrigger
-- **バックエンド**: Firebase Firestore + Cloud Functions
-- **認証**: Firebase Authentication
-- **デプロイ**: Vercel（フロントエンド）+ Firebase（バックエンド）
+- **バックエンド**: Firebase Firestore
+- **デプロイ**: Firebase Hosting
 - **フォーム**: React Hook Form + Yup バリデーション
 
 ##  コーディング規約
@@ -96,17 +87,6 @@ pages/sections/   # 各セクションは大文字開始
     └── GreetingText.tsx
 ```
 
-### カラークラス命名（Tailwind CSS）
-```css
-/* 茜色系統 */
-bg-akane-50   /* 最薄い茜色 */
-bg-akane-500  /* メイン茜色 */
-bg-akane-900  /* 最も濃い茜色 */
-
-text-akane-500  /* 茜色テキスト */
-border-akane-500  /* 茜色ボーダー */
-```
-
 ### フォーマット規則
 - **インデント**: スペース2つ（タブ禁止）
 - **コメント**: 複雑なロジックにはJSDoc形式
@@ -118,8 +98,3 @@ border-akane-500  /* 茜色ボーダー */
 - **最新情報検索**: 実装・ライブラリ変更前に必ずWeb検索
 - **問題解決**: 問題発生時はまずWeb検索（記憶に依存しない）
 - **ベストプラクティス**: 最新の技術情報・ベストプラクティスを確認
-
----
-
-**作成日**: 2025年8月13日
-**対象プロジェクト**: 結婚式招待サイト（2025年11月3日）
