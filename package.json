@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build_backup": "if [ -d out ]; then mv out out_backup_$(date +%Y%m%d_%H%M%S); fi",
-    "build": "npm run build_backup && next build",
+    "build": "next build",
     "build:clean": "rm -rf .next out && npm run build",
     "build:production": "if [ -f .env.local ]; then mv .env.local .env.local.backup; fi && npm run build:clean && if [ -f .env.local.backup ]; then mv .env.local.backup .env.local; fi",
     "start": "next start -p $PORT",
