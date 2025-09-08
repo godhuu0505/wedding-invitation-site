@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { getCoupleNames, getWeddingDate } from '@/lib/env';
+import LoadingAnimation from '@/components/ui/LoadingAnimation';
 
 interface SimpleLoadingScreenProps {
   isVisible: boolean;
@@ -68,36 +69,17 @@ export default function SimpleLoadingScreen({
     }`}>
       {/* 背景画像 */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 nav-flower-pattern"
         style={{ backgroundImage: 'url(/images/bowing.jpg)' }}
       />
       
       {/* コンテンツオーバーレイ */}
       <div className="relative z-10 text-center">
-        {/* シンプルなアニメーションロゴ */}
+        {/* 和風幾何学模様アニメーション */}
         <div className="w-64 h-40 mx-auto mb-8 flex items-center justify-center">
           <div className="relative">
-            {/* 回転するリング */}
-            <div className="w-20 h-20 border-4 border-akane-200 rounded-full animate-spin border-t-akane-500"></div>
-            
-            {/* 中央のハート */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-akane-500 text-2xl animate-pulse">♡</div>
-            </div>
+            <LoadingAnimation />
           </div>
-        </div>
-        
-        {/* カップル名表示 */}
-        <div className="mb-6 animate-fade-in">
-          <h1 className="text-3xl font-elegant text-akane-600 mb-2 tracking-wider">
-            {coupleNames.combined.en}
-          </h1>
-          <p className="text-lg text-akane-400 font-japanese tracking-widest">
-            {coupleNames.combined.jp}
-          </p>
-          <p className="text-sm text-gray-600 mt-2">
-            {weddingDate.display}
-          </p>
         </div>
 
         {/* プログレスバー */}
@@ -107,9 +89,9 @@ export default function SimpleLoadingScreen({
             style={{ width: `${progress}%` }}
           />
         </div>
-        
+
         <p className="mt-4 text-sm text-gray-500 font-japanese">
-          {progress < 100 ? 'お招きページを準備中...' : '準備完了'}
+          {progress < 100 ? '招待ページを準備中...' : '準備完了'}
         </p>
       </div>
     </div>
