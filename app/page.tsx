@@ -11,6 +11,7 @@ import RSVPSection from '@/components/sections/RSVPSection';
 import FooterSection from '@/components/sections/FooterSection';
 import Navigation from '@/components/layout/Navigation';
 import ErrorBoundary from '@/components/layout/ErrorBoundary';
+import SectionDivider from '@/components/ui/SectionDivider';
 
 /**
  * メインページコンポーネント - Figmaデザイン完全対応版
@@ -77,7 +78,7 @@ export default function HomePage() {
             { id: 'rsvp', label: 'RSVP', href: '#rsvp' }
           ]} />
           
-          {/* セクション1: ヒーロー（背景カルーセル + カップル名表示）*/}
+          {/* セクション1: ヒーロー（背景カルーセル）*/}
           <HeaderSection />
           
           {/* セクション2-7: コンテンツセクション */}
@@ -85,16 +86,28 @@ export default function HomePage() {
             {/* セクション2: メッセージ（挨拶文）*/}
             <MessageSection />
             
+            {/* セクション間スペース 1 */}
+            <SectionDivider height="lg" />
+            
             {/* セクション3: プロフィール（新郎新婦紹介）*/}
             <ProfileSection />
+            
+            {/* セクション間スペース 2 */}
+            <SectionDivider height="lg" />
             
             {/* セクション4: カウントダウン（結婚式まで残り日数）*/}
             <CountdownSection />
             
+            {/* セクション間スペース 3 */}
+            <SectionDivider height="lg" />
+            
             {/* セクション5: インフォメーション（式場案内 + Google Maps）*/}
             <InformationSection />
             
-            {/* セクション6: RSVP（出欠確認フォーム - reference-site.html準拠）*/}
+            {/* セクション間スペース 4 */}
+            <SectionDivider height="lg" />
+            
+            {/* セクション6: RSVP（出欠確認フォーム）*/}
             <RSVPSection />
             
             {/* セクション7: フッター（ナビゲーション + クレジット）*/}

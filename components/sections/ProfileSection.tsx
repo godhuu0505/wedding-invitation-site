@@ -59,7 +59,7 @@ export default function ProfileSection() {
                   }}
                 >
                   <img 
-                    src="/images/profiles/groom-placeholder.jpg"
+                    src="/images/profiles/groom.png"
                     alt={`${weddingEnv.groomNameFullJp}のプロフィール写真`}
                     className="w-full h-full object-cover"
                     style={{
@@ -143,10 +143,11 @@ export default function ProfileSection() {
                   whiteSpace: 'pre-line',
                 }}
               >
-                {weddingEnv.groomBirthDate}　{weddingEnv.groomBirthPlace}生まれ{'\n\n'}
-                {/* {weddingEnv.groomBloodType}　{weddingEnv.groomOccupation}{'\n'} */}
+                {weddingEnv.groomBirthDate}　{weddingEnv.groomBirthPlace}生まれ{'\n'}
+                {weddingEnv.groomBloodType}{'\n\n'}
+
                 {weddingEnv.groomHobby}{'\n\n'}
-                
+
                 {weddingEnv.groomMessage}
               </p>
             </div>
@@ -164,7 +165,7 @@ export default function ProfileSection() {
                   }}
                 >
                   <img 
-                    src="/images/profiles/bride-placeholder.jpg"
+                    src="/images/profiles/bride.png"
                     alt={`${weddingEnv.brideNameFullJp}のプロフィール写真`}
                     className="w-full h-full object-cover"
                     style={{
@@ -248,8 +249,8 @@ export default function ProfileSection() {
                   whiteSpace: 'pre-line',
                 }}
               >
-                {weddingEnv.brideBirthDate}　{weddingEnv.brideBirthPlace}生まれ{'\n\n'}
-                {/* {weddingEnv.brideBloodType}　{weddingEnv.brideOccupation}{'\n'} */}
+                {weddingEnv.brideBirthDate}　{weddingEnv.brideBirthPlace}生まれ{'\n'}
+                {weddingEnv.brideBloodType}{'\n\n'}
                 {weddingEnv.brideHobby}{'\n\n'}
                 
                 {weddingEnv.brideMessage}
