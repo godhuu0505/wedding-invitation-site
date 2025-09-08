@@ -11,7 +11,7 @@ export function BlackOverlay({ showBlackOverlay }: BlackOverlayProps) {
   return (
     <motion.div
       initial={{ opacity: 0.8 }}
-      animate={{ opacity: showBlackOverlay ? 1 : 0 }}
+      animate={{ opacity: showBlackOverlay ? 0.8 : 0 }}
       transition={{ duration: 2.5, ease: "easeOut" }}
       className="absolute inset-0 bg-black z-10"
       style={{
