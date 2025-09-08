@@ -18,8 +18,9 @@ export default function InformationSection() {
   }, []);
   
   return (
-    <section id="information" className="min-h-screen py-20 bg-gradient-to-br from-gray-50 to-akane-50/30">
-      <div className="max-w-6xl mx-auto px-4">
+    <section id="information" className="min-h-screen py-20 bg-old-lace relative">
+      <div className="absolute inset-0 bg-gradient-to-b from-ecru-white/40 to-old-lace"></div>
+      <div className="max-w-6xl mx-auto px-4 relative z-10">
         {/* セクションタイトル */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-japanese font-bold text-gray-800 mb-6">
