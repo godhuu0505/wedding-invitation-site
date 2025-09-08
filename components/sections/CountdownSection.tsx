@@ -67,46 +67,6 @@ export default function CountdownSection() {
     );
   }
 
-  // Figmaデザインのカウントダウンアイテム
-  const CountdownItem = ({ value, label }: { value: number; label: string }) => (
-    <div className="group">
-      <div 
-        className="figma-card p-8 md:p-10 mx-2 transform hover:scale-105 transition-all duration-500 hover:shadow-xl"
-        style={{
-          background: 'rgba(255, 255, 255, 0.9)',
-          backdropFilter: 'blur(15px)',
-          border: '1px solid rgba(230, 85, 85, 0.1)',
-          borderRadius: '12px',
-        }}
-      >
-        <div 
-          className="mb-4 animate-count-change leading-none"
-          style={{
-            fontFamily: 'Cinzel, serif',
-            fontWeight: '700',
-            fontSize: 'clamp(3rem, 6vw, 5rem)',
-            color: '#e65555',
-            textShadow: '0 2px 10px rgba(230, 85, 85, 0.2)',
-          }}
-        >
-          {value.toString().padStart(2, '0')}
-        </div>
-        <div 
-          className="uppercase tracking-widest"
-          style={{
-            fontFamily: 'Cinzel, serif',
-            fontWeight: '400',
-            fontSize: 'clamp(0.75rem, 1.5vw, 1rem)',
-            letterSpacing: '0.2em',
-            color: '#999999',
-          }}
-        >
-          {label}
-        </div>
-      </div>
-    </div>
-  );
-
   return (
     <section id="countdown" className="py-24 bg-ecru-white relative overflow-hidden">
       {/* Figmaデザインの背景装飾 */}
@@ -122,13 +82,13 @@ export default function CountdownSection() {
       </div>
       
       <div className="container mx-auto px-4 text-center relative z-10 max-w-7xl">
-        {/* Figmaデザインのセクションタイトル */}
+        {/* 和風セクションタイトル */}
         <div className="mb-20">
           <h2 
             className="text-mine-shaft mb-8"
             style={{
-              fontFamily: 'Cinzel, serif',
-              fontWeight: '600',
+              fontFamily: 'Noto Serif JP, serif',
+              fontWeight: '700',
               fontSize: 'clamp(2.5rem, 5vw, 4rem)',
               lineHeight: '1.1',
               letterSpacing: '0.1em',
@@ -159,45 +119,22 @@ export default function CountdownSection() {
           </p>
         </div>
 
-        {/* Figmaデザインのカウントダウン表示 */}
-        <div className="flex flex-wrap justify-center items-center gap-6 md:gap-8 mb-20">
-          <CountdownItem value={timeRemaining.days} label="DAYS" />
+        {/* 日数のみ表示 */}
+        <div className="mb-20">
           <div 
-            className="text-akane-500 hidden md:block"
+            className="text-center"
             style={{
-              fontFamily: 'Cinzel, serif',
-              fontWeight: '300',
-              fontSize: 'clamp(2rem, 4vw, 3rem)',
+              fontFamily: 'Noto Serif JP, serif',
+              fontWeight: '700',
+              fontSize: 'clamp(3rem, 8vw, 6rem)',
+              color: '#e65555',
+              lineHeight: '1.2',
+              letterSpacing: '0.05em',
+              textShadow: '0 4px 20px rgba(230, 85, 85, 0.3)',
             }}
           >
-            :
+            あと{timeRemaining.days}日
           </div>
-          
-          <CountdownItem value={timeRemaining.hours} label="HOURS" />
-          <div 
-            className="text-akane-500 hidden md:block"
-            style={{
-              fontFamily: 'Cinzel, serif',
-              fontWeight: '300',
-              fontSize: 'clamp(2rem, 4vw, 3rem)',
-            }}
-          >
-            :
-          </div>
-          
-          <CountdownItem value={timeRemaining.minutes} label="MINUTES" />
-          <div 
-            className="text-akane-500 hidden md:block"
-            style={{
-              fontFamily: 'Cinzel, serif',
-              fontWeight: '300',
-              fontSize: 'clamp(2rem, 4vw, 3rem)',
-            }}
-          >
-            :
-          </div>
-          
-          <CountdownItem value={timeRemaining.seconds} label="SECONDS" />
         </div>
 
         {/* Figmaデザインの結婚式情報カード */}
@@ -213,17 +150,17 @@ export default function CountdownSection() {
             <h3 
               className="text-akane-500 mb-10"
               style={{
-                fontFamily: 'Cinzel, serif',
-                fontWeight: '600',
+                fontFamily: 'Noto Serif JP, serif',
+                fontWeight: '700',
                 fontSize: 'clamp(2rem, 4vw, 3rem)',
                 letterSpacing: '0.1em',
                 color: '#e65555',
               }}
             >
-              Wedding Day
+              結婚式当日
             </h3>
             
-            {/* Figmaデザインの日付情報 */}
+            {/* レスポンシブ対応の日付情報 */}
             <div className="mb-12">
               <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8">
                 <span 
@@ -231,19 +168,21 @@ export default function CountdownSection() {
                   style={{
                     fontFamily: 'Cinzel, serif',
                     fontWeight: '700',
-                    fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+                    fontSize: 'clamp(1.5rem, 4vw, 4rem)',
                     color: '#333333',
+                    textAlign: 'center',
+                    lineHeight: '1.2',
                   }}
                 >
                   {weddingDate.jp}
                 </span>
               </div>
               <div 
-                className="text-mine-shaft mb-3"
+                className="text-mine-shaft mb-3 mt-4"
                 style={{
                   fontFamily: 'Noto Serif JP, serif',
                   fontWeight: '600',
-                  fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
+                  fontSize: 'clamp(1.125rem, 2.5vw, 2.25rem)',
                   color: '#333333',
                 }}
               >
@@ -298,9 +237,8 @@ export default function CountdownSection() {
           </div>
         </div>
 
-        {/* Figmaデザインの特別メッセージ */}
-        {timeRemaining.days === 0 && timeRemaining.hours === 0 && 
-         timeRemaining.minutes === 0 && timeRemaining.seconds === 0 && (
+        {/* 結婚式当日の特別メッセージ */}
+        {timeRemaining.days === 0 && (
           <div 
             className="mt-20 p-10 text-white rounded-xl shadow-xl"
             style={{
@@ -310,8 +248,8 @@ export default function CountdownSection() {
             <h3 
               className="mb-6"
               style={{
-                fontFamily: 'Cinzel, serif',
-                fontWeight: '600',
+                fontFamily: 'Noto Serif JP, serif',
+                fontWeight: '700',
                 fontSize: 'clamp(2rem, 4vw, 3rem)',
                 letterSpacing: '0.1em',
                 color: 'white',
