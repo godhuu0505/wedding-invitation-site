@@ -118,6 +118,9 @@ export interface WeddingEnvironment {
   venueLat: string;
   venueLng: string;
 
+  // 連絡先情報
+  lineOfficialUrl: string;
+
   // メタデータ
   siteTitle: string;
   siteDescription: string;
@@ -247,6 +250,9 @@ export const getWeddingEnv = (): WeddingEnvironment => {
     venueWebSite: process.env.NEXT_PUBLIC_WEB_SITE || 'https://example-venue.com',
     venueLat: process.env.NEXT_PUBLIC_VENUE_LAT || '35.6895',
     venueLng: process.env.NEXT_PUBLIC_VENUE_LNG || '139.6917',
+
+    // 連絡先情報
+    lineOfficialUrl: process.env.NEXT_PUBLIC_LINE_OFFICIAL_URL || '',
 
     // メタデータ
     siteTitle: process.env.NEXT_PUBLIC_SITE_TITLE || '瑚大 & 花菜 結婚式招待サイト',

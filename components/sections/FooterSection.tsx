@@ -149,6 +149,31 @@ export default function FooterSection() {
                 ご不明な点やご質問がございましたら、<br />
                 お気軽にお声かけください。
               </p>
+
+              {/* LINE公式アカウントリンク */}
+              {weddingEnv.lineOfficialUrl && (
+                <div className="flex items-center justify-left">
+                  <a
+                    href={weddingEnv.lineOfficialUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center px-6 py-3 rounded-full transition-all duration-300 hover:scale-105"
+                    style={{
+                      background: 'linear-gradient(135deg, #00B900 0%, #00C300 100%)',
+                      color: 'white',
+                      fontFamily: 'Noto Serif JP, serif',
+                      fontWeight: '500',
+                      fontSize: '0.875rem',
+                      letterSpacing: '0.05em',
+                      boxShadow: '0 4px 15px rgba(0, 185, 0, 0.3)',
+                    }}
+                  >
+                    <span className="mr-2" style={{ fontSize: '1.125rem' }}>📱</span>
+                    LINE公式アカウント
+                  </a>
+                </div>
+              )}
+
               <div className="flex space-x-6">
                 <div className="text-center">
                   <div 
