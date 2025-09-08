@@ -125,7 +125,7 @@ export default function Navigation({
             isScrolled ? 'text-xl' : 'text-2xl'
           }`}>
             <span className="nav-text-white">
-              {coupleNames.combined.shortEn}
+              {coupleNames.combined.jp}
             </span>
           </div>
 

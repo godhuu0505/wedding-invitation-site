@@ -23,11 +23,12 @@ const playfairDisplay = Playfair_Display({
   display: 'swap',
 });
 
+// 静的メタデータ
 export const metadata: Metadata = {
   title: weddingEnv.siteTitle,
   description: weddingEnv.siteDescription,
-  keywords: ['結婚式', '招待状', 'ウェディング', weddingEnv.weddingDateJp, weddingEnv.groomNameEn, weddingEnv.brideNameEn],
-  authors: [{ name: `${weddingEnv.groomNameEn} & ${weddingEnv.brideNameEn}` }],
+  keywords: ['結婚式', '招待状', 'ウェディング', weddingEnv.weddingDateJp, weddingEnv.groomFirstNameJp, weddingEnv.brideFirstNameJp],
+  authors: [{ name: `${weddingEnv.groomFirstNameEn} & ${weddingEnv.brideFirstNameEn}` }],
   robots: 'index, follow',
   metadataBase: new URL('http://localhost:3003'),
   icons: {

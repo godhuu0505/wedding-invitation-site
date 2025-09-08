@@ -64,16 +64,13 @@ export default function MessageSection() {
                 color: '#333333',
               }}
             >
-              皆様にはご健勝のことと<br />
-              お慶び申し上げます<br />
-              このたび　私たちは<br />
-              結婚式を挙げることになりました<br />
-              つきましては　親しい皆様の末永い<br />
-              お力添えをいただきたく<br />
-              心ばかりの小宴をもうけたいと存じます<br />
-              おいそがしい中と存じますが<br />
-              ご列席くださいますよう<br />
-              お願い申し上げます
+              皆様にはご健勝のことと お慶び申し上げます<br />
+              このたび 私たちは 結婚式を挙げることになりました<br />
+              <br />
+              つきましては 親しい皆様の末永い<br />
+              お力添えをいただきたく心ばかりの小宴をもうけたいと存じます<br />
+              <br />
+              おいそがしい中と存じますがご列席くださいますようお願い申し上げます
             </p>
           </div>
         </div>
@@ -154,7 +151,7 @@ export default function MessageSection() {
                     color: '#999999',
                   }}
                 >
-                  {weddingEnv.groomNameEn}
+                  {weddingEnv.groomNameFullEn}
                 </p>
               </div>
             </div>
@@ -263,7 +260,7 @@ export default function MessageSection() {
                     color: '#999999',
                   }}
                 >
-                  {weddingEnv.brideNameEn}
+                  {weddingEnv.brideNameFullEn}
                 </p>
               </div>
             </div>

@@ -60,7 +60,7 @@ export default function FooterSection() {
                 }}
               >
                 <span className="mr-3">⏰</span>
-                挙式 {weddingEnv.ceremonyTimeDisplay} / 披露宴 {weddingEnv.receptionTimeDisplay}
+                披露宴 {weddingEnv.receptionTimeDisplay}
               </p>
               <p 
                 className="flex items-center text-dusty-gray"
