@@ -50,7 +50,7 @@ export default function ProfileSection() {
           {/* 新郎セクション - Figmaデザイン */}
           <div className="text-center group">
             <div className="mb-10">
-              <div className="relative w-72 h-72 mx-auto mb-8">
+              <div className="relative w-72 h-72 mx-auto mb-12">
                 <div 
                   className="w-full h-full rounded-full overflow-hidden shadow-xl group-hover:shadow-2xl transition-all duration-500 transform group-hover:scale-105"
                   style={{
@@ -144,7 +144,7 @@ export default function ProfileSection() {
           {/* 新婦セクション - Figmaデザイン */}
           <div className="text-center group">
             <div className="mb-10">
-              <div className="relative w-72 h-72 mx-auto mb-8">
+              <div className="relative w-72 h-72 mx-auto mb-12">
                 <div 
                   className="w-full h-full rounded-full overflow-hidden shadow-xl group-hover:shadow-2xl transition-all duration-500 transform group-hover:scale-105"
                   style={{
