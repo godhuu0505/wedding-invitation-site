@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import SimpleLoadingScreen from '@/components/layout/SimpleLoadingScreen';
 import HeaderSection from '@/components/sections/HeaderSection';
 import MessageSection from '@/components/sections/MessageSection';
+import ProfileSection from '@/components/sections/ProfileSection';
 import CountdownSection from '@/components/sections/CountdownSection';
 import InformationSection from '@/components/sections/InformationSection';
 import RSVPSection from '@/components/sections/RSVPSection';
@@ -14,14 +15,15 @@ import ErrorBoundary from '@/components/layout/ErrorBoundary';
 /**
  * メインページコンポーネント - Figmaデザイン完全対応版
  * 
- * 6つのセクション構成（Figmaデザインベース）:
+ * 7つのセクション構成（Figmaデザインベース）:
  * 1. ローディング画面（5秒間、SVGアニメーション）
  * 2. ヒーローセクション（背景カルーセル + カップル名）
- * 3. メッセージセクション（挨拶文 + 新郎新婦プロフィール）
- * 4. カウントダウンセクション（結婚式まで残り日数）
- * 5. インフォメーションセクション（式場案内 + Google Maps）
- * 6. RSVPセクション（出欠確認フォーム）
- * 7. フッターセクション（ナビゲーション + クレジット）
+ * 3. メッセージセクション（挨拶文）
+ * 4. プロフィールセクション（新郎新婦プロフィール）
+ * 5. カウントダウンセクション（結婚式まで残り日数）
+ * 6. インフォメーションセクション（式場案内 + Google Maps）
+ * 7. RSVPセクション（出欠確認フォーム）
+ * 8. フッターセクション（ナビゲーション + クレジット）
  */
 export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -69,6 +71,7 @@ export default function HomePage() {
           <Navigation items={[
             { id: 'home', label: 'Home', href: '#home' },
             { id: 'message', label: 'Message', href: '#message' },
+            { id: 'profile', label: 'Profile', href: '#profile' },
             { id: 'countdown', label: 'Countdown', href: '#countdown' },
             { id: 'information', label: 'Information', href: '#information' },
             { id: 'rsvp', label: 'RSVP', href: '#rsvp' }
@@ -77,21 +80,24 @@ export default function HomePage() {
           {/* セクション1: ヒーロー（背景カルーセル + カップル名表示）*/}
           <HeaderSection />
           
-          {/* セクション2-6: コンテンツセクション */}
+          {/* セクション2-7: コンテンツセクション */}
           <div className="relative z-10">
-            {/* セクション2: メッセージ（挨拶文 + 新郎新婦プロフィール）*/}
+            {/* セクション2: メッセージ（挨拶文）*/}
             <MessageSection />
             
-            {/* セクション3: カウントダウン（結婚式まで残り日数）*/}
+            {/* セクション3: プロフィール（新郎新婦紹介）*/}
+            <ProfileSection />
+            
+            {/* セクション4: カウントダウン（結婚式まで残り日数）*/}
             <CountdownSection />
             
-            {/* セクション4: インフォメーション（式場案内 + Google Maps）*/}
+            {/* セクション5: インフォメーション（式場案内 + Google Maps）*/}
             <InformationSection />
             
-            {/* セクション5: RSVP（出欠確認フォーム - reference-site.html準拠）*/}
+            {/* セクション6: RSVP（出欠確認フォーム - reference-site.html準拠）*/}
             <RSVPSection />
             
-            {/* セクション6: フッター（ナビゲーション + クレジット）*/}
+            {/* セクション7: フッター（ナビゲーション + クレジット）*/}
             <FooterSection />
           </div>
         </div>
