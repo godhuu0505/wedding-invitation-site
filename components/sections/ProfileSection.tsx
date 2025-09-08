@@ -2,6 +2,8 @@
 
 import React from 'react';
 import { getWeddingEnv } from '@/lib/env';
+import AnimatedProfileMessage from '@/components/ui/AnimatedProfileMessage';
+import AnimatedProfileImage from '@/components/ui/AnimatedProfileImage';
 
 export default function ProfileSection() {
   // 環境変数から情報を取得
@@ -50,38 +52,10 @@ export default function ProfileSection() {
           {/* 新郎セクション - Figmaデザイン */}
           <div className="text-center group">
             <div className="mb-10">
-              <div className="relative w-72 h-72 mx-auto mb-12">
-                <div 
-                  className="w-full h-full rounded-full overflow-hidden shadow-xl group-hover:shadow-2xl transition-all duration-500 transform group-hover:scale-105"
-                  style={{
-                    background: 'linear-gradient(135deg, #F5F2E4 0%, #E5E3DF 50%, #BDBCDA 100%)',
-                    border: '3px solid #e65555',
-                  }}
-                >
-                  <img 
-                    src="/images/profiles/groom.png"
-                    alt={`${weddingEnv.groomNameFullJp}のプロフィール写真`}
-                    className="w-full h-full object-cover"
-                    style={{
-                      objectFit: 'cover',
-                      objectPosition: 'center',
-                    }}
-                  />
-                </div>
-                
-                <div 
-                  className="absolute inset-0 rounded-full transform scale-110 opacity-30"
-                  style={{
-                    border: '2px solid #e65555',
-                  }}
-                ></div>
-                <div 
-                  className="absolute inset-0 rounded-full transform scale-125 opacity-15"
-                  style={{
-                    border: '1px solid #e65555',
-                  }}
-                ></div>
-              </div>
+              <AnimatedProfileImage
+                src="/images/profiles/groom.png"
+                alt={`${weddingEnv.groomNameFullJp}のプロフィール写真`}
+              />
               
               <div className="mb-8">
                 <h3
@@ -111,71 +85,22 @@ export default function ProfileSection() {
               </div>
             </div>
             
-            <div 
-              className="figma-card p-8 md:p-10"
-              style={{
-                background: 'rgba(255, 255, 255, 0.8)',
-                backdropFilter: 'blur(10px)',
-                border: '1px solid rgba(230, 85, 85, 0.1)',
-              }}
-            >
-              <p 
-                className="text-mine-shaft leading-relaxed"
-                style={{
-                  fontFamily: 'Noto Serif JP, serif',
-                  fontWeight: '400',
-                  fontSize: 'clamp(0.9rem, 1.5vw, 1.1rem)',
-                  lineHeight: '1.8',
-                  letterSpacing: '0.02em',
-                  color: '#333333',
-                  whiteSpace: 'pre-line',
-                }}
-              >
-                {weddingEnv.groomBirthDate}　{weddingEnv.groomBirthPlace}生まれ{'\n'}
-                {weddingEnv.groomBloodType}{'\n\n'}
-
-                {weddingEnv.groomHobby}{'\n\n'}
-
-                {weddingEnv.groomMessage}
-              </p>
-            </div>
+            <AnimatedProfileMessage
+              birthDate={weddingEnv.groomBirthDate}
+              birthPlace={weddingEnv.groomBirthPlace}
+              bloodType={weddingEnv.groomBloodType}
+              hobby={weddingEnv.groomHobby}
+              message={weddingEnv.groomMessage}
+            />
           </div>
 
           {/* 新婦セクション - Figmaデザイン */}
           <div className="text-center group">
             <div className="mb-10">
-              <div className="relative w-72 h-72 mx-auto mb-12">
-                <div 
-                  className="w-full h-full rounded-full overflow-hidden shadow-xl group-hover:shadow-2xl transition-all duration-500 transform group-hover:scale-105"
-                  style={{
-                    background: 'linear-gradient(135deg, #F5F2E4 0%, #E5E3DF 50%, #BDBCDA 100%)',
-                    border: '3px solid #e65555',
-                  }}
-                >
-                  <img 
-                    src="/images/profiles/bride.png"
-                    alt={`${weddingEnv.brideNameFullJp}のプロフィール写真`}
-                    className="w-full h-full object-cover"
-                    style={{
-                      objectFit: 'cover',
-                      objectPosition: 'center',
-                    }}
-                  />
-                </div>
-                
-                <div 
-                  className="absolute inset-0 rounded-full transform scale-110 opacity-30"
-                  style={{
-                    border: '2px solid #e65555',
-                  }}
-                ></div>
-                <div 
-                  className="absolute inset-0 rounded-full transform scale-125 opacity-15"
-                  style={{
-                    border: '1px solid #e65555',
-                  }}
-                ></div>
-              </div>
+              <AnimatedProfileImage
+                src="/images/profiles/bride.png"
+                alt={`${weddingEnv.brideNameFullJp}のプロフィール写真`}
+              />
               
               <div className="mb-8">
                 <h3 
@@ -205,33 +130,13 @@ export default function ProfileSection() {
               </div>
             </div>
             
-            <div 
-              className="figma-card p-8 md:p-10"
-              style={{
-                background: 'rgba(255, 255, 255, 0.8)',
-                backdropFilter: 'blur(10px)',
-                border: '1px solid rgba(230, 85, 85, 0.1)',
-              }}
-            >
-              <p 
-                className="text-mine-shaft leading-relaxed"
-                style={{
-                  fontFamily: 'Noto Serif JP, serif',
-                  fontWeight: '400',
-                  fontSize: 'clamp(0.9rem, 1.5vw, 1.1rem)',
-                  lineHeight: '1.8',
-                  letterSpacing: '0.02em',
-                  color: '#333333',
-                  whiteSpace: 'pre-line',
-                }}
-              >
-                {weddingEnv.brideBirthDate}　{weddingEnv.brideBirthPlace}生まれ{'\n'}
-                {weddingEnv.brideBloodType}{'\n\n'}
-                {weddingEnv.brideHobby}{'\n\n'}
-                
-                {weddingEnv.brideMessage}
-              </p>
-            </div>
+            <AnimatedProfileMessage
+              birthDate={weddingEnv.brideBirthDate}
+              birthPlace={weddingEnv.brideBirthPlace}
+              bloodType={weddingEnv.brideBloodType}
+              hobby={weddingEnv.brideHobby}
+              message={weddingEnv.brideMessage}
+            />
           </div>
         </div>
       </div>
