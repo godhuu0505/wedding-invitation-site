@@ -35,7 +35,7 @@ export default function FooterSection() {
                 backgroundClip: 'text',
               }}
             >
-              {coupleNames.combined.shortEn}
+              結婚式
             </h3>
             <div className="space-y-4">
               <p 
@@ -93,11 +93,12 @@ export default function FooterSection() {
             </h3>
             <ul className="space-y-4">
               {[
-                { label: 'ホーム', href: '#home' },
-                { label: 'メッセージ', href: '#message' },
-                { label: 'カウントダウン', href: '#countdown' },
-                { label: '式場案内', href: '#information' },
-                { label: '出欠確認', href: '#rsvp' },
+                { label: 'Home', href: '#home' },
+                { label: 'Message', href: '#message' },
+                { label: 'Profile', href: '#profile' },
+                { label: 'Countdown', href: '#countdown' },
+                { label: 'Venue Information', href: '#information' },
+                { label: 'RSVP', href: '#rsvp' },
               ].map((item) => (
                 <li key={item.href}>
                   <button
