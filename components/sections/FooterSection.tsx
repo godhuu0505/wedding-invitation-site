@@ -235,7 +235,7 @@ export default function FooterSection() {
                 color: '#9E9E9E',
               }}
             >
-              <p>© 2025 {coupleNames.groom.fullJp} & {coupleNames.bride.fullJp} Wedding</p>
+              <p>© 2025 {coupleNames.groom.en} & {coupleNames.bride.en} Wedding</p>
               <p className="mt-1">All rights reserved.</p>
             </div>
           </div>
