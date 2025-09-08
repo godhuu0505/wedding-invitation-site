@@ -42,7 +42,7 @@ export default function ProfileSection() {
               color: '#4D4D4D',
             }}
           >
-            プロフィール
+            新郎新婦のご紹介
           </p>
         </div>
 
@@ -84,19 +84,7 @@ export default function ProfileSection() {
               </div>
               
               <div className="mb-8">
-                <h3 
-                  className="text-akane-500 mb-4"
-                  style={{
-                    fontFamily: 'Cinzel, serif',
-                    fontWeight: '500',
-                    fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-                    letterSpacing: '0.15em',
-                    color: '#e65555',
-                  }}
-                >
-                  Groom
-                </h3>
-                <h4 
+                <h3
                   className="text-mine-shaft mb-3"
                   style={{
                     fontFamily: 'Noto Serif JP, serif',
@@ -107,7 +95,7 @@ export default function ProfileSection() {
                   }}
                 >
                   {weddingEnv.groomNameFullJp}
-                </h4>
+                </h3>
                 <p 
                   className="text-dusty-gray"
                   style={{
@@ -191,18 +179,6 @@ export default function ProfileSection() {
               
               <div className="mb-8">
                 <h3 
-                  className="text-akane-500 mb-4"
-                  style={{
-                    fontFamily: 'Cinzel, serif',
-                    fontWeight: '500',
-                    fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-                    letterSpacing: '0.15em',
-                    color: '#e65555',
-                  }}
-                >
-                  Bride
-                </h3>
-                <h4 
                   className="text-mine-shaft mb-3"
                   style={{
                     fontFamily: 'Noto Serif JP, serif',
@@ -213,7 +189,7 @@ export default function ProfileSection() {
                   }}
                 >
                   {weddingEnv.brideNameFullJp}
-                </h4>
+                </h3>
                 <p 
                   className="text-dusty-gray"
                   style={{

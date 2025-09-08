@@ -22,7 +22,7 @@ export default function FooterSection() {
         <div className="grid md:grid-cols-3 gap-12">
           {/* Figmaデザインの結婚式情報 */}
           <div>
-            <h3 
+            {/* <h3 
               className="mb-8"
               style={{
                 fontFamily: 'Cinzel, serif',
@@ -33,6 +33,19 @@ export default function FooterSection() {
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
+              }}
+            >
+              結婚式
+            </h3> */}
+
+            <h3 
+              className="mb-8"
+              style={{
+                fontFamily: 'Noto Serif JP, serif',
+                fontWeight: '600',
+                fontSize: 'clamp(1.25rem, 2vw, 1.5rem)',
+                letterSpacing: '0.1em',
+                color: '#E0E0E0',
               }}
             >
               結婚式
@@ -136,44 +149,6 @@ export default function FooterSection() {
               お問い合わせ
             </h3>
             <div className="space-y-6">
-              <p 
-                className="leading-relaxed"
-                style={{
-                  fontFamily: 'Noto Serif JP, serif',
-                  fontWeight: '400',
-                  fontSize: '0.875rem',
-                  lineHeight: '1.6',
-                  color: '#B8B8B8',
-                }}
-              >
-                ご不明な点やご質問がございましたら、<br />
-                お気軽にお声かけください。
-              </p>
-
-              {/* LINE公式アカウントリンク */}
-              {weddingEnv.lineOfficialUrl && (
-                <div className="flex items-center justify-left">
-                  <a
-                    href={weddingEnv.lineOfficialUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center px-6 py-3 rounded-full transition-all duration-300 hover:scale-105"
-                    style={{
-                      background: 'linear-gradient(135deg, #00B900 0%, #00C300 100%)',
-                      color: 'white',
-                      fontFamily: 'Noto Serif JP, serif',
-                      fontWeight: '500',
-                      fontSize: '0.875rem',
-                      letterSpacing: '0.05em',
-                      boxShadow: '0 4px 15px rgba(0, 185, 0, 0.3)',
-                    }}
-                  >
-                    <span className="mr-2" style={{ fontSize: '1.125rem' }}>📱</span>
-                    LINE公式アカウント
-                  </a>
-                </div>
-              )}
-
               <div className="flex space-x-6">
                 <div className="text-center">
                   <div 
@@ -222,6 +197,44 @@ export default function FooterSection() {
                   </div>
                 </div>
               </div>
+
+              {/* LINE公式アカウントリンク */}
+              {weddingEnv.lineOfficialUrl && (
+                <div className="flex items-center justify-left">
+                  <a
+                    href={weddingEnv.lineOfficialUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center px-6 py-3 rounded-full transition-all duration-300 hover:scale-105"
+                    style={{
+                      background: 'linear-gradient(135deg, #00B900 0%, #00C300 100%)',
+                      color: 'white',
+                      fontFamily: 'Noto Serif JP, serif',
+                      fontWeight: '500',
+                      fontSize: '0.875rem',
+                      letterSpacing: '0.05em',
+                      boxShadow: '0 4px 15px rgba(0, 185, 0, 0.3)',
+                    }}
+                  >
+                    <span className="mr-2" style={{ fontSize: '1.125rem' }}>📱</span>
+                    LINE公式アカウント
+                  </a>
+                </div>
+              )}
+              
+              <p 
+                className="leading-relaxed"
+                style={{
+                  fontFamily: 'Noto Serif JP, serif',
+                  fontWeight: '400',
+                  fontSize: '0.875rem',
+                  lineHeight: '1.6',
+                  color: '#B8B8B8',
+                }}
+              >
+                ご不明な点やご質問がございましたら、<br />
+                お気軽にお声かけください。
+              </p>
             </div>
           </div>
         </div>
@@ -291,14 +304,6 @@ export default function FooterSection() {
           <div className="flex justify-center items-center space-x-3">
             <span 
               style={{
-                color: '#e65555',
-                fontSize: '1.125rem',
-              }}
-            >
-              ♡
-            </span>
-            <span 
-              style={{
                 fontFamily: 'Cinzel, serif',
                 fontWeight: '400',
                 fontSize: '0.875rem',
@@ -306,15 +311,7 @@ export default function FooterSection() {
                 color: '#9E9E9E',
               }}
             >
-              {coupleNames.groom.en} & {coupleNames.bride.en}
-            </span>
-            <span 
-              style={{
-                color: '#BDBCDA',
-                fontSize: '1.125rem',
-              }}
-            >
-              ♡
+              {coupleNames.groom.fullJp} & {coupleNames.bride.fullJp}
             </span>
           </div>
         </div>

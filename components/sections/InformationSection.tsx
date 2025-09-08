@@ -24,12 +24,26 @@ export default function InformationSection() {
         {/* セクションタイトル */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-japanese font-bold text-gray-800 mb-6">
-            式場案内
-            <span className="block text-lg md:text-xl font-normal text-gray-600 mt-2">
-              Venue Information
-            </span>
+            Information
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-akane-400 to-pink-400 mx-auto rounded-full"></div>
+          <div className="flex items-center justify-center mb-6">
+            <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-akane-500 to-transparent"></div>
+            <div className="w-3 h-3 bg-akane-500 rounded-full mx-6 shadow-sm"></div>
+            <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-akane-500 to-transparent"></div>
+          </div>
+          
+          <p 
+            className="text-tundora"
+            style={{
+              fontFamily: 'Noto Serif JP, serif',
+              fontWeight: '400',
+              fontSize: '1.125rem',
+              letterSpacing: '0.1em',
+              color: '#4D4D4D',
+            }}
+          >
+            会場情報とアクセス
+          </p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12 items-start">
