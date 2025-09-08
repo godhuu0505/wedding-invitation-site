@@ -67,11 +67,8 @@ export default function SimpleLoadingScreen({
     <div className={`fixed inset-0 z-50 bg-white flex items-center justify-center transition-opacity duration-1000 ${
       isComplete ? 'opacity-0' : 'opacity-100'
     }`}>
-      {/* 背景画像 */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 nav-flower-pattern"
-        style={{ backgroundImage: 'url(/images/bowing.jpg)' }}
-      />
+      {/* 背景パターン */}
+      <div className="absolute inset-0 opacity-20 nav-flower-pattern" />
       
       {/* コンテンツオーバーレイ */}
       <div className="relative z-10 text-center">
