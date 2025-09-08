@@ -1,14 +1,20 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { getCoupleNames, getWeddingDate, getWeddingEnv } from '@/lib/env';
+import { getWeddingDate, getWeddingEnv } from '@/lib/env';
+import {
+  BlackOverlay,
+  VerticalInvitationText,
+  WeddingDate,
+  SlideIndicator
+} from '@/components/ui/HeaderAnimations';
 
 export default function HeaderSection() {
   const headerRef = useRef<HTMLElement>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [showBlackOverlay, setShowBlackOverlay] = useState(true);
 
   // 環境変数から情報を取得
-  const coupleNames = getCoupleNames();
   const weddingDate = getWeddingDate();
   const weddingEnv = getWeddingEnv();
 
@@ -24,13 +30,13 @@ export default function HeaderSection() {
   // Figmaデザインに基づく背景画像とグラデーション
   const backgroundStyles: BackgroundStyle[] = React.useMemo(() => [
     {
-      background: 'url("/images/header/umbrella-gate.jpg"), linear-gradient(135deg, rgba(139, 69, 19, 0.3) 0%, rgba(160, 82, 45, 0.2) 30%, rgba(205, 133, 63, 0.1) 60%, rgba(222, 184, 135, 0.05) 100%)',
+      background: 'url("/images/header/header_1_moon-room.jpg"), linear-gradient(45deg, #D2B48C 0%, #DEB887 30%, #F5DEB3 60%, #FDF5E6 100%)',
       backgroundSize: 'cover, cover',
         backgroundPosition: 'center, center',
         overlay: 'linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(139,69,19,0.3) 50%, rgba(0,0,0,0.4) 100%)'
     },
     {
-      background: 'url("/images/header/moon-room.jpg"), linear-gradient(45deg, #D2B48C 0%, #DEB887 30%, #F5DEB3 60%, #FDF5E6 100%)',
+      background: 'url("/images/header/umbrella-gate.jpg"), linear-gradient(135deg, rgba(139, 69, 19, 0.3) 0%, rgba(160, 82, 45, 0.2) 30%, rgba(205, 133, 63, 0.1) 60%, rgba(222, 184, 135, 0.05) 100%)',
       backgroundSize: 'cover, cover',
         backgroundPosition: 'center, center',
         overlay: 'linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(139,69,19,0.3) 50%, rgba(0,0,0,0.4) 100%)'
@@ -50,12 +56,20 @@ export default function HeaderSection() {
   ], []);
 
   useEffect(() => {
+    // 黒いオーバーレイを3秒後に非表示にする
+    const overlayTimer = setTimeout(() => {
+      setShowBlackOverlay(false);
+    }, 3000);
+
     // Figmaデザインに基づく7秒間隔でのスライド切り替え
     const slideInterval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % backgroundStyles.length);
     }, 7000);
 
-    return () => clearInterval(slideInterval);
+    return () => {
+      clearTimeout(overlayTimer);
+      clearInterval(slideInterval);
+    };
   }, [backgroundStyles.length]);
 
   return (
@@ -93,7 +107,6 @@ export default function HeaderSection() {
               transitionProperty: 'opacity',
             }}
           >
-            {/* Figmaデザインのオーバーレイ */}
             <div 
               className="absolute inset-0"
               style={{
@@ -102,6 +115,8 @@ export default function HeaderSection() {
             />
           </div>
         ))}
+        
+        <BlackOverlay showBlackOverlay={showBlackOverlay} />
       </div>
 
       {/* Figmaデザインに基づくヘッダーセクション */}
@@ -110,31 +125,16 @@ export default function HeaderSection() {
         id="home" 
         className="relative z-10 min-h-screen flex flex-col"
       >
-        {/* Figmaデザインのメインコンテンツエリア */}
-        <div className="flex-1 flex items-center justify-center px-4 py-20">
-          <div className="text-center max-w-6xl mx-auto">
-            
+        {/* 縦書き「ご招待状」文字 - 画面中央 */}
+        <VerticalInvitationText showBlackOverlay={showBlackOverlay} />
 
-            {/* Figmaデザインのスクロールインジケーター */}
-            <div className="animate-figma-fade-in" style={{ animationDelay: '1.2s' }}>
-              <div className="flex flex-col items-center text-dusty-gray animate-bounce">
-                <span 
-                  className="figma-small-text mb-3 tracking-widest"
-                  style={{
-                    fontFamily: 'Cinzel, serif',
-                    fontWeight: '300',
-                    fontSize: '0.75rem',
-                    letterSpacing: '0.3em',
-                    color: '#999999',
-                  }}
-                >
-                  SCROLL DOWN
-                </span>
-                <div className="w-px h-12 bg-gradient-to-b from-dusty-gray to-transparent opacity-50"></div>
-                <div className="w-1.5 h-1.5 bg-akane-500 rounded-full mt-2 opacity-70 shadow-sm"></div>
-              </div>
-            </div>
-          </div>
+        {/* 結婚式日程 - 左下 */}
+        <div className="absolute bottom-20 left-8 z-30">
+          <WeddingDate
+            showBlackOverlay={showBlackOverlay}
+            weddingDate={weddingDate.date}
+            venueName={weddingEnv.venueName}
+          />
         </div>
 
         {/* Figmaデザインのスライドインジケーター */}
@@ -154,7 +154,7 @@ export default function HeaderSection() {
                 boxShadow: index === currentSlide ? '0 4px 12px rgba(230, 85, 85, 0.3)' : 'none',
               }}
               aria-label={`背景スライド ${index + 1}`}
-            />
+          />
           ))}
         </div>
       </header>
