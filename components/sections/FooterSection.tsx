@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { getCoupleNames, getWeddingEnv } from '@/lib/env';
+import BackToTopButton from '@/components/ui/BackToTopButton';
 
 export default function FooterSection() {
   const coupleNames = getCoupleNames();
@@ -248,12 +249,13 @@ export default function FooterSection() {
         >
           <div className="flex flex-col md:flex-row justify-between items-center">
             {/* Figmaデザインのトップに戻るボタン */}
-            <button
-              onClick={scrollToTop}
-              className="primary-button mb-6 md:mb-0 px-8 py-3 rounded-full transform transition-all duration-300"
-            >
-              ↑ トップに戻る
-            </button>
+            <div className="mb-6 md:mb-0">
+              <BackToTopButton 
+                variant={3}
+                onClick={scrollToTop}
+                className="shadow-lg"
+              />
+            </div>
 
             {/* Figmaデザインのコピーライト */}
             <div 

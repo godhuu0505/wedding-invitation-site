@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import SubmitButton from '@/components/ui/SubmitButton';
 
 /**
  * Comprehensive RSVP Form - reference-site.html完全対応版
@@ -591,26 +592,12 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
 
         {/* 送信ボタン */}
         <div className="text-center">
-          <button
+          <SubmitButton
             type="submit"
             disabled={isSubmitting}
-            className={`
-              primary-button px-16 py-4 rounded-full transform transition-all duration-300
-              ${isSubmitting
-                ? 'opacity-50 cursor-not-allowed'
-                : 'shadow-lg hover:shadow-xl'
-              }
-            `}
-          >
-            {isSubmitting ? (
-              <span className="flex items-center justify-center">
-                <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full mr-3"></div>
-                送信中...
-              </span>
-            ) : (
-              '送信する'
-            )}
-          </button>
+            isSubmitting={isSubmitting}
+            className="shadow-lg"
+          />
         </div>
       </div>
     </form>

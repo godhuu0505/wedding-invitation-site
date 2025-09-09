@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import SubmitButton from '@/components/ui/SubmitButton';
 
 export default function RSVPForm() {
   const [name, setName] = useState('');
@@ -158,9 +159,12 @@ export default function RSVPForm() {
         </div>
       )}
 
-      <button type="submit" className="bg-akane-500 hover:bg-akane-600 text-white px-4 py-2 rounded transition-colors">
-        送信
-      </button>
+      <div className="text-center">
+        <SubmitButton 
+          type="submit"
+          className="shadow-lg"
+        />
+      </div>
     </form>
   );
 }
