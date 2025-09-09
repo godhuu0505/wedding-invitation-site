@@ -250,16 +250,7 @@ export default function FooterSection() {
             {/* Figmaデザインのトップに戻るボタン */}
             <button
               onClick={scrollToTop}
-              className="figma-button mb-6 md:mb-0 px-8 py-3 rounded-full transform hover:scale-105 transition-all duration-300"
-              style={{
-                background: 'linear-gradient(135deg, #e65555 0%, #BDBCDA 100%)',
-                color: 'white',
-                fontFamily: 'Hiragino Kaku Gothic ProN, sans-serif',
-                fontWeight: '300',
-                fontSize: '0.875rem',
-                letterSpacing: '0.1em',
-                boxShadow: '0 6px 20px rgba(230, 85, 85, 0.3)',
-              }}
+              className="primary-button mb-6 md:mb-0 px-8 py-3 rounded-full transform transition-all duration-300"
             >
               ↑ トップに戻る
             </button>

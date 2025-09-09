@@ -37,10 +37,8 @@ export function VerticalInvitationText({ showBlackOverlay }: VerticalInvitationT
         textOrientation: 'upright',
       }}
     >
-      <div
-        className="text-white tracking-wider"
+      <div className="text-white tracking-wider font-elegant"
         style={{
-          fontFamily: 'serif',
           fontSize: 'clamp(2rem, 5vw, 4rem)',
           fontWeight: '400',
           letterSpacing: '0.5em',
@@ -67,10 +65,8 @@ export function WeddingDate({ showBlackOverlay, weddingDate, venueName }: Weddin
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
     >
-      <div 
-        className="text-white text-left"
+      <div className="text-white text-left font-elegant"
         style={{
-          fontFamily: 'Cinzel, serif',
           fontWeight: '400',
           fontSize: 'clamp(1rem, 2.5vw, 1.5rem)',
           letterSpacing: '0.1em',

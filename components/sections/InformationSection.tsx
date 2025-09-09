@@ -32,14 +32,9 @@ export default function InformationSection() {
             <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-akane-500 to-transparent"></div>
           </div>
           
-          <p 
-            className="text-tundora"
+          <p className="text-tundora text-lg font-japanese leading-relaxed"
             style={{
-              fontFamily: 'Noto Serif JP, serif',
-              fontWeight: '400',
-              fontSize: '1.125rem',
               letterSpacing: '0.1em',
-              color: '#4D4D4D',
             }}
           >
             会場情報とアクセス

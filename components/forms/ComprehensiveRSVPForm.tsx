@@ -180,43 +180,16 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-8">
-      <div 
-        className="figma-card p-8 md:p-12"
-        style={{
-          background: 'rgba(255, 255, 255, 0.95)',
-          backdropFilter: 'blur(15px)',
-          border: '1px solid rgba(230, 85, 85, 0.1)',
-          borderRadius: '12px',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-        }}
-      >
+      <div className="section-card p-8 md:p-12">
         {/* セクション1: 出欠・関係性 */}
         <div className="mb-12">
-          <h3 
-            className="text-mine-shaft mb-8 pb-4 border-b border-mercury"
-            style={{
-              fontFamily: 'Cinzel, serif',
-              fontWeight: '500',
-              fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-              letterSpacing: '0.1em',
-              color: '#333333',
-            }}
-          >
+          <h3 className="section-heading mb-8 pb-4 border-b border-mercury">
             出席・関係性情報
           </h3>
           
           {/* 出欠選択 */}
           <div className="mb-8">
-            <label 
-              className="semantic-label block mb-4"
-              style={{
-                fontFamily: 'Noto Serif JP, serif',
-                fontWeight: '400',
-                fontSize: '11.7px',
-                lineHeight: '17.49px',
-                color: '#333333',
-              }}
-            >
+            <label className="form-label block mb-4">
               出欠 <span className="text-akane-500">*</span>
             </label>
             <div className="grid grid-cols-2 gap-4">
@@ -266,16 +239,7 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
 
           {/* 関係性選択 */}
           <div className="mb-8">
-            <label 
-              className="semantic-label block mb-4"
-              style={{
-                fontFamily: 'Noto Serif JP, serif',
-                fontWeight: '400',
-                fontSize: '11.7px',
-                lineHeight: '17.49px',
-                color: '#333333',
-              }}
-            >
+            <label className="form-label block mb-4">
               どちら側のゲストですか？ <span className="text-akane-500">*</span>
             </label>
             <div className="grid grid-cols-2 gap-4">
@@ -324,16 +288,7 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
 
         {/* セクション2: 個人情報 */}
         <div className="mb-12">
-          <h3 
-            className="text-mine-shaft mb-8 pb-4 border-b border-mercury"
-            style={{
-              fontFamily: 'Cinzel, serif',
-              fontWeight: '500',
-              fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-              letterSpacing: '0.1em',
-              color: '#333333',
-            }}
-          >
+          <h3 className="section-heading mb-8 pb-4 border-b border-mercury">
             お名前情報
           </h3>
           
@@ -436,16 +391,7 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
 
         {/* セクション3: 連絡先情報 */}
         <div className="mb-12">
-          <h3 
-            className="text-mine-shaft mb-8 pb-4 border-b border-mercury"
-            style={{
-              fontFamily: 'Cinzel, serif',
-              fontWeight: '500',
-              fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-              letterSpacing: '0.1em',
-              color: '#333333',
-            }}
-          >
+          <h3 className="section-heading mb-8 pb-4 border-b border-mercury">
             連絡先情報
           </h3>
           
@@ -483,16 +429,7 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
 
         {/* セクション4: 住所情報 */}
         <div className="mb-12">
-          <h3 
-            className="text-mine-shaft mb-8 pb-4 border-b border-mercury"
-            style={{
-              fontFamily: 'Cinzel, serif',
-              fontWeight: '500',
-              fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-              letterSpacing: '0.1em',
-              color: '#333333',
-            }}
-          >
+          <h3 className="section-heading mb-8 pb-4 border-b border-mercury">
             住所情報（任意）
           </h3>
           
@@ -546,16 +483,7 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
 
         {/* セクション5: その他情報 */}
         <div className="mb-12">
-          <h3 
-            className="text-mine-shaft mb-8 pb-4 border-b border-mercury"
-            style={{
-              fontFamily: 'Cinzel, serif',
-              fontWeight: '500',
-              fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-              letterSpacing: '0.1em',
-              color: '#333333',
-            }}
-          >
+          <h3 className="section-heading mb-8 pb-4 border-b border-mercury">
             その他情報
           </h3>
 
@@ -667,25 +595,12 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
             type="submit"
             disabled={isSubmitting}
             className={`
-              figma-button px-16 py-4 rounded-full transform hover:scale-105 transition-all duration-300
+              primary-button px-16 py-4 rounded-full transform transition-all duration-300
               ${isSubmitting
                 ? 'opacity-50 cursor-not-allowed'
                 : 'shadow-lg hover:shadow-xl'
               }
             `}
-            style={{
-              background: isSubmitting 
-                ? '#999999' 
-                : 'linear-gradient(135deg, #e65555 0%, #BDBCDA 100%)',
-              color: 'white',
-              fontFamily: 'Hiragino Kaku Gothic ProN, sans-serif',
-              fontWeight: '300',
-              fontSize: '1.125rem',
-              letterSpacing: '0.1em',
-              boxShadow: isSubmitting 
-                ? 'none' 
-                : '0 8px 25px rgba(230, 85, 85, 0.3)',
-            }}
           >
             {isSubmitting ? (
               <span className="flex items-center justify-center">

@@ -87,25 +87,25 @@ export default function HomePage() {
             <MessageSection />
             
             {/* セクション間スペース 1 */}
-            <SectionDivider height="lg" />
+            <SectionDivider height="xl" />
             
             {/* セクション3: プロフィール（新郎新婦紹介）*/}
             <ProfileSection />
             
             {/* セクション間スペース 2 */}
-            <SectionDivider height="lg" />
+            <SectionDivider height="xl" />
             
             {/* セクション4: カウントダウン（結婚式まで残り日数）*/}
             <CountdownSection />
             
             {/* セクション間スペース 3 */}
-            <SectionDivider height="lg" />
+            <SectionDivider height="xl" />
             
             {/* セクション5: インフォメーション（式場案内 + Google Maps）*/}
             <InformationSection />
             
             {/* セクション間スペース 4 */}
-            <SectionDivider height="lg" />
+            <SectionDivider height="xl" />
             
             {/* セクション6: RSVP（出欠確認フォーム）*/}
             <RSVPSection />

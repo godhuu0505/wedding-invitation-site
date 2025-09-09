@@ -4,7 +4,7 @@ import { FC } from 'react';
 
 interface SectionDividerProps {
   /** 高さの調整 */
-  height?: 'sm' | 'md' | 'lg';
+  height?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   /** 追加のCSS クラス */
   className?: string;
 }
@@ -22,9 +22,11 @@ const SectionDivider: FC<SectionDividerProps> = ({
 }) => {
   // 高さのマッピング
   const heightClasses = {
-    sm: 'h-24 sm:h-32 md:h-40 lg:h-48',
-    md: 'h-32 sm:h-40 md:h-56 lg:h-64',
-    lg: 'h-48 sm:h-56 md:h-72 lg:h-80'
+    xs: 'h-12 sm:h-16 md:h-20 lg:h-24',      // 約48-96px (小さめ)
+    sm: 'h-24 sm:h-32 md:h-40 lg:h-48',      // 約96-192px (小)
+    md: 'h-32 sm:h-40 md:h-56 lg:h-64',      // 約128-256px (中)
+    lg: 'h-48 sm:h-56 md:h-72 lg:h-80',      // 約192-320px (大)
+    xl: 'h-56 sm:h-64 md:h-80 lg:h-96'       // 約224-384px (特大)
   };
 
   return (

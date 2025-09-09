@@ -247,10 +247,7 @@ export default function GoogleMap({
       {/* マップコンテナ */}
       <div
         ref={mapRef}
-        className="w-full h-full rounded-lg"
-        style={{ 
-          background: 'linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)'
-        }}
+        className="w-full h-full rounded-lg gradient-background"
       />
 
       {/* ローディング表示 */}

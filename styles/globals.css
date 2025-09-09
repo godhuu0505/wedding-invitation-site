@@ -345,7 +345,7 @@ body {
   }
 }
 
-  /* Figmaデザインのレスポンシブブレークポイント */
+/* Figmaデザインのレスポンシブブレークポイント */
 @media (max-width: 640px) {
   .figma-mobile-padding {
     padding-left: 1rem;
@@ -410,4 +410,93 @@ body {
 .nav-button-active-white {
   color: white !important;
   background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* 共通セクション見出しスタイル */
+.section-heading {
+  font-family: 'Cinzel', serif;
+  font-weight: 500;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  letter-spacing: 0.1em;
+  color: #333333;
+}
+
+.section-heading-large {
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  font-size: clamp(2rem, 4vw, 3rem);
+  letter-spacing: 0.1em;
+  color: #333333;
+}
+
+/* 共通フォームラベルスタイル */
+.form-label {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 400;
+  font-size: 11.7px;
+  line-height: 17.49px;
+  color: #333333;
+}
+
+/* 共通カードスタイル */
+.section-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(230, 85, 85, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* 共通ボタンスタイル */
+.primary-button {
+  font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
+  font-weight: 300;
+  font-size: 1.125rem;
+  letter-spacing: 0.1em;
+  background: linear-gradient(135deg, #e65555 0%, #BDBCDA 100%);
+  color: white;
+  box-shadow: 0 8px 25px rgba(230, 85, 85, 0.3);
+  transition: all 0.3s ease;
+}
+
+.primary-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 35px rgba(230, 85, 85, 0.4);
+}
+
+.primary-button:disabled {
+  background: #999999;
+  box-shadow: none;
+  transform: none;
+  cursor: not-allowed;
+}
+
+/* 共通グラデーション背景 */
+.gradient-background {
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+}
+
+/* 共通セクション装飾 */
+.section-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 3rem 0;
+}
+
+.section-divider::before,
+.section-divider::after {
+  content: '';
+  width: 5rem;
+  height: 2px;
+  background: linear-gradient(to right, transparent, #e65555, transparent);
+}
+
+.section-divider-dot {
+  width: 12px;
+  height: 12px;
+  background: #e65555;
+  border-radius: 50%;
+  margin: 0 1.5rem;
+  box-shadow: 0 2px 4px rgba(230, 85, 85, 0.3);
 }
