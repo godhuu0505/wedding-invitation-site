@@ -209,7 +209,6 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
                     : 'border-mercury hover:border-chateau-green hover:bg-chateau-green/5'
                   }
                 `}>
-                  <div className="text-2xl mb-2">🎉</div>
                   <div className="semantic-button">出席</div>
                 </div>
               </label>
@@ -228,7 +227,6 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
                     : 'border-mercury hover:border-cinnabar hover:bg-cinnabar/5'
                   }
                 `}>
-                  <div className="text-2xl mb-2">😢</div>
                   <div className="semantic-button">欠席</div>
                 </div>
               </label>
