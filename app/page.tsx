@@ -29,14 +29,60 @@ import SectionDivider from '@/components/ui/SectionDivider';
 export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [showContent, setShowContent] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    // クライアントサイドレンダリングの確認
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return; // クライアントサイドでのみ実行
+    
     let mounted = true;
     
-    // Figmaデザイン仕様：5秒間のローディング時間
+    // リロード検知：Navigation Timing API を使用
+    let isReload = false;
+    try {
+      const navigationEntries = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[];
+      isReload = navigationEntries[0]?.type === 'reload';
+      
+      // フォールバック：古いブラウザ対応
+      if (!isReload && window.performance && (window.performance as any).navigation) {
+        isReload = (window.performance as any).navigation.type === 1;
+      }
+    } catch (error) {
+      // エラーが発生した場合はリロードと判定しない
+      isReload = false;
+    }
+    
+    // セッションストレージから前回のローディング状態をチェック
+    const skipLoading = sessionStorage.getItem('wedding-skip-loading');
+    
+    // リロードの場合は必ずローディングを表示
+    if (isReload) {
+      // リロード時はローディング状態をリセット
+      sessionStorage.removeItem('wedding-loading-seen');
+      sessionStorage.removeItem('wedding-skip-loading');
+    }
+    
+    // thank-you画面から戻ってきた場合のみスキップ（リロードでない場合）
+    if (!isReload && skipLoading === 'true') {
+      if (mounted) {
+        setIsLoading(false);
+        setShowContent(true);
+        // スキップフラグをクリア（次回訪問時は通常ローディング）
+        sessionStorage.removeItem('wedding-skip-loading');
+      }
+      return;
+    }
+    
+    // 通常のローディング処理（Figmaデザイン仕様：5秒間のローディング時間）
     const timer = setTimeout(() => {
       if (mounted) {
         setIsLoading(false);
+        // ローディング完了をセッションストレージに記録
+        sessionStorage.setItem('wedding-loading-seen', 'true');
         // ローディング完了後少し待ってからコンテンツを表示
         setTimeout(() => {
           if (mounted) {
@@ -50,7 +96,7 @@ export default function HomePage() {
       mounted = false;
       clearTimeout(timer);
     };
-  }, []);
+  }, [isClient]);
 
   return (
     <ErrorBoundary>

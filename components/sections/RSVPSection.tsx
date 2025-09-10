@@ -1,30 +1,18 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
+import { useRouter } from 'next/navigation';
 import { getWeddingEnv } from '@/lib/env';
-import { createRSVP, checkRSVPDuplicate } from '@/lib/firebase-operations';
+import { createRSVP } from '@/lib/firebase-operations';
 import { RSVPFormData } from '@/lib/types';
 import ComprehensiveRSVPForm from '@/components/forms/ComprehensiveRSVPForm';
 
-/**
- * RSVPSection - Figmaデザイン + reference-site.html完全対応版
- * 
- * このセクションはFigmaデザインのスタイリングと
- * reference-site.htmlの包括的なフォーム機能を組み合わせています。
- */
-
 export default function RSVPSection() {
+  const router = useRouter();
   const weddingEnv = getWeddingEnv();
-  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleRSVPSubmit = async (data: RSVPFormData) => {
     try {
-      // メールアドレスの重複チェック
-      const isDuplicate = await checkRSVPDuplicate(data.email);
-      if (isDuplicate) {
-        throw new Error('このメールアドレスは既に登録されています。');
-      }
-
       // Firebase Firestoreへのデータ保存
       const savedData = await createRSVP(data);
       
@@ -37,8 +25,15 @@ export default function RSVPSection() {
         console.log('Firestore保存結果:', savedData);
       }
       
-      // 成功時の処理
-      setIsSubmitted(true);
+      // 成功時は送信完了ページにリダイレクト
+      const guestName = `${data.jpn_family_name} ${data.jpn_first_name}`;
+      const statusParam = data.status?.toString() || '';
+      const queryParams = new URLSearchParams({
+        name: guestName,
+        status: statusParam
+      });
+      
+      router.push(`/rsvp/thank-you?${queryParams.toString()}`);
       
     } catch (error) {
       console.error('RSVP送信エラー:', error);
@@ -55,93 +50,12 @@ export default function RSVPSection() {
   };
 
   const handleSubmitSuccess = () => {
-    setIsSubmitted(true);
+    // この関数は使用されなくなったが、ComprehensiveRSVPFormとの互換性のため残す
+    // 実際のリダイレクトはhandleRSVPSubmit内で行われる
   };
 
-  // 送信完了画面
-  if (isSubmitted) {
-    return (
-      <section id="rsvp" className="min-h-screen py-24 bg-old-lace relative">
-        {/* Figmaデザインの背景グラデーション */}
-        <div className="absolute inset-0 bg-gradient-to-b from-ecru-white/30 to-old-lace"></div>
-        
-        <div className="max-w-5xl mx-auto px-4 relative z-10">
-          <div className="text-center">
-            {/* 成功アイコン */}
-            <div 
-              className="w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-12 shadow-2xl"
-              style={{
-                background: 'linear-gradient(135deg, #34A853 0%, #4285F4 100%)',
-              }}
-            >
-              <span className="text-white text-6xl">✓</span>
-            </div>
-            
-            {/* 成功メッセージ */}
-            <h2 
-              className="text-mine-shaft mb-10"
-              style={{
-                fontFamily: 'Cinzel, serif',
-                fontWeight: '600',
-                fontSize: 'clamp(2.5rem, 5vw, 4rem)',
-                lineHeight: '1.1',
-                letterSpacing: '0.1em',
-                color: '#333333',
-              }}
-            >
-              Thank You
-            </h2>
-            
-            <h3 
-              className="text-akane-500 mb-8"
-              style={{
-                fontFamily: 'Noto Serif JP, serif',
-                fontWeight: '500',
-                fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
-                letterSpacing: '0.1em',
-                color: '#e65555',
-              }}
-            >
-              ありがとうございました
-            </h3>
-            
-            <p 
-              className="text-dusty-gray mb-12 leading-relaxed max-w-3xl mx-auto"
-              style={{
-                fontFamily: 'Noto Serif JP, serif',
-                fontWeight: '400',
-                fontSize: 'clamp(1.125rem, 2vw, 1.375rem)',
-                lineHeight: '2',
-                letterSpacing: '0.02em',
-                color: '#999999',
-              }}
-            >
-              出欠のご連絡をいただき、誠にありがとうございます。<br />
-              皆様からのお返事を心よりお待ちしております。<br />
-              当日、お会いできることを楽しみにしております。
-            </p>
-            
-            {/* 戻るボタン */}
-            <button
-              onClick={() => setIsSubmitted(false)}
-              className="figma-button px-12 py-4 rounded-full transform hover:scale-105 shadow-lg hover:shadow-xl transition-all duration-300"
-              style={{
-                background: 'linear-gradient(135deg, #e65555 0%, #BDBCDA 100%)',
-                color: 'white',
-                fontFamily: 'Hiragino Kaku Gothic ProN, sans-serif',
-                fontWeight: '300',
-                fontSize: '1.125rem',
-                letterSpacing: '0.1em',
-                boxShadow: '0 8px 25px rgba(230, 85, 85, 0.3)',
-              }}
-            >
-              フォームに戻る
-            </button>
-          </div>
-        </div>
-      </section>
-    );
-  }
+  // 送信完了画面は /rsvp/thank-you ページで表示されるため、
+  // ここでは直接フォームをレンダリングします
 
   return (
     <section id="rsvp" className="min-h-screen py-24 bg-old-lace relative">
