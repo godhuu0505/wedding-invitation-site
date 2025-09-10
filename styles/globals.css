@@ -5,6 +5,15 @@
 /* スムーズスクロール */
 html {
   scroll-behavior: smooth;
+  /* CSS変数でスクロール状態を管理 */
+  --scroll-offset: 0;
+  --viewport-height: 100vh;
+}
+
+@supports (height: 100svh) {
+  html {
+    --viewport-height: 100svh;
+  }
 }
 
 /* Figmaデザインに基づくベーススタイル */
@@ -195,6 +204,118 @@ body {
 
 /* カスタムCSS utilities layer */
 @layer utilities {
+  /* モバイル安全領域対応 */
+  .mobile-safe-header {
+    min-height: var(--viewport-height);
+    transition: none; /* 高さ変化時の突然な変化を防ぐ */
+  }
+
+  @supports (height: 100svh) {
+    .mobile-safe-header {
+      min-height: 100svh;
+    }
+  }
+
+  .mobile-safe-nav {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .mobile-safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .mobile-safe-indicator {
+    bottom: calc(10rem + env(safe-area-inset-bottom));
+    right: calc(2rem + env(safe-area-inset-right));
+  }
+
+  .mobile-safe-content {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* 背景画像の安定化 */
+  .stable-background {
+    height: var(--viewport-height) !important;
+    transition: none; /* ビューポート変化時の突然な変化を防ぐ */
+  }
+
+  .stable-background-layer {
+    height: var(--viewport-height) !important;
+    transition: opacity 3000ms ease; /* オーバーレイトランジションのみ */
+  }
+
+  @supports (height: 100svh) {
+    .stable-background,
+    .stable-background-layer {
+      height: 100svh !important;
+    }
+  }
+
+  /* レスポンシブ調整 */
+  @media (max-width: 640px) {
+    .mobile-safe-bottom {
+      bottom: calc(3rem + env(safe-area-inset-bottom));
+      left: calc(1.5rem + env(safe-area-inset-left));
+    }
+
+    .mobile-safe-indicator {
+      bottom: calc(1.5rem + env(safe-area-inset-bottom));
+      right: calc(1.5rem + env(safe-area-inset-right));
+    }
+
+    .mobile-safe-nav {
+      padding-top: calc(0.5rem + env(safe-area-inset-top));
+    }
+
+    /* モバイル特有のビューポート調整 */
+    .mobile-safe-header {
+      min-height: 100vh; /* フォールバック */
+      min-height: 100svh; /* スマートフォン固定ビューポート */
+    }
+
+    .stable-background,
+    .stable-background-layer {
+      height: 100vh !important; /* フォールバック */
+      height: 100svh !important; /* 統一された高さ基準 */
+    }
+
+    @supports (height: 100svh) {
+      .mobile-safe-header,
+      .stable-background,
+      .stable-background-layer {
+        min-height: 100svh;
+        height: 100svh !important;
+      }
+    }
+  }
+
+  /* iPhone X以降のノッチ対応 */
+  @media (max-width: 640px) and (orientation: portrait) {
+    .mobile-safe-content {
+      padding-top: max(env(safe-area-inset-top), 1rem);
+    }
+  }
+
+  /* 横向き時の調整 */
+  @media (max-width: 896px) and (orientation: landscape) {
+    .mobile-safe-nav {
+      padding-top: env(safe-area-inset-top);
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+    }
+
+    .mobile-safe-header,
+    .stable-background,
+    .stable-background-layer {
+      min-height: 100vh; /* フォールバック */
+      min-height: 100svh; /* 横向きでも統一 */
+      height: 100svh !important;
+    }
+  }
+
   /* Figmaデザインのトランジション */
   .transition-2000 {
     transition-duration: 2000ms;

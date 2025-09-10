@@ -391,19 +391,29 @@ module.exports = {
         '4': '4px',
       },
       },
-      animation: {
-        'fade-in': 'fade-in 1s ease-out forwards',
-        'slide-up': 'slide-up 0.8s ease-out forwards',
-        'count-change': 'count-change 0.3s ease-in-out',
-        'float': 'float 6s ease-in-out infinite',
-        'loading': 'loading 2s linear infinite',
-        'kenburns': 'kenburns 20s ease-out infinite',
-        'slow-zoom': 'slowMove 20s ease-in-out infinite alternate',
-        'slow-zoom-delay': 'slowMove 25s ease-in-out infinite alternate-reverse',
-      },
+      // Figmaから取得したトランジション時間
       transitionDuration: {
         '3000': '3000ms',
         '5000': '5000ms',
+      },
+      // レスポンシブ設計のためのスクリーン設定
+      screens: {
+        'xs': '360px',
+        'sm': '640px',
+        'md': '768px',
+        'lg': '1024px',
+        'xl': '1280px',
+        '2xl': '1536px',
+        // モバイル特化サイズ
+        'mobile-s': '320px',
+        'mobile-m': '375px',
+        'mobile-l': '425px',
+        'mobile-xl': '480px',
+        // 高さベースのクエリ（新しいビューポート単位対応）
+        'short': { 'raw': '(max-height: 600px)' },
+        'tall': { 'raw': '(min-height: 800px)' },
+        // セーフエリア対応
+        'safe-area': { 'raw': '(display-mode: standalone)' },
       },
       keyframes: {
         'fade-in': {

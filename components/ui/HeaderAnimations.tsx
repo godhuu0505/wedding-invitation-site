@@ -31,7 +31,7 @@ export function VerticalInvitationText({ showBlackOverlay }: VerticalInvitationT
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
-      className="absolute inset-0 flex items-center justify-center z-30"
+      className="absolute inset-0 flex items-center justify-center z-30 mobile-safe-content"
       style={{
         writingMode: 'vertical-rl',
         textOrientation: 'upright',
@@ -111,7 +111,7 @@ export function SlideIndicator({
       initial={{ opacity: 0 }}
       animate={{ opacity: showBlackOverlay ? 0 : 1 }}
       transition={{ duration: 1, delay: 6 }}
-      className="absolute bottom-8 right-8 flex flex-col space-y-3 z-20"
+      className="absolute bottom-8 right-8 flex flex-col space-y-3 z-20 mobile-safe-indicator"
     >
       {backgroundStyles.map((_, index) => (
         <motion.button

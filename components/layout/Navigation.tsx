@@ -106,7 +106,7 @@ export default function Navigation({
 
   const navClasses = `
     fixed top-0 left-0 right-0 z-50 backdrop-blur-lg shadow-lg nav-flower-pattern
-    transition-all duration-500 border-b border-akane-100/50
+    transition-all duration-500 border-b border-akane-100/50 mobile-safe-nav
     ${isScrolled 
       ? 'py-2' 
       : 'py-4'
