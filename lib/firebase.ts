@@ -14,8 +14,8 @@ const firebaseConfig = {
 // Firebase App初期化
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
-// Firestore初期化
-const db = getFirestore(app);
+// Firestore初期化 - wedding-invitation-siteデータベースに接続
+const db = getFirestore(app, 'wedding-invitation-site');
 
 // Authentication初期化
 const auth = getAuth(app);

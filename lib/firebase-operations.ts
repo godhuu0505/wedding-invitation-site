@@ -20,53 +20,65 @@ export const COLLECTIONS = {
 /**
  * RSVPデータを作成
  */
-export async function createRSVP(formData: RSVPFormData) {
+export async function createRSVP(formData: RSVPFormData): Promise<{ success: boolean; message: string; data?: any }> {
   try {
-    const now = new Date();
+    // データベース接続情報を確認
+    const isProduction = process.env.NODE_ENV === 'production';
+    const useEmulator = process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true';
+    const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
     
-    // フォームデータをFirestore用データに変換
-    const firestoreData: Omit<FirestoreRSVPData, 'id'> = {
+    console.log('🔍 Firebase設定情報:', {
+      isProduction,
+      useEmulator,
+      projectId,
+      currentApp: db.app.name,
+      databaseId: 'wedding-invitation-site' // 明示的にデータベースIDを表示
+    });
+
+    const rsvpData: FirestoreRSVPData = {
       status: formData.status,
       guest_side: formData.guest_side,
       jpn_family_name: formData.jpn_family_name,
       jpn_first_name: formData.jpn_first_name,
-      kana_family_name: formData.kana_family_name || '',
-      kana_first_name: formData.kana_first_name || '',
+      kana_family_name: formData.kana_family_name,
+      kana_first_name: formData.kana_first_name,
       rom_family_name: formData.rom_family_name,
       rom_first_name: formData.rom_first_name,
       email: formData.email,
-      phone_number: formData.phone_number || '',
-      zipcode: formData.zipcode || '',
-      address: formData.address || '',
-      address2: formData.address2 || '',
+      phone_number: formData.phone_number,
+      zipcode: formData.zipcode,
+      address: formData.address,
+      address2: formData.address2,
       allergy_flag: formData.allergy_flag,
-      allergy: formData.allergy || [],
-      guest_message: formData.guest_message || '',
-      createdAt: now,
-      updatedAt: now,
+      allergy: formData.allergy,
+      guest_message: formData.guest_message,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
-    const docRef = await addDoc(collection(db, COLLECTIONS.WEDDING_RSVPS), {
-      ...firestoreData,
-      createdAt: Timestamp.fromDate(now),
-      updatedAt: Timestamp.fromDate(now),
-    });
+    console.log('📝 送信データ:', JSON.stringify(rsvpData, null, 2));
 
-    console.log('RSVP保存成功:', {
-      id: docRef.id,
-      email: formData.email,
-      status: formData.status === 1 ? '出席' : '欠席',
-      guest_side: formData.guest_side === 0 ? '新郎側' : '新婦側',
-    });
+    const docRef = await addDoc(collection(db, 'wedding_rsvps'), rsvpData);
 
-    return { 
-      id: docRef.id, 
-      ...firestoreData 
+    console.log('✅ RSVP作成成功:', docRef.id);
+
+    return {
+      success: true,
+      message: 'RSVPが正常に登録されました',
+      data: { id: docRef.id, ...rsvpData }
     };
   } catch (error) {
-    console.error('RSVP作成エラー:', error);
+    console.error('❌ RSVP作成エラー詳細:', {
+      error,
+      errorMessage: error instanceof Error ? error.message : 'Unknown error',
+      errorCode: (error as any)?.code || 'no-code',
+      errorDetails: (error as any)?.details || 'no-details'
+    });
     
-    throw new Error('出欠確認の送信に失敗しました。再度お試しください。');
+    return {
+      success: false,
+      message: error instanceof Error ? `エラー: ${error.message}` : 'RSVPの登録に失敗しました',
+    };
   }
 }
 

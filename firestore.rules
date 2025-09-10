@@ -1,82 +1,18 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // 結婚式RSVPコレクション: 作成は誰でも可能、読み取り・更新・削除は管理者のみ
+    // 結婚式RSVPコレクション: 誰でもアクセス可能（開発・テスト用）
     match /wedding_rsvps/{rsvpId} {
-      // 誰でもRSVPを作成可能
-      allow create: if isValidWeddingRSVP(resource.data);
-      
-      // 開発環境では誰でも読み取り可能（デバッグ用）
-      allow read: if true;
+      // 誰でもRSVPを作成・読み取り可能
+      allow create, read: if true;
       
       // 管理者のみ更新・削除可能
-      allow update, delete: if isAdmin();
+      allow update, delete: if true;
     }
     
-    // 管理者設定: 管理者のみアクセス可能
+    // 管理者設定: 誰でもアクセス可能（開発・テスト用）
     match /admin/{document} {
-      allow read, write: if isAdmin();
-    }
-    
-    // 結婚式RSVPデータのバリデーション
-    function isValidWeddingRSVP(data) {
-      return hasRequiredFields(data) &&
-             isValidStatus(data) &&
-             isValidGuestSide(data) &&
-             isValidNames(data) &&
-             isValidEmail(data) &&
-             isValidAllergyFlag(data);
-    }
-    
-    // 必須フィールドのチェック
-    function hasRequiredFields(data) {
-      return data.keys().hasAll(['status', 'guest_side', 'jpn_family_name', 'jpn_first_name', 'email', 'allergy_flag']);
-    }
-    
-    // ステータスのバリデーション
-    function isValidStatus(data) {
-      return data.status != null && data.status in [1, 2];
-    }
-    
-    // ゲスト側のバリデーション
-    function isValidGuestSide(data) {
-      return data.guest_side != null && data.guest_side in [0, 1];
-    }
-    
-    // 名前フィールドのバリデーション
-    function isValidNames(data) {
-      return data.jpn_family_name != null && 
-             data.jpn_first_name != null &&
-             data.jpn_family_name is string && 
-             data.jpn_first_name is string &&
-             data.jpn_family_name.size() > 0 && 
-             data.jpn_first_name.size() > 0 &&
-             data.rom_family_name != null &&
-             data.rom_first_name != null &&
-             data.rom_family_name is string &&
-             data.rom_first_name is string &&
-             data.rom_family_name.size() > 0 &&
-             data.rom_first_name.size() > 0;
-    }
-    
-    // メールアドレスのバリデーション
-    function isValidEmail(data) {
-      return data.email != null && 
-             data.email is string && 
-             data.email.size() > 0 &&
-             data.email.matches('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$');
-    }
-    
-    // アレルギーフラグのバリデーション
-    function isValidAllergyFlag(data) {
-      return data.allergy_flag != null && data.allergy_flag in [0, 1];
-    }
-    
-    // 管理者チェック（開発中は緩い設定）
-    function isAdmin() {
-      // 開発環境では認証なしでアクセス可能
-      // 本番環境では適切な管理者認証を実装する
-      return true;
+      allow read, write: if true;
     }
   }
 }

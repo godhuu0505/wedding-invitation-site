@@ -1,11 +1,11 @@
 {
   "indexes": [
     {
-      "collectionGroup": "rsvps",
+      "collectionGroup": "wedding_rsvps",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "attendance",
+          "fieldPath": "status",
           "order": "ASCENDING"
         },
         {
@@ -15,26 +15,16 @@
       ]
     },
     {
-      "collectionGroup": "rsvps",
+      "collectionGroup": "wedding_rsvps",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "side",
+          "fieldPath": "guest_side",
           "order": "ASCENDING"
         },
         {
           "fieldPath": "createdAt",
           "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "rsvps",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "email",
-          "order": "ASCENDING"
         }
       ]
     }
