@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { getWeddingEnv } from '@/lib/env';
 
@@ -12,7 +12,8 @@ import { getWeddingEnv } from '@/lib/env';
  * 送信完了のメッセージと必要に応じてゲスト情報を表示します。
  */
 
-export default function RSVPThankYouPage() {
+// SearchParamsを使用する内部コンポーネント
+function RSVPThankYouContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const weddingEnv = getWeddingEnv();
@@ -229,5 +230,28 @@ export default function RSVPThankYouPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// ローディング用のフォールバックコンポーネント
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen py-24 bg-old-lace relative flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin w-12 h-12 border-4 border-akane-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+        <p className="text-tundora" style={{ fontFamily: 'Noto Serif JP, serif' }}>
+          読み込み中...
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// メインのページコンポーネント
+export default function RSVPThankYouPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <RSVPThankYouContent />
+    </Suspense>
   );
 }
