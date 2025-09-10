@@ -96,7 +96,6 @@ export default function HeaderSection() {
               backgroundSize: style.backgroundSize,
               backgroundPosition: style.backgroundPosition,
               backgroundRepeat: style.backgroundRepeat || 'no-repeat',
-              transform: 'scale(1.02)',
               transitionDuration: '3000ms',
               transitionProperty: 'opacity',
             }}
@@ -132,25 +131,12 @@ export default function HeaderSection() {
         </div>
 
         {/* Figmaデザインのスライドインジケーター */}
-        <div className="absolute bottom-8 right-8 flex flex-col space-y-3 z-20">
-          {backgroundStyles.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentSlide(index)}
-              className={`w-2.5 h-2.5 rounded-full transition-all duration-500 border ${
-                index === currentSlide 
-                  ? 'bg-akane-500 border-akane-500 scale-125 shadow-lg' 
-                  : 'bg-transparent border-dusty-gray hover:bg-dusty-gray/30 hover:scale-110'
-              }`}
-              style={{
-                borderColor: index === currentSlide ? '#e65555' : '#999999',
-                backgroundColor: index === currentSlide ? '#e65555' : 'transparent',
-                boxShadow: index === currentSlide ? '0 4px 12px rgba(230, 85, 85, 0.3)' : 'none',
-              }}
-              aria-label={`背景スライド ${index + 1}`}
-          />
-          ))}
-        </div>
+        <SlideIndicator
+          showBlackOverlay={showBlackOverlay}
+          backgroundStyles={backgroundStyles}
+          currentSlide={currentSlide}
+          onSlideChange={setCurrentSlide}
+        />
       </header>
     </>
   );

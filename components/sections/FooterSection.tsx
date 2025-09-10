@@ -21,24 +21,7 @@ export default function FooterSection() {
     >
       <div className="max-w-6xl mx-auto px-4">
         <div className="grid md:grid-cols-3 gap-12">
-          {/* Figmaデザインの結婚式情報 */}
           <div>
-            {/* <h3 
-              className="mb-8"
-              style={{
-                fontFamily: 'Cinzel, serif',
-                fontWeight: '600',
-                fontSize: 'clamp(1.75rem, 3vw, 2.25rem)',
-                letterSpacing: '0.1em',
-                background: 'linear-gradient(135deg, #e65555 0%, #BDBCDA 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
-            >
-              結婚式
-            </h3> */}
-
             <h3 
               className="mb-8"
               style={{
@@ -61,7 +44,7 @@ export default function FooterSection() {
                   color: '#B8B8B8',
                 }}
               >
-                <span className="mr-3">📅</span>
+                <span className="mr-3">日付：</span>
                 {weddingEnv.weddingDateJp}（{weddingEnv.weddingDayJp}）
               </p>
               <p 
@@ -73,7 +56,7 @@ export default function FooterSection() {
                   color: '#B8B8B8',
                 }}
               >
-                <span className="mr-3">⏰</span>
+                <span className="mr-3">時間：</span>
                 披露宴 {weddingEnv.receptionTimeDisplay}
               </p>
               <p 
@@ -85,7 +68,7 @@ export default function FooterSection() {
                   color: '#B8B8B8',
                 }}
               >
-                <span className="mr-3">📍</span>
+                <span className="mr-3">場所：</span>
                 {weddingEnv.venueName}
               </p>
             </div>

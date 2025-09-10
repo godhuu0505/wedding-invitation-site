@@ -62,8 +62,11 @@ export function WeddingDate({ showBlackOverlay, weddingDate, venueName }: Weddin
   return (
     <motion.div
       initial={{ opacity: 0, x: -50 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
+      animate={{ 
+        opacity: showBlackOverlay ? 0 : 1,
+        x: showBlackOverlay ? -50 : 0 
+      }}
+      transition={{ duration: 1, delay: showBlackOverlay ? 0 : 0.5, ease: "easeOut" }}
     >
       <div className="text-white text-left font-elegant"
         style={{
