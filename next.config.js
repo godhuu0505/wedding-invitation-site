@@ -54,7 +54,27 @@ const nextConfig = {
   },
   
   // 環境変数のバリデーション（開発時のみ）
-  webpack: (config, { dev }) => {
+  webpack: (config, { dev, isServer }) => {
+    // undiciの互換性問題を解決
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      net: false,
+      tls: false,
+    };
+
+    // undiciモジュールをトランスパイルから除外
+    config.externals = config.externals || [];
+    if (isServer) {
+      config.externals.push('undici');
+    }
+
+    // webpack 5のModuleFederationプラグインでの問題を回避
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'undici': false,
+    };
+
     if (dev) {
       // 開発時に必須環境変数の存在をチェック
       const requiredEnvVars = [

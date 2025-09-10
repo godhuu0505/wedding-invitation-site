@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react';
 import { getWeddingEnv } from '@/lib/env';
+import { createRSVP, checkRSVPDuplicate } from '@/lib/firebase-operations';
+import { RSVPFormData } from '@/lib/types';
 import ComprehensiveRSVPForm from '@/components/forms/ComprehensiveRSVPForm';
 
 /**
@@ -11,49 +13,44 @@ import ComprehensiveRSVPForm from '@/components/forms/ComprehensiveRSVPForm';
  * reference-site.htmlの包括的なフォーム機能を組み合わせています。
  */
 
-interface RSVPFormData {
-  status: 1 | 2;
-  guest_side: 0 | 1;
-  jpn_family_name: string;
-  jpn_first_name: string;
-  kana_family_name: string;
-  kana_first_name: string;
-  rom_family_name: string;
-  rom_first_name: string;
-  email: string;
-  phone_number: string;
-  zipcode: string;
-  address: string;
-  address2: string;
-  age_category: 0 | 1 | 2;
-  allergy_flag: 0 | 1;
-  allergy: string[];
-  guest_message: string;
-}
-
 export default function RSVPSection() {
   const weddingEnv = getWeddingEnv();
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleRSVPSubmit = async (data: RSVPFormData) => {
     try {
-      // TODO: Firebase Firestoreへのデータ保存を実装
+      // メールアドレスの重複チェック
+      const isDuplicate = await checkRSVPDuplicate(data.email);
+      if (isDuplicate) {
+        throw new Error('このメールアドレスは既に登録されています。');
+      }
+
+      // Firebase Firestoreへのデータ保存
+      const savedData = await createRSVP(data);
       
-      // アレルギー情報のログ出力（開発用）
-      console.log('RSVP送信データ:', {
-        ...data,
-        allergy_items: data.allergy_flag === 1 ? data.allergy : []
-      });
-      
-      // 模擬的な送信処理
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // 開発用ログ出力
+      if (process.env.NODE_ENV === 'development') {
+        console.log('RSVP送信データ:', {
+          ...data,
+          allergy_items: data.allergy_flag === 1 ? data.allergy : []
+        });
+        console.log('Firestore保存結果:', savedData);
+      }
       
       // 成功時の処理
       setIsSubmitted(true);
       
     } catch (error) {
       console.error('RSVP送信エラー:', error);
-      throw error; // ComprehensiveRSVPFormでエラーハンドリング
+      
+      // エラーメッセージを具体的に設定
+      let errorMessage = 'エラーが発生しました。再度お試しください。';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      
+      // ComprehensiveRSVPFormでエラーハンドリングされるようにエラーを再投出
+      throw new Error(errorMessage);
     }
   };
 

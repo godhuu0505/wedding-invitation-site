@@ -125,7 +125,6 @@ interface RSVPFormData {
   zipcode?: string;                // 郵便番号
   address?: string;                // 住所
   address2?: string;               // 建物名
-  age_category?: 0 | 1 | 2;        // 年齢区分
   allergy_flag: 0 | 1;            // アレルギー有無
   allergy?: string;                // アレルギー詳細
   guest_message?: string;          // メッセージ

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { RSVPFormData } from '@/lib/types';
 import SubmitButton from '@/components/ui/SubmitButton';
 
 /**
@@ -37,7 +38,6 @@ const rsvpSchema = yup.object().shape({
   address2: yup.string().default('').max(100, '住所2は100文字以内でご入力ください'),
   
   // その他
-  age_category: yup.number().oneOf([0, 1, 2] as const, '年齢区分をお選びください').nullable().transform((value) => value === null ? undefined : value),
   allergy_flag: yup.number().oneOf([0, 1] as const, 'アレルギーの有無をお選びください').required('アレルギーの有無をお選びください'),
   allergy: yup.array().of(yup.string()).default([]).when('allergy_flag', {
     is: 1,
@@ -47,29 +47,8 @@ const rsvpSchema = yup.object().shape({
   guest_message: yup.string().default('').max(500, 'メッセージは500文字以内でご入力ください'),
 }).strict();
 
-// TypeScript型定義（reference-site.html準拠）
-interface ComprehensiveRSVPFormData {
-  status: 1 | 2; // 1: 出席, 2: 欠席
-  guest_side: 0 | 1; // 0: 新郎側, 1: 新婦側
-  jpn_family_name: string;
-  jpn_first_name: string;
-  kana_family_name: string;
-  kana_first_name: string;
-  rom_family_name: string;
-  rom_first_name: string;
-  email: string;
-  phone_number: string;
-  zipcode: string;
-  address: string;
-  address2: string;
-  age_category?: 0 | 1 | 2; // 0: 大人, 1: 子供, 2: 幼児
-  allergy_flag: 0 | 1; // 0: なし, 1: あり
-  allergy: string[];
-  guest_message: string;
-}
-
 interface ComprehensiveRSVPFormProps {
-  onSubmit?: (data: ComprehensiveRSVPFormData) => Promise<void>;
+  onSubmit?: (data: RSVPFormData) => Promise<void>;
   onSuccess?: () => void;
 }
 
@@ -96,7 +75,7 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
     getValues,
     formState: { errors },
     reset,
-  } = useForm<ComprehensiveRSVPFormData>({
+  } = useForm<RSVPFormData>({
     resolver: yupResolver(rsvpSchema) as any, // 型互換性の問題を回避
     defaultValues: {
       status: undefined,
@@ -112,7 +91,6 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
       zipcode: '',
       address: '',
       address2: '',
-      age_category: undefined,
       allergy_flag: 0,
       allergy: [],
       guest_message: '',
@@ -125,12 +103,10 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
   const allergyItems = watch('allergy') || [];
 
   // 選択肢の変更処理
-  const handleRadioChange = (value: number, field: keyof ComprehensiveRSVPFormData) => {
+  const handleRadioChange = (value: number, field: keyof RSVPFormData) => {
     if (field === 'status' && (value === 1 || value === 2)) {
       setValue(field, value);
     } else if (field === 'guest_side' && (value === 0 || value === 1)) {
-      setValue(field, value);
-    } else if (field === 'age_category' && (value === 0 || value === 1 || value === 2)) {
       setValue(field, value);
     }
   };
@@ -153,7 +129,7 @@ export default function ComprehensiveRSVPForm({ onSubmit, onSuccess }: Comprehen
     }
   };
 
-  const handleFormSubmit: SubmitHandler<ComprehensiveRSVPFormData> = async (data) => {
+  const handleFormSubmit: SubmitHandler<RSVPFormData> = async (data) => {
     setIsSubmitting(true);
     
     try {

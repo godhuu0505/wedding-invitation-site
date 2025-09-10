@@ -29,10 +29,13 @@ if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
       // エミュレータ接続は初回のみ実行
       connectFirestoreEmulator(db, 'localhost', 8080);
       connectAuthEmulator(auth, 'http://localhost:9099');
+      console.log('✅ Firebase エミュレータに接続しました');
     } catch (error) {
       // エミュレータが既に接続されている場合はエラーを無視
       console.warn('Firebase エミュレータ接続をスキップしました:', error);
     }
+  } else {
+    console.log('🌐 Firebase 本番環境を使用しています');
   }
 }
 

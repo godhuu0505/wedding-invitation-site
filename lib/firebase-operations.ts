@@ -1,43 +1,91 @@
 import { 
-  collection, 
-  addDoc, 
-  getDocs, 
-  doc, 
-  getDoc, 
-  updateDoc, 
-  deleteDoc, 
-  query, 
-  orderBy, 
-  where, 
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  orderBy,
+  where,
   limit,
-  Timestamp 
+  Timestamp
 } from 'firebase/firestore';
 import { db } from './firebase';
-import { RSVPData } from './types';
+import { RSVPFormData, FirestoreRSVPData } from './types';
 
 // コレクション名定数
 export const COLLECTIONS = {
-  RSVPS: 'rsvps',
+  WEDDING_RSVPS: 'wedding_rsvps',
   ADMIN: 'admin',
 } as const;
 
 /**
- * RSVP データを作成
+ * RSVPデータを作成
  */
-export async function createRSVP(rsvpData: Omit<RSVPData, 'id' | 'createdAt' | 'updatedAt'>) {
+export async function createRSVP(formData: RSVPFormData) {
   try {
     const now = new Date();
-    const dataToSave = {
-      ...rsvpData,
-      createdAt: Timestamp.fromDate(now),
-      updatedAt: Timestamp.fromDate(now),
+    
+    // フォームデータをFirestore用データに変換
+    const firestoreData: Omit<FirestoreRSVPData, 'id'> = {
+      status: formData.status,
+      guest_side: formData.guest_side,
+      jpn_family_name: formData.jpn_family_name,
+      jpn_first_name: formData.jpn_first_name,
+      kana_family_name: formData.kana_family_name || '',
+      kana_first_name: formData.kana_first_name || '',
+      rom_family_name: formData.rom_family_name,
+      rom_first_name: formData.rom_first_name,
+      email: formData.email,
+      phone_number: formData.phone_number || '',
+      zipcode: formData.zipcode || '',
+      address: formData.address || '',
+      address2: formData.address2 || '',
+      allergy_flag: formData.allergy_flag,
+      allergy: formData.allergy || [],
+      guest_message: formData.guest_message || '',
+      createdAt: now,
+      updatedAt: now,
     };
 
-    const docRef = await addDoc(collection(db, COLLECTIONS.RSVPS), dataToSave);
-    return { id: docRef.id, ...dataToSave };
+    const docRef = await addDoc(collection(db, COLLECTIONS.WEDDING_RSVPS), {
+      ...firestoreData,
+      createdAt: Timestamp.fromDate(now),
+      updatedAt: Timestamp.fromDate(now),
+    });
+
+    console.log('RSVP保存成功:', {
+      id: docRef.id,
+      email: formData.email,
+      status: formData.status === 1 ? '出席' : '欠席',
+      guest_side: formData.guest_side === 0 ? '新郎側' : '新婦側',
+    });
+
+    return { 
+      id: docRef.id, 
+      ...firestoreData 
+    };
   } catch (error) {
     console.error('RSVP作成エラー:', error);
-    throw new Error('出欠確認の送信に失敗しました');
+    
+    throw new Error('出欠確認の送信に失敗しました。再度お試しください。');
+  }
+}
+
+/**
+ * RSVPデータの重複チェック（メールアドレス）
+ */
+export async function checkRSVPDuplicate(email: string) {
+  try {
+    const q = query(
+      collection(db, COLLECTIONS.WEDDING_RSVPS),
+      where('email', '==', email),
+      limit(1)
+    );
+    
+    const querySnapshot = await getDocs(q);
+    return !querySnapshot.empty;
+  } catch (error) {
+    console.error('重複チェックエラー:', error);
+    return false;
   }
 }
 
@@ -47,12 +95,12 @@ export async function createRSVP(rsvpData: Omit<RSVPData, 'id' | 'createdAt' | '
 export async function getAllRSVPs() {
   try {
     const q = query(
-      collection(db, COLLECTIONS.RSVPS),
+      collection(db, COLLECTIONS.WEDDING_RSVPS),
       orderBy('createdAt', 'desc')
     );
     
     const querySnapshot = await getDocs(q);
-    const rsvps: RSVPData[] = [];
+    const rsvps: FirestoreRSVPData[] = [];
     
     querySnapshot.forEach((doc) => {
       const data = doc.data();
@@ -61,7 +109,7 @@ export async function getAllRSVPs() {
         ...data,
         createdAt: data.createdAt.toDate(),
         updatedAt: data.updatedAt.toDate(),
-      } as RSVPData);
+      } as FirestoreRSVPData);
     });
     
     return rsvps;
@@ -72,122 +120,48 @@ export async function getAllRSVPs() {
 }
 
 /**
- * 特定のRSVPデータを取得
- */
-export async function getRSVPById(id: string) {
-  try {
-    const docRef = doc(db, COLLECTIONS.RSVPS, id);
-    const docSnap = await getDoc(docRef);
-    
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      return {
-        id: docSnap.id,
-        ...data,
-        createdAt: data.createdAt.toDate(),
-        updatedAt: data.updatedAt.toDate(),
-      } as RSVPData;
-    } else {
-      throw new Error('該当するデータが見つかりません');
-    }
-  } catch (error) {
-    console.error('RSVP取得エラー:', error);
-    throw new Error('出欠確認データの取得に失敗しました');
-  }
-}
-
-/**
- * RSVPデータを更新
- */
-export async function updateRSVP(id: string, updateData: Partial<Omit<RSVPData, 'id' | 'createdAt' | 'updatedAt'>>) {
-  try {
-    const docRef = doc(db, COLLECTIONS.RSVPS, id);
-    const dataToUpdate = {
-      ...updateData,
-      updatedAt: Timestamp.fromDate(new Date()),
-    };
-    
-    await updateDoc(docRef, dataToUpdate);
-    return true;
-  } catch (error) {
-    console.error('RSVP更新エラー:', error);
-    throw new Error('出欠確認の更新に失敗しました');
-  }
-}
-
-/**
- * RSVPデータを削除
- */
-export async function deleteRSVP(id: string) {
-  try {
-    const docRef = doc(db, COLLECTIONS.RSVPS, id);
-    await deleteDoc(docRef);
-    return true;
-  } catch (error) {
-    console.error('RSVP削除エラー:', error);
-    throw new Error('出欠確認の削除に失敗しました');
-  }
-}
-
-/**
- * 出席予定者数を取得
+ * RSVP統計を取得
  */
 export async function getRSVPStats() {
   try {
     const attendingQuery = query(
-      collection(db, COLLECTIONS.RSVPS),
-      where('attendance', '==', 'attending')
+      collection(db, COLLECTIONS.WEDDING_RSVPS),
+      where('status', '==', 1) // 出席
     );
     
     const notAttendingQuery = query(
-      collection(db, COLLECTIONS.RSVPS),
-      where('attendance', '==', 'not-attending')
+      collection(db, COLLECTIONS.WEDDING_RSVPS),
+      where('status', '==', 2) // 欠席
     );
     
-    const tentativeQuery = query(
-      collection(db, COLLECTIONS.RSVPS),
-      where('attendance', '==', 'tentative')
+    const groomSideQuery = query(
+      collection(db, COLLECTIONS.WEDDING_RSVPS),
+      where('guest_side', '==', 0),
+      where('status', '==', 1)
+    );
+    
+    const brideSideQuery = query(
+      collection(db, COLLECTIONS.WEDDING_RSVPS),
+      where('guest_side', '==', 1),
+      where('status', '==', 1)
     );
 
-    const [attendingSnap, notAttendingSnap, tentativeSnap] = await Promise.all([
+    const [attendingSnap, notAttendingSnap, groomSideSnap, brideSideSnap] = await Promise.all([
       getDocs(attendingQuery),
       getDocs(notAttendingQuery),
-      getDocs(tentativeQuery),
+      getDocs(groomSideQuery),
+      getDocs(brideSideQuery),
     ]);
-
-    let totalAttending = 0;
-    attendingSnap.forEach((doc) => {
-      const data = doc.data();
-      totalAttending += data.guestCount || 1;
-    });
 
     return {
       attending: attendingSnap.size,
       notAttending: notAttendingSnap.size,
-      tentative: tentativeSnap.size,
-      totalGuests: totalAttending,
+      groomSideAttending: groomSideSnap.size,
+      brideSideAttending: brideSideSnap.size,
+      total: attendingSnap.size + notAttendingSnap.size,
     };
   } catch (error) {
     console.error('RSVP統計取得エラー:', error);
     throw new Error('出欠統計の取得に失敗しました');
-  }
-}
-
-/**
- * メールアドレスで重複チェック
- */
-export async function checkDuplicateEmail(email: string) {
-  try {
-    const q = query(
-      collection(db, COLLECTIONS.RSVPS),
-      where('email', '==', email),
-      limit(1)
-    );
-    
-    const querySnapshot = await getDocs(q);
-    return !querySnapshot.empty;
-  } catch (error) {
-    console.error('重複チェックエラー:', error);
-    return false;
   }
 }
