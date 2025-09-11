@@ -98,26 +98,106 @@ function RSVPThankYouContent() {
           {/* 出欠状況に応じたメッセージ */}
           <div className="mb-12">
             {status === '1' ? (
-              <p 
-                className="text-dusty-gray leading-relaxed max-w-3xl mx-auto"
-                style={{
-                  fontFamily: 'Noto Serif JP, serif',
-                  fontWeight: '400',
-                  fontSize: 'clamp(1.125rem, 2vw, 1.375rem)',
-                  lineHeight: '2',
-                  letterSpacing: '0.02em',
-                  color: '#999999',
-                }}
-              >
-                ご出席のお返事をいただき<br />
-                誠にありがとうございます<br />
-                <br />
-                結婚式でお会いできることを<br />
-                心より楽しみにしております<br />
-                <br />
-                当日はどうぞ<br />
-                よろしくお願いいたします
-              </p>
+              <div>
+                <p 
+                  className="text-dusty-gray leading-relaxed max-w-3xl mx-auto mb-12"
+                  style={{
+                    fontFamily: 'Noto Serif JP, serif',
+                    fontWeight: '400',
+                    fontSize: 'clamp(1.125rem, 2vw, 1.375rem)',
+                    lineHeight: '2',
+                    letterSpacing: '0.02em',
+                    color: '#999999',
+                  }}
+                >
+                  ご出席のお返事をいただき<br />
+                  誠にありがとうございます<br />
+                  <br />
+                  結婚式でお会いできることを<br />
+                  心より楽しみにしております<br />
+                  <br />
+                  当日はどうぞ<br />
+                  よろしくお願いいたします
+                </p>
+
+                {/* 公式LINE案内（出席の場合のみ） */}
+                {weddingEnv.lineOfficialUrl && (
+                  <div className="max-w-3xl mx-auto">
+                    {/* 区切り線 */}
+                    <div className="flex items-center justify-center mb-8">
+                      <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-akane-500 to-transparent"></div>
+                      <div className="w-3 h-3 bg-akane-500 rounded-full mx-6 shadow-sm"></div>
+                      <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-akane-500 to-transparent"></div>
+                    </div>
+
+                    <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-8 shadow-lg border border-green-200">
+                      <div className="text-center mb-6">
+                        <div className="mb-4 flex justify-center">
+                          <img 
+                            src="/images/line.png" 
+                            alt="LINE" 
+                            style={{ width: '48px', height: '48px' }}
+                          />
+                        </div>
+                        <h3 
+                          className="text-green-700 mb-4"
+                          style={{
+                            fontFamily: 'Noto Serif JP, serif',
+                            fontWeight: '600',
+                            fontSize: 'clamp(1.25rem, 2.5vw, 1.5rem)',
+                            letterSpacing: '0.1em',
+                          }}
+                        >
+                          田中家・與口家WEDDING
+                        </h3>
+                        <p 
+                          className="text-green-600 leading-relaxed"
+                          style={{
+                            fontFamily: 'Noto Serif JP, serif',
+                            fontWeight: '400',
+                            fontSize: 'clamp(1rem, 2vw, 1.125rem)',
+                            lineHeight: '1.8',
+                            letterSpacing: '0.02em',
+                          }}
+                        >
+                          結婚式に向けて<br />
+                          専用LINEを用意しました<br />
+                          最新情報や当日座席など<br />
+                          今後も配信予定です<br />
+                          <br />
+                          ぜひ友だち追加して<br />
+                          ご案内メッセージをお待ちください！
+                        </p>
+                      </div>
+
+                      <div className="flex justify-center">
+                        <a
+                          href={weddingEnv.lineOfficialUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center px-8 py-4 rounded-full transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                          style={{
+                            background: 'linear-gradient(135deg, #00B900 0%, #00C300 100%)',
+                            color: 'white',
+                            fontFamily: 'Noto Serif JP, serif',
+                            fontWeight: '500',
+                            fontSize: '1.125rem',
+                            letterSpacing: '0.05em',
+                            boxShadow: '0 8px 25px rgba(0, 185, 0, 0.3)',
+                          }}
+                        >
+                          <img 
+                            src="/images/add-friend.png" 
+                            alt="LINE友だち追加"
+                            style={{ width: '50px', height: '40px', opacity: 0.8 }}
+                          />
+                          友だち追加する
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             ) : status === '2' ? (
               <p 
                 className="text-dusty-gray leading-relaxed max-w-3xl mx-auto"
