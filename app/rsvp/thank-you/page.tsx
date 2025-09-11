@@ -189,7 +189,8 @@ function RSVPThankYouContent() {
                           <img 
                             src="/images/add-friend.png" 
                             alt="LINE友だち追加"
-                            style={{ width: '50px', height: '40px', opacity: 0.8 }}
+                            className="mr-3"
+                            style={{ width: '40px', height: '40px', opacity: 0.8 }}
                           />
                           友だち追加する
                         </a>
