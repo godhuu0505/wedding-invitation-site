@@ -80,8 +80,6 @@ const nextConfig = {
       const requiredEnvVars = [
         'NEXT_PUBLIC_FIREBASE_API_KEY',
         'NEXT_PUBLIC_FIREBASE_PROJECT_ID',
-        'NEXT_PUBLIC_GROOM_FIRST_NAME_EN',
-        'NEXT_PUBLIC_BRIDE_FIRST_NAME_EN',
         'NEXT_PUBLIC_WEDDING_DATE',
       ];
       
