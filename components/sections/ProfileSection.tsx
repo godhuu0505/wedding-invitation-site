@@ -1,13 +1,60 @@
 'use client';
 
 import React from 'react';
-import { getWeddingEnv } from '@/lib/env';
-import AnimatedProfileMessage from '@/components/ui/AnimatedProfileMessage';
 import AnimatedProfileImage from '@/components/ui/AnimatedProfileImage';
+import { AnimatedProfileCard } from '@/components/ui/AnimatedProfileCard';
 
 export default function ProfileSection() {
-  // 環境変数から情報を取得
-  const weddingEnv = getWeddingEnv();
+  // 新郎のプロフィール情報を行ごとに細かく定義
+  const groomProfile = {
+    nameFullJp: '田中 瑚大',
+    nameFullEn: 'Tanaka Godai',
+    birthDate: '1993年5月5日',
+    birthPlace: '埼玉県',
+    bloodType: 'B型のINFP(仲介者)',
+    hobbyLines: [
+      '',
+      '週末は外に出かけることが多く',
+      'サッカー・キャンプ・ゴルフなど',
+      'にハマっています！',
+      '',
+      '犬が好きな犬顔ですが',
+      '犬アレルギー持ちで困ってます'
+    ],
+    messageLines: [
+      '',
+      '美味しい料理・お酒を用意して',
+      'お待ちしております',
+      '',
+      '当日皆様にお会いできることを',
+      '楽しみにしております'
+    ]
+  };
+
+  // 新婦のプロフィール情報を行ごとに細かく定義
+  const brideProfile = {
+    nameFullJp: '與口 花菜',
+    nameFullEn: 'Yoguchi Kana',
+    birthDate: '1994年11月5日',
+    birthPlace: '東京都',
+    bloodType: 'O型のISTJ(管理者)',
+    hobbyLines: [
+      '',
+      'キャリアアドバイザーから',
+      '人事労務に職種チェンジしました',
+      '',
+      'プライベートでは超多趣味なので',
+      '3人分くらいの人生を',
+      '謳歌するつもりで生きています'
+    ],
+    messageLines: [
+      '',
+      '皆さんが',
+      '存分に楽しめる宴になるよう',
+      '鋭意準備中です',
+      'ご列席 心よりお待ちしております'
+    ]
+  };
   
   return (
     <section id="profile" className="py-24 bg-old-lace relative">
@@ -53,8 +100,8 @@ export default function ProfileSection() {
           <div className="text-center group">
             <div className="mb-10">
               <AnimatedProfileImage
-                src="/images/profiles/groom.png"
-                alt={`${weddingEnv.groomNameFullJp}のプロフィール写真`}
+                src="/images/profiles/groom.jpg"
+                alt={`${groomProfile.nameFullJp}のプロフィール写真`}
               />
               
               <div className="mb-8">
@@ -68,7 +115,7 @@ export default function ProfileSection() {
                     color: '#333333',
                   }}
                 >
-                  {weddingEnv.groomNameFullJp}
+                  {groomProfile.nameFullJp}
                 </h3>
                 <p 
                   className="text-dusty-gray"
@@ -80,26 +127,26 @@ export default function ProfileSection() {
                     color: '#999999',
                   }}
                 >
-                  {weddingEnv.groomNameFullEn}
+                  {groomProfile.nameFullEn}
                 </p>
               </div>
             </div>
             
-            <AnimatedProfileMessage
-              birthDate={weddingEnv.groomBirthDate}
-              birthPlace={weddingEnv.groomBirthPlace}
-              bloodType={weddingEnv.groomBloodType}
-              hobby={weddingEnv.groomHobby}
-              message={weddingEnv.groomMessage}
+            <AnimatedProfileCard
+              birthDate={groomProfile.birthDate}
+              birthPlace={groomProfile.birthPlace}
+              bloodType={groomProfile.bloodType}
+              hobbyLines={groomProfile.hobbyLines}
+              messageLines={groomProfile.messageLines}
             />
           </div>
 
           {/* 新婦セクション - Figmaデザイン */}
           <div className="text-center group">
             <div className="mb-10">
-              <AnimatedProfileImage
-                src="/images/profiles/bride.png"
-                alt={`${weddingEnv.brideNameFullJp}のプロフィール写真`}
+                            <AnimatedProfileImage
+                src="/images/profiles/bride.jpg"
+                alt={`${brideProfile.nameFullJp}のプロフィール写真`}
               />
               
               <div className="mb-8">
@@ -113,7 +160,7 @@ export default function ProfileSection() {
                     color: '#333333',
                   }}
                 >
-                  {weddingEnv.brideNameFullJp}
+                  {brideProfile.nameFullJp}
                 </h3>
                 <p 
                   className="text-dusty-gray"
@@ -125,17 +172,17 @@ export default function ProfileSection() {
                     color: '#999999',
                   }}
                 >
-                  {weddingEnv.brideNameFullEn}
+                  {brideProfile.nameFullEn}
                 </p>
               </div>
             </div>
             
-            <AnimatedProfileMessage
-              birthDate={weddingEnv.brideBirthDate}
-              birthPlace={weddingEnv.brideBirthPlace}
-              bloodType={weddingEnv.brideBloodType}
-              hobby={weddingEnv.brideHobby}
-              message={weddingEnv.brideMessage}
+            <AnimatedProfileCard
+              birthDate={brideProfile.birthDate}
+              birthPlace={brideProfile.birthPlace}
+              bloodType={brideProfile.bloodType}
+              hobbyLines={brideProfile.hobbyLines}
+              messageLines={brideProfile.messageLines}
             />
           </div>
         </div>
